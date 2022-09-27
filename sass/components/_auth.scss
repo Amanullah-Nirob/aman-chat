@@ -23,19 +23,25 @@
     padding: 0 4% 0 20px;
     overflow: hidden;
     border-radius: 10px;
-    background-color: hsla(0, 0%, 100%, 0.8);
+    // background-color: hsla(0, 0%, 100%, 0.8); 
 
-    .login-left {
+    .login-left{
+        width: 100%;
+        height: 100%;
+      .left-content{
         position: relative;
-        width: 43%;
-        height: 57%;
+        width: 74%;
+        height: 100%;
+        margin: auto;
+      }
     }
+
     .login-form {
-        width: 30%;
-        background-color: transparent;
         box-shadow: 2px 3px 7px rgb(0 0 0 / 20%);
-        padding: 24px 50px;
+        padding: 36px 50px;
         border-radius: 10px;
+        width: 72%;
+        margin: auto;
         .login-logo {
             display: flex;
             align-items: center;
@@ -44,19 +50,114 @@
                 position: relative;
                 width: 70px;
                 height: 60px;
+                margin-right: 10px;
             }
             h2 {
                 margin-left: 20px;
-                color: #475768;
                 font-size: 45px;
                 font-weight: bold;
+                margin: 0;
             }
         }
+
         
     }
    
   }
-
-  
-
 }
+
+.loginRegister {
+  padding: 15px 30px;
+  width: 25rem;
+}
+
+
+@media only screen and  (min-width : 321px) and (max-width : 767px){
+  .login-area-main {
+    background-position: 17%;
+    .login-box-area {
+      .login-left {
+        display: none;
+      }
+      .login-form {
+        padding: 33px 30px;
+        .login-logo {
+            .logo-image{
+              width: 55px;
+              height: 46px;
+            }
+          h2 {
+            font-size: 29px;
+          }
+        }
+      }
+    }
+  }
+  .loginRegister {
+    padding: 5px 23px;
+    width: 100%;
+}
+}
+
+
+@media screen and (min-width:768px) and (max-width:1024px){
+  .login-area-main {
+    .login-box-area {
+      .login-left {
+        .left-content {
+          width: 93%;
+        }
+      }
+      .login-form {
+        .login-logo {
+          h2 {
+            font-size: 30px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width:992px) and (max-width:1199px){
+  .login-area-main {
+    .login-box-area {
+      .login-left {
+        .left-content {
+          width: 93%;
+        }
+      }
+      .login-form {
+        .login-logo {
+          h2 {
+            font-size: 36px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width:1200px) and (max-width:1300px){
+  .login-area-main {
+    .login-box-area {
+      .login-left {
+        .left-content {
+          width: 85%;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width:1631px){
+  .login-area-main {
+    .login-box-area {
+      .login-form {
+        width: 100%;
+    }
+    }
+  }
+}
+
+
