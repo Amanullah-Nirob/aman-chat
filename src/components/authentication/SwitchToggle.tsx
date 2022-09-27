@@ -1,6 +1,5 @@
 import React from 'react';
-import styled from '@emotion/styled';
-import { FormControl, FormControlLabel, Hidden, InputLabel, Select, Switch } from '@mui/material';
+import { FormControl, FormControlLabel, Hidden, InputLabel, Select, Switch,styled } from '@mui/material';
 import { useDispatch,useSelector } from 'react-redux';
 import { switchTheme,selectTheme } from '../../app/theme/ThemeSlice';
 
