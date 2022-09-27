@@ -1,0 +1,57 @@
+.login-area-main {
+  width: 100%;
+  background-image: url('../../public/static/images/login_bg.svg');
+  background-position: 50%;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .login-box-area {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 96%;
+    height: 94%;
+    padding: 0 4% 0 20px;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: hsla(0, 0%, 100%, 0.8);
+
+    .login-left {
+        position: relative;
+        width: 43%;
+        height: 57%;
+    }
+    .login-form {
+        width: 30%;
+        background-color: transparent;
+        box-shadow: 2px 3px 7px rgb(0 0 0 / 20%);
+        padding: 24px 50px;
+        border-radius: 10px;
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .logo-image {
+                position: relative;
+                width: 70px;
+                height: 60px;
+            }
+            h2 {
+                margin-left: 20px;
+                color: #475768;
+                font-size: 45px;
+                font-weight: bold;
+            }
+        }
+        
+    }
+   
+  }
+
+  
+
+}

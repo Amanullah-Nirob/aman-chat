@@ -9,9 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@hookform/resolvers": "^2.9.8",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/lab": "^5.0.0-alpha.99",
+    "@mui/material": "^5.10.5",
+    "@reduxjs/toolkit": "^1.8.5",
+    "axios": "^0.27.2",
     "next": "12.3.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.35.0",
+    "react-redux": "^8.0.2",
+    "redux": "^4.2.0",
+    "redux-persist": "^6.0.0",
+    "sass": "^1.54.9",
+    "zod": "^3.19.1"
   },
   "devDependencies": {
     "@types/node": "18.7.18",
