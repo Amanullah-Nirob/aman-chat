@@ -5,8 +5,11 @@ import { persistReducer,FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,} from
 
 // internal imports
 import storage from "./sync-storage";
-import themReducer from './theme/ThemeSlice'
-
+import themReducer from './slices/theme/ThemeSlice'
+import toastReducer from './slices/ToastSlice'
+import { userApi } from "./apisAll/userApi";
+import AppSliceReducer from './slices/AppSlice'
+import authSliceReducer from './slices/auth/authSlice'
 
 const persistConfig = {
     key: "root",
@@ -16,7 +19,11 @@ const persistConfig = {
 }; 
 
 const rootReducer = combineReducers({
-  theme:themReducer
+  [userApi.reducerPath]: userApi.reducer,
+  auth:authSliceReducer,
+  AppData: AppSliceReducer,
+  theme:themReducer,
+  ToastData:toastReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -28,7 +35,8 @@ export const store = configureStore({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      })
+      }) 
+      .concat(userApi.middleware)
 
 
 });

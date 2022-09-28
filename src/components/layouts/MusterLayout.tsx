@@ -1,8 +1,9 @@
 import React from 'react';
 import { ThemeProvider ,createTheme} from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import { selectTheme } from '../../app/theme/ThemeSlice';
+import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import { CssBaseline } from '@mui/material';
+import AppToast from '../utils/AppToast';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -27,6 +28,7 @@ const MusterLayout = ({children}:LayoutProps) => {
         <ThemeProvider theme={theme}>
         <CssBaseline />
             {children}
+            <AppToast></AppToast>
         </ThemeProvider>
     );
 };

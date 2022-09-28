@@ -1,14 +1,13 @@
 import React from 'react';
 import { FormControl, FormControlLabel, Hidden, InputLabel, Select, Switch,styled } from '@mui/material';
-import { useDispatch,useSelector } from 'react-redux';
-import { switchTheme,selectTheme } from '../../app/theme/ThemeSlice';
-
+import { switchTheme,selectTheme } from '../../app/slices/theme/ThemeSlice';
+import { useAppSelector,useAppDispatch } from '../../app/hooks';
 
 const SwitchToggle = () => {
 
 
-  const dispatch = useDispatch();
-  const theme = useSelector(selectTheme); 
+  const dispatch = useAppDispatch();
+  const theme = useAppSelector(selectTheme); 
   const handleChange = (_event: any) => {
     dispatch(switchTheme(theme == 'dark' ? 'light' : 'dark'))
 };

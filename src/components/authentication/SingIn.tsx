@@ -1,79 +1,37 @@
+// external imports
 import React,{FC,useState} from 'react';
-import {
-    Container,
-    Grid,
-    Box,
-    Typography,
-    Stack,
-    Link as MuiLink,
-    FormControlLabel,
-    Dialog,
-    Button,
-    styled,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    IconButton,
-} from '@mui/material';
+import { Box, Typography,Stack,Dialog,Button,styled,DialogTitle,IconButton,} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
-import { literal, object, string, TypeOf } from 'zod';
+import { TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import AuthFormInputs from './AuthFormInputs';
-import Link from 'next/link';
 import CloseIcon from '@mui/icons-material/Close';
-import Register from './Register';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 
+// internal imports
+import AuthFormInputs from './AuthFormInputs';
+import Register from './Register';
+import { loginSchema } from './authValidSchema';
+import {useLoginMutation} from '../../app/apisAll/userApi'
+import {useAppDispatch} from '../../app/hooks'
+import { displayToast } from '../../app/slices/ToastSlice';
+import { setLoggedInUser } from '../../app/slices/auth/authSlice';
 
-// 👇 Login Schema with Zod
-const loginSchema = object({
-    email: string().min(1, 'Email is required').email('Email is invalid'),
-    password: string()
-      .min(1, 'Password is required')
-      .min(3, 'Password must be more than 3 characters')
-      .max(32, 'Password must be less than 32 characters'),
-  });
-  
-  // 👇 Infer the Schema to get the TS Type
-  type ILogin = TypeOf<typeof loginSchema>;
-
+// 👇 Infer the Schema to get the TS Type
+type ILogin = TypeOf<typeof loginSchema>;
 
   
 const SingIn:FC= () => {
+const dispatch=useAppDispatch()
 
-  // ====================== login area ============================
-  // Default Values
-  const defaultValues: ILogin = {
-    email: '',
-    password: '',
-  };
-
-  // The object returned from useForm Hook
-  const methods = useForm<ILogin>({
-    resolver: zodResolver(loginSchema),
-    defaultValues,
-  });
-
-  // Submit Handler
-  const onSubmitHandler: SubmitHandler<ILogin> = (values: ILogin) => {
-    console.log(values);
-  };
-
-// =================================== login area end =========================
-
+//  register modal 
 const theme = useTheme();
 const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 const [open, setOpen] = useState(false);
-const handleClickOpen = () => {
-  setOpen(true);
-};
-const handleClose = () => {
-  setOpen(false);
-};
 
-
+const handleClickOpen = () => {setOpen(true);};
+const handleClose = () => {setOpen(false);};
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -112,73 +70,76 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
     </DialogTitle>
   );
 };
+ // > model end
+
+
+  // Default Values
+  const defaultValues: ILogin = { email: '', password: ''};
+  // The object returned from useForm Hook
+  const methods = useForm<ILogin>({
+    resolver: zodResolver(loginSchema),
+    defaultValues,
+  });
+
+
+  const [login,{ isLoading, isError, error }] = useLoginMutation()
+  // Submit Handler
+  const onSubmitHandler: SubmitHandler<ILogin> = async ({email,password}: ILogin) => {
+    try {
+        const user = await login({email,password}).unwrap();
+        if(user?._id){
+          dispatch(
+            displayToast({
+              title: "Registration Successful",
+              message: "Your login session will expire in 15 days",
+              type: "success",
+              duration: 5000,
+              position: "top-center",
+            })
+          );
+          dispatch(setLoggedInUser(user))
+         }
+    } catch (error:any) {
+      dispatch(  
+        displayToast({
+          title: "login Failed",
+          message: error?.data.message? error?.data.message : 'login Failed',
+          type: "error",
+          duration: 4000,
+          position: "top-center",
+      }))
+
+    }
+  };
+
+
 
     return (
       <>
-          <FormProvider {...methods}>
-                  <Box
-                    display='flex'
-                    flexDirection='column'
-                    component='form'
-                    noValidate
-                    autoComplete='off'
-                    sx={{ marginTop: '40px' }}
-                    onSubmit={methods.handleSubmit(onSubmitHandler)}
-                  >
+        <FormProvider {...methods}>
+              <Box display='flex' flexDirection='column' component='form' noValidate autoComplete='off' sx={{ marginTop: '40px' }}
+                   onSubmit={methods.handleSubmit(onSubmitHandler)}
+               >
+                    <AuthFormInputs label='Enter your email' type='email' name='email' focused required />
+                    <AuthFormInputs  type='password' label='Password' name='password' required focused />
 
-
-                    <AuthFormInputs
-                      label='Enter your email'
-                      type='email'
-                      name='email'
-                      focused
-                      required
-                    />
-                    <AuthFormInputs
-                      type='password'
-                      label='Password'
-                      name='password'
-                      required
-                      focused
-                    />
-                     
-                    <LoadingButton
-                      loading={false}
-                      type='submit'
-                      variant='contained'
-                      sx={{
-                        py: '0.8rem',
-                        mt: 2,
-                        width: '80%',
-                        marginInline: 'auto',
-                      }}
-                    >
+                    <LoadingButton loading={isLoading?true:false} type='submit' variant='contained'
+                      sx={{ py: '0.8rem',mt: 2, width: '80%',marginInline: 'auto'}}>
                       Login
                     </LoadingButton>
-                  </Box>
-
+              </Box>
 
                 <Stack sx={{ mt: '1rem', textAlign: 'center' }}>
                   <Typography sx={{ fontSize: '0.9rem', mb: '1rem' }}>
-                  <Button onClick={handleClickOpen}>
-                  new user? Register 
-                  </Button>
+                  <Button onClick={handleClickOpen}> new user? Register </Button>
                   </Typography>
                 </Stack>
-          </FormProvider>
+        </FormProvider>
 
-
-      <BootstrapDialog
-     fullScreen={fullScreen}
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-      <BootstrapDialogTitle onClose={handleClose} id={''}>
-     Register
-    </BootstrapDialogTitle>
+    <BootstrapDialog fullScreen={fullScreen} onClose={handleClose} aria-labelledby="customized-dialog-title"open={open}>
+      <BootstrapDialogTitle onClose={handleClose} id={''}>Register</BootstrapDialogTitle>
      <Register></Register>
-      </BootstrapDialog>
+  </BootstrapDialog>
       </>
       
 

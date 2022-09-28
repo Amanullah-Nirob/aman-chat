@@ -1,20 +1,19 @@
 
 import { Box,styled ,Grid} from "@mui/material";
 import Image from "next/image";
-import { useSelector } from "react-redux";
 import loginLeft from "../../../public/static/images/login_left.png";
 import logo from "../../../public/static/images/logo.png";
-import { selectTheme } from "../../app/theme/ThemeSlice";
+import { selectTheme } from "../../app/slices/theme/ThemeSlice";
 import SingIn from "../../components/authentication/SingIn";
 import SwitchToggle from "../../components/authentication/SwitchToggle";
 import PageContainer from "../../components/layouts/PageContainer";
-
+import { useAppSelector } from "../../app/hooks";
 
 const Login = () => {
 	const MaterialUIBox = styled(Box)(({ theme }) => ({
         backgroundColor:theme.palette.mode=='dark'? '#141414':'#eeeeee',
     }));
-	const theme=useSelector(selectTheme)
+	const theme=useAppSelector(selectTheme)
 
 	return (
 	<PageContainer title="Login">
