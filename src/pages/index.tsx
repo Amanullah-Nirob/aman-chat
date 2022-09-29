@@ -7,17 +7,10 @@ import { selectCurrentUser } from '../app/slices/auth/authSlice'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 
+
 const Home: NextPage = () => {
 const router=useRouter()
 const user=useAppSelector(selectCurrentUser)
-
-useEffect(() => {
-  if(!user.token){
-      router.push('/login')
-      return
-    }
-    
-}, [])
 
 
   return (
