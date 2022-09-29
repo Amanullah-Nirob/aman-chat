@@ -48,19 +48,21 @@ const Register: FC = () => {
           message: "Your login session will expire in 15 days",
           type: "success",
           duration: 5000,
-          position: "top-center",
+          positionVert: "top",
+          positionHor: "center",
         })
       );
       dispatch(setLoggedInUser(user))
      }
-   } catch (error:any) {
+   } catch (error:any) { 
       dispatch(  
         displayToast({
           title: "Registration Failed",
           message: error?.data.message? error?.data.message : 'Registration Failed',
           type: "error",
           duration: 4000,
-          position: "top-center",
+          positionVert: "top",
+          positionHor: "center",
       }))
        
      }

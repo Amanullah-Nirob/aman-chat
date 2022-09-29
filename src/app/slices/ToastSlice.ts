@@ -6,12 +6,13 @@ interface ToastState {
     isOpen: boolean,
     title: string,
     message: string,
-    type: string,
+    type: 'success' | 'info' | 'warning' | 'error',
     duration: number,
-    position: string,
+    positionVert: 'top' | 'bottom',
+    positionHor: 'left' | 'center' | 'right',
   }
 }
-
+ 
 // App Toast State
 const ToastSlice = createSlice({
   name: "toast",
@@ -22,7 +23,8 @@ const ToastSlice = createSlice({
       message: "Default toast message",
       type: "success",
       duration: 5000,
-      position: "bottom-center",
+      positionVert: "top",
+      positionHor: "center",
     },
   } as ToastState,
   reducers: {

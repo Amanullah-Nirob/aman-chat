@@ -1,23 +1,28 @@
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { Alert, AlertTitle,Snackbar} from "@mui/material";
 import { hideToast, selectToastState } from "../../app/slices/ToastSlice";
+import { useAppSelector,useAppDispatch } from "../../app/hooks";
+import React, { useEffect } from "react";
+
 
 const AppToast = () => {
-  const { toastData } = useSelector(selectToastState);
-  const dispatch = useDispatch(); 
+  const { toastData } = useAppSelector(selectToastState);
+  const dispatch = useAppDispatch(); 
 
-  const handleToastClose = (event: any, reason: string) => {
+  const handleToastClose = (event:React.SyntheticEvent | Event, reason: string) => {
     if (reason === "clickaway") return;
     dispatch(hideToast());
   };
 
-  const { isOpen, title, message, type, duration, position } = toastData;
-  const positions = position.split("-");
+
+  const { isOpen, title, message, type, duration, positionVert,positionHor } = toastData;
+
+  
+
   return (
     <Snackbar
       anchorOrigin={{
-        vertical: positions[0],
-        horizontal: positions[1],
+        vertical: positionVert,
+        horizontal:positionHor,
       }}
       style={{ maxWidth: 340, margin: "10px auto" }}
       open={isOpen}

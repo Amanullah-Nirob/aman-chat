@@ -1,21 +1,6 @@
-import { useRouter } from 'next/router';
-import React, {  useEffect } from 'react';
-import { useAppSelector } from '../../app/hooks';
-import { selectCurrentUser } from '../../app/slices/auth/authSlice';
-
+import React from 'react';
 
 const ChatHome = () => {
- const user=useAppSelector(selectCurrentUser)
-
- const router=useRouter()
- useEffect(() => {
-    if(!user.token){
-        router.push('/login')
-        return
-      }
-      
-  }, [])
- 
     return (
         <div>
             bangladesh

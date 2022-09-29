@@ -94,7 +94,8 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
               message: "Your login session will expire in 15 days",
               type: "success",
               duration: 5000,
-              position: "top-center",
+              positionVert: "top",
+              positionHor: "center",
             })
           );
           dispatch(setLoggedInUser(user))
@@ -106,7 +107,8 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
           message: error?.data.message? error?.data.message : 'login Failed',
           type: "error",
           duration: 4000,
-          position: "top-center",
+          positionVert: "top",
+          positionHor: "center",
       }))
 
     }
