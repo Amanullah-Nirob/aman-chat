@@ -1,6 +1,6 @@
 // external imports
 import React,{FC,useState} from 'react';
-import { Box, Typography,Stack,Dialog,Button,styled,DialogTitle,IconButton,} from '@mui/material';
+import { Box, Typography,Stack,Dialog,Button,styled,DialogTitle,IconButton, InputAdornment,} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { TypeOf } from 'zod';
@@ -17,14 +17,16 @@ import {useLoginMutation} from '../../app/apisAll/userApi'
 import {useAppDispatch} from '../../app/hooks'
 import { displayToast } from '../../app/slices/ToastSlice';
 import { setLoggedInUser } from '../../app/slices/auth/authSlice';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 // 👇 Infer the Schema to get the TS Type
 type ILogin = TypeOf<typeof loginSchema>;
 
   
 const SingIn:FC= () => {
-const dispatch=useAppDispatch()
 
+
+const dispatch=useAppDispatch()
 //  register modal 
 const theme = useTheme();
 const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -102,28 +104,49 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
          }
     } catch (error:any) {
       dispatch(  
-        displayToast({
-          title: "login Failed",
-          message: error?.data.message? error?.data.message : 'login Failed',
-          type: "error",
-          duration: 4000,
-          positionVert: "top",
-          positionHor: "center",
+        displayToast({ title: "login Failed",  message: error?.data.message? error?.data.message : 'login Failed',type: "error", duration: 4000, positionVert: "top", 
+        positionHor: "center",
       }))
-
     }
   };
 
+  const [values, setValues] = useState({
+    showPassword: false,
+  });
 
+  const handleClickShowPassword = () => {
+    setValues({
+      showPassword: !values.showPassword,
+    });
+  };
+ console.log(values);
+ 
 
-    return (
+    return ( 
       <>
         <FormProvider {...methods}>
               <Box display='flex' flexDirection='column' component='form' noValidate autoComplete='off' sx={{ marginTop: '40px' }}
                    onSubmit={methods.handleSubmit(onSubmitHandler)}
                >
                     <AuthFormInputs label='Enter your email' type='email' name='email' focused required />
-                    <AuthFormInputs  type='password' label='Password' name='password' required focused />
+                    <AuthFormInputs  type={values.showPassword ? 'text' : 'password'}  
+                      InputProps = {
+                        {
+                          endAdornment:(
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={handleClickShowPassword}
+                                edge="end"
+                              >
+                                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+                              </IconButton>
+                            </InputAdornment>
+                         )
+                        }
+                      }
+
+                    label='Password' name='password' required focused />
 
                     <LoadingButton loading={isLoading?true:false} type='submit' variant='contained'
                       sx={{ py: '0.8rem',mt: 2, width: '80%',marginInline: 'auto'}}>
