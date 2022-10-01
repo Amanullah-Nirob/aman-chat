@@ -37,7 +37,13 @@ export const userApi=createApi({
               body: JSON.stringify({email,password}),
             }),
             invalidatesTags: ["User"],
-          }),
+        }),
+
+        searchUser: builder.query<[], string>({
+            query: (query) => `?search=${query}`,
+        }),
+
+        
 
     }),
  
@@ -47,5 +53,6 @@ export const userApi=createApi({
 export const {
     useRegisterUserMutation,
     useLoginMutation,
+    useSearchUserQuery
 } = userApi;
   

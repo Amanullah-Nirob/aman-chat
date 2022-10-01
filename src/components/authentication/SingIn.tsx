@@ -72,7 +72,7 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
     </DialogTitle>
   );
 };
- // > model end
+ // >>>>>> model end
 
 
   // Default Values
@@ -83,7 +83,7 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
     defaultValues,
   });
 
-
+  // registration  
   const [login,{ isLoading, isError, error }] = useLoginMutation()
   // Submit Handler
   const onSubmitHandler: SubmitHandler<ILogin> = async ({email,password}: ILogin) => {
@@ -91,35 +91,24 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
         const user = await login({email,password}).unwrap();
         if(user?._id){
           dispatch(
-            displayToast({
-              title: "Registration Successful",
-              message: "Your login session will expire in 15 days",
-              type: "success",
-              duration: 5000,
-              positionVert: "top",
+            displayToast({ title: "Registration Successful", message: "Your login session will expire in 15 days",type: "success", duration: 5000, positionVert: "top",
               positionHor: "center",
-            })
-          );
+            }));
           dispatch(setLoggedInUser(user))
          }
     } catch (error:any) {
       dispatch(  
-        displayToast({ title: "login Failed",  message: error?.data.message? error?.data.message : 'login Failed',type: "error", duration: 4000, positionVert: "top", 
+        displayToast({ title: "login Failed",  message: error?.data.message? error?.data.message : 'login Failed',type: "error", duration: 4000,
+        positionVert: "top", 
         positionHor: "center",
       }))
     }
   };
 
-  const [values, setValues] = useState({
-    showPassword: false,
-  });
+  // password show
+  const [values, setValues] = useState({ showPassword: false});
+  const handleClickShowPassword = () => setValues({ showPassword: !values.showPassword});
 
-  const handleClickShowPassword = () => {
-    setValues({
-      showPassword: !values.showPassword,
-    });
-  };
- console.log(values);
  
 
     return ( 
@@ -134,23 +123,18 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
                         {
                           endAdornment:(
                             <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                edge="end"
-                              >
+                              <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} edge="end" >
                                 {values.showPassword ? <VisibilityOff /> : <Visibility />}
                               </IconButton>
                             </InputAdornment>
                          )
                         }
                       }
-
-                    label='Password' name='password' required focused />
+                      label='Password' name='password' required focused
+                      />
 
                     <LoadingButton loading={isLoading?true:false} type='submit' variant='contained'
-                      sx={{ py: '0.8rem',mt: 2, width: '80%',marginInline: 'auto'}}>
-                      Login
+                      sx={{ py: '0.8rem',mt: 2, width: '80%',marginInline: 'auto'}}> Login
                     </LoadingButton>
               </Box>
 
@@ -162,7 +146,8 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
         </FormProvider>
 
     <BootstrapDialog fullScreen={fullScreen} onClose={handleClose} aria-labelledby="customized-dialog-title"open={open}>
-      <BootstrapDialogTitle onClose={handleClose} id={''}>Register</BootstrapDialogTitle>
+    <BootstrapDialogTitle onClose={handleClose} id={''}>Aman Chat</BootstrapDialogTitle>
+    {/* reguster form  */}
      <Register></Register>
   </BootstrapDialog>
       </>

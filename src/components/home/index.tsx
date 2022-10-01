@@ -1,12 +1,14 @@
 import React from 'react';
 import withAuth from '../../hooks/withAuth';
+import Header from '../elements/Header';
+
 
 
 const ChatHome = () => {
     return (
-        <div>
-            
-        </div>
+        <>
+            <Header></Header>
+        </>
     );
 };
 

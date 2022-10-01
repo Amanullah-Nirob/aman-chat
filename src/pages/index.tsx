@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import SingIn from '../components/authentication/SingIn'
-import ChatHome from '../components/home/ChatHome'
+import ChatHome from '../components/home'
 import PageContainer from '../components/layouts/PageContainer'
 import { useAppSelector } from '../app/hooks'
 import { selectCurrentUser } from '../app/slices/auth/authSlice'
