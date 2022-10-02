@@ -10,7 +10,8 @@ import toastReducer from './slices/ToastSlice'
 import { userApi } from "./apisAll/userApi";
 import AppSliceReducer from './slices/AppSlice'
 import authSliceReducer from './slices/auth/authSlice'
-
+import CustomDialogReducer from './slices/CustomDialogSlice'
+import LoadingReducer from './slices/LoadingSlice'
 const persistConfig = {
     key: "root",
     version: 1,
@@ -23,7 +24,9 @@ const rootReducer = combineReducers({
   auth:authSliceReducer,
   AppData: AppSliceReducer,
   theme:themReducer,
-  ToastData:toastReducer
+  ToastData:toastReducer,
+  CustomDialogData:CustomDialogReducer,
+  LoadingData:LoadingReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -32,9 +35,7 @@ export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
+        serializableCheck: false,
       }) 
       .concat(userApi.middleware)
 

@@ -10,7 +10,8 @@ import {selectCurrentUser} from '../../app/slices/auth/authSlice'
 import UserListItem from './UserListItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloseIcon from '@mui/icons-material/Close';
-
+import {Avatar,IconButton} from '@mui/material';
+import ProfileSettings from '../menus/ProfileSettings';
 
 
 
@@ -31,11 +32,7 @@ function useDebounce(value:string, delay:number) {
 }
 
  
-
-
-
-
-const Header = () => {
+const Header = ({setDialogBody}:any) => {
  const theme=useAppSelector(selectTheme)
  const loggedinUser=useAppSelector(selectCurrentUser)
  const inputEl = useRef(null);
@@ -44,7 +41,7 @@ const Header = () => {
  const [searchResult, setSearchResult] = useState<any | null>(null);
  const [loading, setLoading] = useState(false);
  const debouncedSearchTerm = useDebounce(keyword, 300);
-
+ const [profileSettingsMenuAnchor, setProfileSettingsMenuAnchor] = useState<any | null>(null);
 
 
  useEffect(() => {
@@ -88,7 +85,6 @@ const Header = () => {
   let productItemsView,
   clearTextView,
   loadingView
-
   if (!loading) {
     if (searchResult && searchResult.length > 0) {
         productItemsView = searchResult.map((user:any) => (
@@ -155,10 +151,17 @@ const Header = () => {
       </div>
 
       <div className='right-area'>
-
-        
+      <div className="profile-area">
+      <IconButton sx={{ color: "#999999",marginRight:'15px'}} onClick={(e) => setProfileSettingsMenuAnchor(e.target)}>
+            <Avatar alt="LoggedInUser" src={loggedinUser?.profilePic}  />
+     </IconButton>
       </div>
-
+      </div>
+     <ProfileSettings
+         anchor={profileSettingsMenuAnchor}
+         setAnchor={setProfileSettingsMenuAnchor}
+         setDialogBody={setDialogBody}
+     ></ProfileSettings>
     </header>
     );
 };

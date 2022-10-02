@@ -98,7 +98,7 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
          }
     } catch (error:any) {
       dispatch(  
-        displayToast({ title: "login Failed",  message: error?.data.message? error?.data.message : 'login Failed',type: "error", duration: 4000,
+        displayToast({ title: "login Failed",  message: error?.data?.message? error?.data?.message : 'login Failed',type: "error", duration: 4000,
         positionVert: "top", 
         positionHor: "center",
       }))

@@ -10,7 +10,7 @@ export const userApi=createApi({
         baseUrl:`${process.env.API_URL}/api/user`,
         prepareHeaders:(headers,{getState})=>{
         // By default, if we have a token in the store, let's use that for authenticated requests
-        const token = (getState() as RootState).auth?.loggedInUser.token;
+        const token = (getState() as RootState).auth?.loggedInUser?.token;
 
         if (token) { 
           headers.set("Authorization", `Bearer ${token}`);
@@ -29,7 +29,7 @@ export const userApi=createApi({
             }),
             invalidatesTags: ["User"],
         }),
-
+ 
         login: builder.mutation<loginResponse, LoginRequest>({
             query: ({email,password}) => ({
               url: "/login",

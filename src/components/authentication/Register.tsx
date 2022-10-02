@@ -6,6 +6,7 @@ import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { object, string, TypeOf } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 // internal imports
 import AuthFormInputs from './AuthFormInputs';
@@ -14,7 +15,7 @@ import { setLoggedInUser } from '../../app/slices/auth/authSlice';
 import { useAppDispatch } from '../../app/hooks';
 import { displayToast } from '../../app/slices/ToastSlice';
 import {signupSchema} from './authValidSchema'
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+
 
 // Infer the Schema to get TypeScript Type
 type ISignUp = TypeOf<typeof signupSchema>;
@@ -70,6 +71,7 @@ const Register: FC = () => {
                     <AuthFormInputs label='Name' type='text' name='name' focused required />
                     <AuthFormInputs label='Enter your email' type='email' name='email' focused required />
 
+
                     <AuthFormInputs type={values.showPassword ? 'text' : 'password'} 
                       InputProps = {{endAdornment:(
                         <InputAdornment position="end">
@@ -77,7 +79,7 @@ const Register: FC = () => {
                                 {values.showPassword ? <VisibilityOff /> : <Visibility />}
                               </IconButton>
                           </InputAdornment>
-                         )}} label='Password' name='password' required focused />
+                      )}} label='Password' name='password' required focused />
 
                     <AuthFormInputs type={confirmPassword.showConfirmPassword ? 'text' : 'password'} 
                       InputProps = {{
@@ -88,6 +90,7 @@ const Register: FC = () => {
                               </IconButton>
                             </InputAdornment>
                         )}} label='Confirm Password' name='passwordConfirm' required focused />
+
 
                     <LoadingButton loading={isLoading?true:false} type='submit' variant='contained'
                       sx={{py: '0.8rem', mt: 2,width: '80%', marginInline: 'auto', }}>

@@ -15,7 +15,6 @@ export const signupSchema = object({
     message: 'Passwords do not match',
 });
 
-
 //  Login Schema with Zod
 export const loginSchema = object({
     email: string().min(1, 'Email is required').email('Email is invalid'),
@@ -24,3 +23,21 @@ export const loginSchema = object({
       .min(3, 'Password must be more than 3 characters')
       .max(32, 'Password must be less than 32 characters'),
 });
+
+
+// update password Schema with Zod
+export const updatePasswordSchema = object({
+  curentpassword: string()
+  .min(1, 'Password is required')
+  .min(3, 'Password must be more than 3 characters')
+  .max(32, 'Password must be less than 32 characters'),
+  password: string()
+    .min(1, 'Password is required')
+    .min(3, 'Password must be more than 3 characters')
+    .max(32, 'Password must be less than 32 characters'),
+  passwordConfirm: string().min(1, 'Please confirm your password'),
+}).refine((data) => data.password === data.passwordConfirm,{
+  path: ['passwordConfirm'],
+  message: 'Passwords do not match',
+});
+

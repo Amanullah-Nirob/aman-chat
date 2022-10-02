@@ -10,7 +10,7 @@ function withAuth(Component: NextComponentType) {
     const user:any=useAppSelector(selectCurrentUser)
  
     // If user is not logged in, return login component
-    if (!user.token) {
+    if (!user?.token) {
       return <Login />;
     }
     
