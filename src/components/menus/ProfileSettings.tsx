@@ -8,6 +8,9 @@ import { displayDialog,hideDialog,setShowDialogActions} from '../../app/slices/C
 import { setLoggedInUser } from '../../app/slices/auth/authSlice';
 import Router from 'next/router';
 import ChangePassword from '../dialogs/ChangePassword';
+import EditProfile from '../dialogs/EditProfile';
+
+
 
 const ProfileSettings = ({anchor,setAnchor,setDialogBody}:any) => {
   const loggedinUser=useAppSelector(selectCurrentUser)
@@ -35,26 +38,27 @@ const ProfileSettings = ({anchor,setAnchor,setDialogBody}:any) => {
     );
   }
   // logout area end
-
-
-// update password
-const updatePassword=()=>{
-  console.log(`update password comming soon`);
-  dispatch(hideDialog());
-}
+  // update password 
    const openEditPasswordDialog=()=>{
-    dispatch(setShowDialogActions(true));
+    dispatch(setShowDialogActions(false));
     setDialogBody(<ChangePassword></ChangePassword>);
     dispatch(
       displayDialog({
-        title: "Change Password",
-        nolabel: "CANCEL",
-        yeslabel: "SAVE",
-        loadingYeslabel: "Saving...",
-        action: updatePassword,
-      })
+        title: "Change Password"})
     );
    }
+
+  // profile update
+  const openEditProfileDialog=()=>{
+    dispatch(setShowDialogActions(false));
+    setDialogBody(<EditProfile setDialogBody={setDialogBody} />);
+    dispatch(
+      displayDialog({
+        title: `Edit Profile`,
+      })
+    );
+  }
+
 
     return (
         <Menu 
@@ -63,7 +67,7 @@ const updatePassword=()=>{
           transformOrigin={{ vertical: "top", horizontal: "right" }}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-        <MenuItem>
+        <MenuItem onClick={openEditProfileDialog}>
         <ListItemIcon> <Avatar src={loggedinUser?.profilePic}></Avatar> </ListItemIcon>
          Edit Profile
         </MenuItem>

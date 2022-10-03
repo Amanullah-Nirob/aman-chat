@@ -1,22 +1,25 @@
 // external imports
 import React,{useState} from 'react';
-import { InputAdornment, IconButton,Box } from '@mui/material';
+import { InputAdornment, IconButton,Box,Button } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TypeOf } from 'zod';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+
 // internal imports
 import AuthFormInputs from '../authentication/AuthFormInputs';
 import { updatePasswordSchema } from '../authentication/authValidSchema';
-
+import { useAppDispatch } from '../../app/hooks';
+import {hideDialog} from '../../app/slices/CustomDialogSlice'
 
 // Infer the Schema to get TypeScript Type
 type ISignUp = TypeOf<typeof updatePasswordSchema>;
 
 
 const ChangePassword = () => {
+  const dispatch=useAppDispatch()
 
   // Default Values
   const defaultValues: ISignUp = { curentpassword:'', password: '',passwordConfirm: ''};
@@ -69,11 +72,15 @@ const ChangePassword = () => {
                               </IconButton>
                             </InputAdornment>
                         )}} label='New Confirm Password' name='passwordConfirm' required focused />
-                    <LoadingButton loading={false} type='submit' variant='contained'
+
+                 <Box  sx={{ '& > *': { m: 1,},textAlign:'end'}}>
+                <Button onClick={()=>dispatch(hideDialog())}   sx={{py: '0.8rem', mt: 2,width: '20%', marginInline: 'auto', }}>cencel</Button>
+
+                <LoadingButton loading={false} type='submit'
                       sx={{py: '0.8rem', mt: 2,width: '20%', marginInline: 'auto', }}>
                      Save
                     </LoadingButton>
-
+                 </Box>
          </Box>
         </FormProvider>
     );

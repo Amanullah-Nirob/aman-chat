@@ -12,6 +12,8 @@ import AppSliceReducer from './slices/AppSlice'
 import authSliceReducer from './slices/auth/authSlice'
 import CustomDialogReducer from './slices/CustomDialogSlice'
 import LoadingReducer from './slices/LoadingSlice'
+
+
 const persistConfig = {
     key: "root",
     version: 1,
@@ -26,7 +28,8 @@ const rootReducer = combineReducers({
   theme:themReducer,
   ToastData:toastReducer,
   CustomDialogData:CustomDialogReducer,
-  LoadingData:LoadingReducer
+  LoadingData:LoadingReducer,
+
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
