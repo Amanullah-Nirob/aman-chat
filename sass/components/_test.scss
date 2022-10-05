@@ -23,8 +23,23 @@
     }
     .profile-content {
         margin-left: 15px;
+        display: flex;
+        justify-content: space-between;
+        width: 55%;
         h2,h4{
             margin: 0;
         }
+    
     }
+
+   .editNameFrom{
+    margin-left: 19px;
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+   }
+
+
 }

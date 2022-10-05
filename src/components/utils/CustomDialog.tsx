@@ -56,7 +56,7 @@ const CustomDialog = ({dialogData,showDialogActions,showDialogClose,closeDialog,
        </DialogTitle>
 
        {/* dialog body */}
-        <DialogContent>
+        <DialogContent sx={{padding:'0'}}>
         {children || <></>}
         </DialogContent>
 

@@ -28,3 +28,14 @@ export function useHover(styleOnHover: CSSProperties, styleOnNotHover: CSSProper
   const onMouseLeave = () => setStyle(styleOnNotHover)
   return {style, onMouseEnter, onMouseLeave}
 }
+
+
+export const isImageFile = memoize((filename:any) =>
+  /(\.png|\.jpg|\.jpeg|\.svg|\.webp)$/.test(filename)
+);
+
+// In bytes
+export const ONE_KB = 1024;
+export const ONE_MB = 1048576;
+export const TWO_MB = 2097152;
+export const FIVE_MB = 5242880;

@@ -26,7 +26,7 @@ const ProfileSettings = ({anchor,setAnchor,setDialogBody}:any) => {
   }
   const openLogoutConfirmDialog=()=>{
     dispatch(setShowDialogActions(true));
-    setDialogBody(<>Are you sure you want to log out?</>);
+    setDialogBody(<div style={{padding:'15px 27px'}}>Are you sure you want to log out?</div>);
     dispatch(
       displayDialog({
         title: "Logout Confirmation",

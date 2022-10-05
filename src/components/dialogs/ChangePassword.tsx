@@ -13,6 +13,10 @@ import AuthFormInputs from '../authentication/AuthFormInputs';
 import { updatePasswordSchema } from '../authentication/authValidSchema';
 import { useAppDispatch } from '../../app/hooks';
 import {hideDialog} from '../../app/slices/CustomDialogSlice'
+import { displayToast } from '../../app/slices/ToastSlice';
+import {usePasswordUpdateMutation} from '../../app/apisAll/userApi'
+import { setLoggedInUser } from '../../app/slices/auth/authSlice';
+import Router  from 'next/router';
 
 // Infer the Schema to get TypeScript Type
 type ISignUp = TypeOf<typeof updatePasswordSchema>;
@@ -20,6 +24,31 @@ type ISignUp = TypeOf<typeof updatePasswordSchema>;
 
 const ChangePassword = () => {
   const dispatch=useAppDispatch()
+  const [passwordUpdate,{isLoading,isError,error}]=usePasswordUpdateMutation()
+
+
+  const displayWarning = (message = "Warning", duration = 3000) => {
+    dispatch(
+      displayToast({
+        message,
+        type: "warning",
+        duration,
+        positionVert: "top",
+        positionHor:'center'
+      })
+    );
+  };
+  const displaySuccess = (message:string) => {
+    dispatch(
+      displayToast({
+        message,
+        type: "success",
+        duration: 4000,
+        positionVert: "top",
+        positionHor:'center'
+      })
+    );
+  };
 
   // Default Values
   const defaultValues: ISignUp = { curentpassword:'', password: '',passwordConfirm: ''};
@@ -32,7 +61,25 @@ const ChangePassword = () => {
 
   
   const onSubmitHandler: SubmitHandler<ISignUp> = async ({curentpassword,password,passwordConfirm}:ISignUp) =>{
-      console.log({curentpassword,password,passwordConfirm});
+    if (curentpassword === password) {
+      return displayWarning("New Password Must Differ from Current Password");
+    }
+    try {
+     await passwordUpdate({currentPassword:curentpassword,newPassword:password}).unwrap()
+        displaySuccess( "Password Updated Successfully. Please Login Again with Updated Password");
+        dispatch(setLoggedInUser(null))
+        dispatch(hideDialog());
+        Router.push('/')
+
+    } catch (error:any) {
+       dispatch(  
+        displayToast({ title: "Password Update Failed",  message: error?.data?.message? error?.data?.message : 'Password Update Failed',type: "error", duration: 4000,
+        positionVert: "top", 
+        positionHor: "center",
+      }))
+      console.log(error);
+      
+    }
       
   }
 
@@ -43,7 +90,7 @@ const ChangePassword = () => {
 
     return (
         <FormProvider {...methods}>
-         <Box display='flex' flexDirection='column' component='form' noValidate autoComplete='off' onSubmit={methods.handleSubmit(onSubmitHandler)} sx={{marginTop:'18px'}}>
+         <Box display='flex' flexDirection='column' component='form' noValidate autoComplete='off' onSubmit={methods.handleSubmit(onSubmitHandler)} sx={{marginTop:'18px',padding:'15px 27px'}}>
 
                  <AuthFormInputs type={values.showPassword ? 'text' : 'password'} 
                       InputProps = {{endAdornment:(
@@ -76,10 +123,10 @@ const ChangePassword = () => {
                  <Box  sx={{ '& > *': { m: 1,},textAlign:'end'}}>
                 <Button onClick={()=>dispatch(hideDialog())}   sx={{py: '0.8rem', mt: 2,width: '20%', marginInline: 'auto', }}>cencel</Button>
 
-                <LoadingButton loading={false} type='submit'
+                <LoadingButton loading={isLoading?true:false} type='submit'
                       sx={{py: '0.8rem', mt: 2,width: '20%', marginInline: 'auto', }}>
                      Save
-                    </LoadingButton>
+                 </LoadingButton>
                  </Box>
          </Box>
         </FormProvider>

@@ -15,7 +15,6 @@ export const userApi=createApi({
         if (token) { 
           headers.set("Authorization", `Bearer ${token}`);
         }
-         headers.set('Content-Type', 'application/json')
          return headers;
     }
     }),
@@ -25,6 +24,7 @@ export const userApi=createApi({
             query:({name,email,password})=>({
                 url: "/register",
                 method: "POST",
+                headers:{ "Content-Type":"application/json"},
                 body: JSON.stringify({name,email,password}),
             }),
             invalidatesTags: ["User"],
@@ -34,14 +34,40 @@ export const userApi=createApi({
             query: ({email,password}) => ({
               url: "/login",
               method: "POST",
+              headers:{"Content-Type":"application/json"},
               body: JSON.stringify({email,password}),
             }),
             invalidatesTags: ["User"],
         }),
 
-        searchUser: builder.query<[], string>({
-            query: (query) => `?search=${query}`,
-        }),
+         profilePhotoUpdate: builder.mutation<{}, FormData>({
+            query: (data) => ({
+              url: "/update/profile-pic",
+              method: "put",
+              body: data,
+            }),
+            invalidatesTags: ["User"],
+         }),
+         profileNameUpdate: builder.mutation<{}, {}>({
+            query: (newName) => ({
+              url: "/update/name",
+              method: "put",
+              headers:{"Content-Type":"application/json"},
+              body: JSON.stringify(newName),
+            }),
+            invalidatesTags: ["User"],
+         }),
+
+         passwordUpdate: builder.mutation<{}, {}>({
+            query: (updatePassword) => ({
+              url: "/update/password",
+              method: "put",
+              headers:{"Content-Type":"application/json"},
+              body: JSON.stringify(updatePassword),
+            }),
+            invalidatesTags: ["User"],
+         }),
+
 
         
 
@@ -53,6 +79,8 @@ export const userApi=createApi({
 export const {
     useRegisterUserMutation,
     useLoginMutation,
-    useSearchUserQuery
+    useProfilePhotoUpdateMutation,
+    useProfileNameUpdateMutation,
+    usePasswordUpdateMutation,
 } = userApi;
   

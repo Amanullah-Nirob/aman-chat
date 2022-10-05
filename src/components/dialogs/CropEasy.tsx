@@ -1,24 +1,69 @@
 // external impprts
 import React,{useState} from 'react';
-import { Cancel } from '@mui/icons-material';
-import CropIcon from '@mui/icons-material/Crop';
 import { Box, Button, DialogActions, DialogContent, Slider,Typography} from '@mui/material';
 import Cropper from 'react-easy-crop'
-import { hideDialog } from '../../app/slices/CustomDialogSlice';
-import { useAppDispatch } from '../../app/hooks';
+import LoadingButton from '@mui/lab/LoadingButton';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import SaveIcon from '@mui/icons-material/Save';
+
 // enternal imports
 import getCroppedImg from '../utils/cropImage'
+import { hideDialog, setShowDialogActions,displayDialog } from '../../app/slices/CustomDialogSlice';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { isImageFile,TWO_MB } from '../utils/appUtils';
+import { displayToast } from '../../app/slices/ToastSlice';
+import { useProfilePhotoUpdateMutation } from '../../app/apisAll/userApi';
+import { selectCurrentUser } from '../../app/slices/auth/authSlice';
+import { setLoggedInUser } from '../../app/slices/auth/authSlice';
+import EditProfile from './EditProfile';
 
-
-
-const CropEasy = ({photoURL}:any) => {
+const CropEasy = ({photoURL,setDialogBody}:any) => {
 const dispatch=useAppDispatch()
+const loggedInUser=useAppSelector(selectCurrentUser)
+
+const [profilePhotoUpdate,{isLoading,error,isError}]=useProfilePhotoUpdateMutation()
+
+
+const displayWarning = (message = "Warning", duration = 3000) => {
+  dispatch(
+    displayToast({
+      message,
+      type: "warning",
+      duration,
+      position: "top-center",
+    })
+  );
+};
+
+const displaySuccess = (message:string) => {
+  dispatch(
+    displayToast({
+      message,
+      type: "success",
+      duration: 3000,
+      positionVert: "top",
+      positionHor:'center'
+    })
+  );
+};
+
+
+const handleBack=()=>{
+  dispatch(setShowDialogActions(false));
+  setDialogBody(<EditProfile setDialogBody={setDialogBody} />);
+  dispatch(
+    displayDialog({
+      title: `Edit Profile`,
+    })
+  );
+}
+
 
     const [crop, setCrop] = useState<any | null>({ x: 0, y: 0 });
     const [zoom, setZoom] = useState<any | null>(1);
     const [rotation, setRotation] = useState<any | null>(0);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState<any | null>(null);
-    
+    const [uploading,setUploading]=useState<Boolean | null>(false)
 
     const cropComplete = (croppedArea: any, croppedAreaPixels: any) => {
         setCroppedAreaPixels(croppedAreaPixels);
@@ -31,11 +76,38 @@ const dispatch=useAppDispatch()
             croppedAreaPixels,
             rotation
           );
-          console.log(file);
+          if (!isImageFile(file.name)) {
+            return dispatch(
+              displayToast({  title: "Invalid Image File",  message: "Please Select an Image File (png/jpg/jpeg/svg/webp)",type: "warning", duration: 3000, position: "bottom-center"})
+            );
+          }
+          if (file.size >= TWO_MB) {
+            return displayWarning("Please Select an Image Smaller than 2 MB", 4000);
+          }
+         setUploading(true)
+         const formData = new FormData();
+         formData.append("profilePic", file);
+         formData.append("currentProfilePic", loggedInUser?.profilePic);
+         formData.append("cloudinary_id", loggedInUser?.cloudinary_id);
+
+          const {data}:any=await profilePhotoUpdate(formData)
+          if(data._id){
+            const updateUser={
+              ...data,
+              token: loggedInUser.token,
+              expiryTime: loggedInUser.expiryTime,
+            }
+            dispatch(setLoggedInUser(updateUser));
+            displaySuccess("ProfilePic Updated Successfully");
+            setUploading(false)
+            dispatch(hideDialog())
+          }
         } catch (error) {
           console.log(error);
         }
     };
+
+
 
 
    return (
@@ -96,18 +168,18 @@ const dispatch=useAppDispatch()
         >
           <Button
             variant="outlined"
-            startIcon={<Cancel />}
-            onClick={() => dispatch(hideDialog())}
-          >
-            Cancel
+            startIcon={<ArrowBackIosIcon />}
+            onClick={handleBack}
+            disabled={uploading?true:false} >
+            Back
           </Button>
-          <Button
+
+          <LoadingButton
             variant="contained"
-            startIcon={<CropIcon />}
-            onClick={cropImage}
-          >
-            Crop
-          </Button>
+            loading={uploading?true:false}
+            startIcon={<SaveIcon />}
+            onClick={cropImage}>Save
+          </LoadingButton>
         </Box>
       </DialogActions>
     </>
