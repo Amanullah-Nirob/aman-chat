@@ -12,7 +12,7 @@ const authSlice = createSlice({
       name: "",
       email: "",
       all:null,
-      notifications: null,
+      notifications: [],
       cloudinary_id: "",
       profilePic: "",
       token: "",

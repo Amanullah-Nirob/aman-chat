@@ -126,7 +126,7 @@ const Header = ({setDialogBody}:any) => {
                     ref={inputEl}
                     type="text"
                     value={keyword}
-                    placeholder='Search' style={{backgroundColor:theme==='light'?'#f0f2f5':'#3a3b3c',color:theme==='light'?'#000':'#fff'}}
+                    placeholder='Search' style={{backgroundColor:theme==='light'?'#f0f2f5':'#3b3b3b',color:theme==='light'?'#000':'#fff'}}
                     onChange={(e) => setKeyword(e.target.value)}
                 />
                 {clearTextView}

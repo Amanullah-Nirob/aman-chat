@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
 import { RegisterRequest,AuthResponse,LoginRequest,loginResponse } from "../interface/userinterface";
-import { json } from "stream/consumers";
+
 
 export const userApi=createApi({
     reducerPath: "userApi",

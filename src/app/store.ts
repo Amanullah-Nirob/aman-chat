@@ -13,7 +13,7 @@ import authSliceReducer from './slices/auth/authSlice'
 import CustomDialogReducer from './slices/CustomDialogSlice'
 import LoadingReducer from './slices/LoadingSlice'
 import ChildDialogReducer from './slices/ChildDialogSlice'
-
+import { chatApi } from "./apisAll/chat";
 const persistConfig = {
     key: "root",
     version: 1,
@@ -23,6 +23,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   [userApi.reducerPath]: userApi.reducer,
+  [chatApi.reducerPath]: chatApi.reducer,
   auth:authSliceReducer,
   AppData: AppSliceReducer,
   theme:themReducer,
@@ -41,6 +42,7 @@ export const store = configureStore({
         serializableCheck: false,
       }) 
       .concat(userApi.middleware)
+      .concat(chatApi.middleware)
 
 
 });

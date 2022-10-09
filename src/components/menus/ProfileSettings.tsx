@@ -9,6 +9,7 @@ import { setLoggedInUser } from '../../app/slices/auth/authSlice';
 import Router from 'next/router';
 import ChangePassword from '../dialogs/ChangePassword';
 import EditProfile from '../dialogs/EditProfile';
+import SwitchToggle from '../authentication/SwitchToggle';
 
 
 
@@ -76,6 +77,11 @@ const ProfileSettings = ({anchor,setAnchor,setDialogBody}:any) => {
         <ListItemIcon> <Key /> </ListItemIcon>
          change password
         </MenuItem>
+
+        <MenuItem>
+        <SwitchToggle></SwitchToggle>
+        </MenuItem>
+   
 
         <MenuItem onClick={openLogoutConfirmDialog}>
         <ListItemIcon> <Logout fontSize="small" /></ListItemIcon>
