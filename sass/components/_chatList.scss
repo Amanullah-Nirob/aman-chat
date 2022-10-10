@@ -1,0 +1,80 @@
+.chatListArea-main {
+    min-height: 500px;
+    width: 407px;
+    height: calc(100vh - 68px);
+    overflow: hidden;
+    border-right: 0.1rem solid;
+
+    .chatListHeader {
+        padding: 10px 14px;
+        .headerTitle{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 10px;
+            .titleMain{
+                h2 {
+                    margin: 0;
+                }
+            }
+            .groupChatCreate {
+                border-radius: 29px;
+            }
+        }
+        .headerSearch {
+            margin-top: 5px;
+            margin-bottom: 13px;
+            input {
+                width: 100%;
+                padding: 10px 16px;
+                border-radius: 16px;
+                border: none;
+                outline: none;
+                font-size: 16px;
+            }
+        }
+
+    }
+
+    .chatListAreaMain {
+        height: 86%;
+        padding: 0px 19px;
+    }
+
+    .chatListUserInfo{
+        display: flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 9px;
+        p{
+            margin: 0;
+        }
+        .chatUserContent{
+            width: 100%;
+            margin-left: 15px;
+            .chatNameAndLastMessasgeDate{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .chatListName {
+                    font-size: 16px;
+                    text-transform: capitalize;
+                }
+            }
+            
+            .notificationCountAnd-lastMessageShow{
+              position: relative;
+
+              .chatListNotificationCount{
+                  position:absolute;
+                  top: 14px;
+                  right: 9px;
+              }
+              .chatListLastMessage {
+                display: flex;
+               }
+            }
+        }
+}
+
+}

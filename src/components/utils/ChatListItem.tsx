@@ -1,12 +1,12 @@
 // external imports
 import React, { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
+import {Avatar,ListItemButton,Badge} from '@mui/material';
 import {AudioFile,Description, DoneAll, GifBox, Image, PictureAsPdf,VideoFile,} from "@mui/icons-material";
 // internal imports
 import { useAppSelector } from '../../app/hooks';
 import { selectAppState } from '../../app/slices/AppSlice';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
-import { dateStringOf, isImageFile, msgDateStringOf, msgTimeStringOf, truncateString,useHover } from './appUtils';
+import { dateStringOf, isImageFile, msgDateStringOf, msgTimeStringOf, truncateString } from './appUtils';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 
 const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
@@ -50,23 +50,25 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
           ? "pdf"
           : "otherFile";
       }
-    const hover = useHover({backgroundColor: theme==='light'?'#f2f2f2':'#3a3b3c', userSelect: "none"})
 
     return (
-      <div
+
+      <ListItemButton
         data-chat={_id}
         data-has-notifs={chatNotifCount}
         className={`chatListUserInfo`}
-        style={{backgroundColor:selectedChat?._id === _id?theme==='light'?'#eaf3ff':'rgb(35 45 58)':'transparent'}}
+        selected={selectedChat?._id === _id}
         >
-   
+
         {/* user Photo */}
         <Avatar
             src={chatDisplayPic}
             alt={chatName}
             data-chat={_id}
             data-has-notifs={chatNotifCount}
+            sx={{width:'55px',height:'55px'}}
         />
+      
 
      <div
         data-chat={_id}
@@ -102,22 +104,13 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
       <div className="notificationCountAnd-lastMessageShow">
        {/* notification count show */}
        {lastMessage && chatNotifCount && (
-          <span
-            data-chat={_id}
-            data-has-notifs={chatNotifCount}
-            className='chatListNotificationCount'
-            style={{
-              fontSize: chatNotifCount > 99 ? 12 : 13,
-              padding:
-                chatNotifCount > 99
-                  ? "2px 4px"
-                  : chatNotifCount > 9
-                  ? "3px 6px"
-                  : "1px 8px",
-            }}
-          >
-            {chatNotifCount || ""}
-          </span>
+        <Badge 
+          data-chat={_id} 
+          data-has-notifs={chatNotifCount} 
+          badgeContent={chatNotifCount || ""} 
+          color="error" 
+          className='chatListNotificationCount'
+         ></Badge>
         )}
 
          {/* Last Message content */}
@@ -127,7 +120,7 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
           </span>
         ):(
             (lastMessage || lastMessage === null || isGroupChat) && (
-             <p data-chat={_id} data-has-notifs={chatNotifCount} className="chatListLastMessage"> 
+             <p data-chat={_id} data-has-notifs={chatNotifCount} className="chatListLastMessage" style={{color:theme==='light'?'rgb(129 129 129)':'rgb(167 167 167)'}}> 
 
               {/* last message check ## you or me */}
               <span data-chat={_id} data-has-notifs={chatNotifCount}>
@@ -139,12 +132,7 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
                       {isGroupChat ? (
                         <>You: </>
                       ) : (
-                        <DoneAll
-                          data-chat={_id}
-                          data-has-notifs={chatNotifCount}
-                          className="messageCheck"
-                          style={{ color: "lightblue" }}
-                        />
+                        <small style={{marginRight:'5px',fontSize:'15px'}}>You: </small>
                       )}
                     </>
                   ) : (
@@ -269,10 +257,8 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
         )
       }
       </div>
-
-        </div>
-
-    </div>
+      </div>
+    </ListItemButton>
     );
 };
 

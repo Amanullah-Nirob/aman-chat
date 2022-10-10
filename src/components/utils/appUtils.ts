@@ -22,7 +22,7 @@ export const truncateString = memoize((str:string, limit:number, index:number) =
 });
 
 
-export function useHover(styleOnHover: CSSProperties, styleOnNotHover: CSSProperties = {}) {
+export function useHover(styleOnHover: CSSProperties,styleOnNotHover: CSSProperties = {},) {
   const [style, setStyle] = React.useState(styleOnNotHover);
   const onMouseEnter = () => setStyle(styleOnHover)
   const onMouseLeave = () => setStyle(styleOnNotHover)
@@ -84,3 +84,13 @@ export const msgDateStringOf = (currDate:any) => {
       } ${currDate.getFullYear()}`;
 };
 
+// Convert a normal function to a 'debounced' function
+export const debounce = (func:Function, delay = 500) => {
+  let timer:any;
+  return (...args:any) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+};

@@ -1,24 +1,26 @@
 // external import
 import React, { useEffect, useState } from 'react';
 import GroupIcon from '@mui/icons-material/Group';
-import { Box,Button} from '@mui/material';
+import { Box,Button,List,ListItemButton} from '@mui/material';
 
 // internal imports
 import { useAppSelector,useAppDispatch } from '../../app/hooks';
 import {selectTheme} from '../../app/slices/theme/ThemeSlice'
 import LoadingList from '../utils/LoadingList';
 import { useGetChatQuery } from '../../app/apisAll/chat';
-import { selectAppState } from '../../app/slices/AppSlice';
+import { selectAppState, setDeleteNotifsOfChat, setFetchMsgs, setGroupInfo, setSelectedChat } from '../../app/slices/AppSlice';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
-import { getOneToOneChatReceiver } from '../utils/appUtils';
+import { debounce, getOneToOneChatReceiver, truncateString } from '../utils/appUtils';
 import ChatListItem from '../utils/ChatListItem';
+import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
+import FullSizeImage from '../utils/FullSizeImage';
 
 const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
  const theme=useAppSelector(selectTheme)
  const loggedinUser=useAppSelector(selectCurrentUser)
  const [loading, setLoading] = useState(false);
  const dispatch=useAppDispatch()
- const { selectedChat, refresh,onlineUsers } = useAppSelector(selectAppState);
+ const { selectedChat, refresh,onlineUsers }:any = useAppSelector(selectAppState);
 //  const { data, isError, isLoading, isSuccess, error }=useGetChatQuery('')
  const [filteredChats, setFilteredChats] = useState(chats);
  const notifs = [...loggedinUser?.notifications];
@@ -59,8 +61,7 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
           return chat;
         })
         .filter((chat:any) => chat.lastMessage !== undefined || chat.isGroupChat)
-        console.log(mappedChats);
-        
+
         setChats(mappedChats);
         setFilteredChats(mappedChats);
         setLoading(false)
@@ -72,10 +73,35 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
       }
  }
 
+   // Debouncing filterChats method to limit the no. of fn calls
+   const searchChats = debounce((e:any) => {
+    const chatNameInput = e.target.value?.toLowerCase().trim();
+    if (!chatNameInput) return setFilteredChats(chats);
+    setFilteredChats(
+      chats.filter((chat:any) =>
+        chat?.chatName?.toLowerCase().includes(chatNameInput)
+      )
+    );
+  }, 600);
+
+
+  const displayFullSizeImage = (e:any) => {
+    dispatch(setShowDialogActions(false));
+    setDialogBody(<FullSizeImage event={e} />);
+    dispatch(
+      displayDialog({
+        isFullScreen: true,
+        title: e.target?.alt || "Display Pic",
+      })
+    );
+  };
+
 
  useEffect(()=>{
   fetchChats(onlineUsers)
  },[refresh,onlineUsers])
+
+
 
 
     return (
@@ -93,7 +119,9 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
           </div>
            </div>
            <div className="headerSearch">
-             <input type="text" placeholder='Search Chat' style={{backgroundColor:theme==='light'?'#f0f2f5':'#3b3b3b',color:theme==='light'?'#000':'#eee'}} />
+             <input  type="text" placeholder='Search Chat' style={{backgroundColor:theme==='light'?'#f0f2f5':'#3b3b3b',color:theme==='light'?'#000':'#eee'}}
+              onChange={(e) => searchChats(e)} 
+              />
            </div>
           </Box>
 
@@ -117,7 +145,30 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
           <LoadingList listOf="Chat" dpRadius={"49px"} count={9} />
           :
            filteredChats?.length > 0 ?(  
-            <div>
+            <div
+             onClick={(e:any)=>{
+              const { dataset }:any = e.target;
+              const parentDataset = e.target.parentNode.dataset;
+              const clickedChatId = dataset.chat || parentDataset.chat;
+              const hasNotifs = dataset.hasNotifs || parentDataset.hasNotifs;
+              if (!clickedChatId) return;
+
+              if (e.target.className?.toString().includes("MuiAvatar-img")) {
+                return displayFullSizeImage(e);
+              }
+              const clickedChat = filteredChats.find(
+                (chat:any) => chat._id === clickedChatId
+              );
+              if (clickedChat._id === selectedChat?._id) return;
+              dispatch(setSelectedChat(clickedChat));
+              dispatch(setFetchMsgs(true));
+              if (clickedChat?.isGroupChat) dispatch(setGroupInfo(clickedChat));
+
+              if (hasNotifs) dispatch(setDeleteNotifsOfChat(clickedChatId));
+
+             }}
+            
+            >
               {filteredChats.map((chat:any)=>{
                // notification count
                let chatNotifCount = 0;
@@ -125,20 +176,33 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
                 if (notif.chat._id === chat._id) ++chatNotifCount;
               });
               return(
-               <ChatListItem key={chat._id}
-               chat={chat}
-               chatNotifCount={chatNotifCount || ""}
-               typingChatUser={typingChatUsers?.find(
-                (u:any) => u?.toString()?.split("---")[0] === chat._id
-               )}
-               >
-               </ChatListItem>
-              )
-              })
-              }
+                <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} key={chat._id}>
+                 <List component="nav" aria-label="main mailbox folders">
+                 <ChatListItem
+                    chat={chat}
+                    chatNotifCount={chatNotifCount || ""}
+                    typingChatUser={typingChatUsers?.find(
+                      (u:any) => u?.toString()?.split("---")[0] === chat._id
+                    )}
+                    >
+                    </ChatListItem>
+             
+                  </List>
+                </Box>
+                  )
+              })}
             </div>
            ):(
-             ''
+            <>
+            <span className="noConversation">
+              {chats?.length === 0
+                ? `Hi ${
+                    truncateString(loggedinUser?.name?.split(" ")[0], 12, 9) ||
+                    "There"
+                  } 😎`
+                : "No Chats Found"}
+            </span>
+          </>
            )
           }
            </Box> 

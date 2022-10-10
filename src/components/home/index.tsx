@@ -24,8 +24,9 @@ const [typingChatUsers, setTypingChatUsers] = useState([]);
            chats={chats}
            setChats={setChats}
            setDialogBody={setDialogBody}
-           typingChatUsers={typingChatUsers}
-           ></ChatList>
+           typingChatUsers={typingChatUsers}>
+           </ChatList>
+
 
 
 
