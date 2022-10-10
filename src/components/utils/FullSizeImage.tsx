@@ -1,9 +1,11 @@
-const FILE_STYLES = { width: "90vw", height: "82vh", borderRadius: 10 };
+import Image from "next/image";
+
+const FILE_STYLES = { width: "100vw", height: "82vh", borderRadius: 10 };
 const PLACEHOLDER_IMG = process.env.DEFAULTImage;
 
 const FullSizeImage = ({ event, audioSrc, videoSrc }:any) => {
   return (
-    <div className="d-flex justify-content-center align-items-center h-100">
+    <div>
       {audioSrc ? (
         <audio
           src={audioSrc}
@@ -18,12 +20,15 @@ const FullSizeImage = ({ event, audioSrc, videoSrc }:any) => {
           Your browser does not support video tag.
         </video>
       ) : (
-        <img
-          src={event.target?.src || PLACEHOLDER_IMG}
-          alt={event.target?.alt || "fullSizeImg"}
-          className="img-fluid d-inline-block mx-auto"
-          style={{ ...FILE_STYLES, objectFit: "contain" }}
-        />
+          <div className="fullScreenImage">
+              <div className="customizeImage">
+              <Image
+                src={event.target?.src || PLACEHOLDER_IMG}
+                alt={event.target?.alt || "fullSizeImg"}
+                layout='fill'
+              />
+              </div>
+          </div>
       )}
     </div>
   );

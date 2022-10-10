@@ -115,7 +115,7 @@ const Header = ({setDialogBody}:any) => {
 
 
     return (
-     <header className='header' style={{backgroundColor:theme==='light'?'#fff':'#272727',boxShadow:theme==='light'?'rgb(0 0 0 / 10%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'rgb(0 0 0 / 10%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px'}}>
+     <header className='header' style={{backgroundColor:theme==='light'?'#fff':'transparent',boxShadow:theme==='light'?'rgb(66 66 66 / 6%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'',borderColor:theme==='light'?'transparent':'#303030'}}>
       <div className='left-area'>
         <div className="logo">
           <Image src={logo} layout='fill'></Image>

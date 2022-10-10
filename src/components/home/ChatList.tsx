@@ -12,8 +12,8 @@ import { selectAppState, setDeleteNotifsOfChat, setFetchMsgs, setGroupInfo, setS
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { debounce, getOneToOneChatReceiver, truncateString } from '../utils/appUtils';
 import ChatListItem from '../utils/ChatListItem';
-import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
-import FullSizeImage from '../utils/FullSizeImage';
+
+
 
 const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
  const theme=useAppSelector(selectTheme)
@@ -85,17 +85,6 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
   }, 600);
 
 
-  const displayFullSizeImage = (e:any) => {
-    dispatch(setShowDialogActions(false));
-    setDialogBody(<FullSizeImage event={e} />);
-    dispatch(
-      displayDialog({
-        isFullScreen: true,
-        title: e.target?.alt || "Display Pic",
-      })
-    );
-  };
-
 
  useEffect(()=>{
   fetchChats(onlineUsers)
@@ -153,9 +142,7 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
               const hasNotifs = dataset.hasNotifs || parentDataset.hasNotifs;
               if (!clickedChatId) return;
 
-              if (e.target.className?.toString().includes("MuiAvatar-img")) {
-                return displayFullSizeImage(e);
-              }
+
               const clickedChat = filteredChats.find(
                 (chat:any) => chat._id === clickedChatId
               );
@@ -176,7 +163,7 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
                 if (notif.chat._id === chat._id) ++chatNotifCount;
               });
               return(
-                <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} key={chat._id}>
+                <Box sx={{ width: '100%', bgcolor: 'background.paper' }} key={chat._id}>
                  <List component="nav" aria-label="main mailbox folders">
                  <ChatListItem
                     chat={chat}

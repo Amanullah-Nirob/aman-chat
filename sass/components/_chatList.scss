@@ -1,17 +1,15 @@
 .chatListArea-main {
     min-height: 500px;
-    width: 407px;
     height: calc(100vh - 68px);
     overflow: hidden;
     border-right: 0.1rem solid;
-
     .chatListHeader {
-        padding: 10px 14px;
+        padding: 10px 15px;
         .headerTitle{
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 7px 10px;
+            padding: 7px 4px;
             .titleMain{
                 h2 {
                     margin: 0;
@@ -27,7 +25,7 @@
             input {
                 width: 100%;
                 padding: 10px 16px;
-                border-radius: 16px;
+                border-radius: 2px;
                 border: none;
                 outline: none;
                 font-size: 16px;
@@ -38,7 +36,7 @@
 
     .chatListAreaMain {
         height: 86%;
-        padding: 0px 19px;
+        padding: 0px 6px;
     }
 
     .chatListUserInfo{
@@ -76,5 +74,20 @@
             }
         }
 }
-
 }
+
+// @media (min-width: 768px) {
+//     .chatListArea-main{
+//       width: 41%;
+//     }
+//   }
+//   @media (min-width: 900px) {
+//     .chatListArea-main{
+//       width: 35%;
+//     }
+//   }
+//   @media (min-width: 1100px) {
+//     .chatListArea-main{
+//       width: 377px;
+//     }
+// }

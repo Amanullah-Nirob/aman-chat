@@ -1,0 +1,51 @@
+.messageMainView {
+    min-height: 500px;
+    height: calc(100vh - 68px);
+
+    .messageHeader {
+        padding: 7px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .photoAndName{
+            .selectName {
+                font-size: 18px;
+                text-transform: capitalize;
+            }
+        }
+    }
+}
+
+//profileShowDialog
+.profileShowDialog{
+    padding: 10px 24px;
+    .profileDialogContent {
+        margin-top: 11px;
+        padding-bottom: 19px;
+        text-align: center;
+        h2,h3 {
+        margin: 0;
+        }
+    }
+}
+
+
+// fullScreenImage
+.fullScreenImage{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .customizeImage{
+        position: relative;
+        width: 80vh;
+        height: 82vh;
+        object-fit: contain;
+    }
+ 
+}
+
+
+
