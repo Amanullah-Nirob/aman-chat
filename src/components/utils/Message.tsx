@@ -151,5 +151,6 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId}:a
       </>
   );
 })
+Message.displayName = 'Message';
 
 export default Message;
