@@ -1,3 +1,4 @@
+// loading list
 .loadingListItem {
     position: relative;
     height: 70px;
@@ -21,6 +22,24 @@
       top: 40px;
       left: 80px;
       width: 15rem;
+    }
+  }
+  // loading message
+  .loadingMsg {
+    position: relative;
+    & > * {
+      border-radius: 7px;
+    }
+    .loadingSender {
+      height: 20px;
+      flex: 0 0 auto;
+      width: 25%;
+      margin-bottom: 5px;
+    }
+    .loadingContent {
+      height: 30px;
+      flex: 0 0 auto;
+      width: 41.66666667%;
     }
   }
   

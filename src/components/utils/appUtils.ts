@@ -94,3 +94,43 @@ export const debounce = (func:Function, delay = 500) => {
     }, delay);
   };
 };
+
+
+export const setCaretPosition = (node:any) => {
+  node?.focus();
+  const lastTextNode = node?.lastChild;
+  if (!lastTextNode) return;
+  const caret = lastTextNode.data?.length || 0;
+  const range = document.createRange();
+  range.setStart(lastTextNode, caret);
+  range.setEnd(lastTextNode, caret);
+  const sel:any = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+};
+
+export const parseInnerHTML = (innerHTML: any) => {
+  return (
+    innerHTML
+      ?.replaceAll("<br>", "")
+      .replaceAll("&nbsp;", " ")
+      .replaceAll("<div>", "")
+      .replaceAll("</div>", "")
+      .trim() || ""
+  );
+};
+
+export const isImageOrGifFile = memoize((filename:any) =>
+  /(\.png|\.jpg|\.jpeg|\.svg|\.gif|\.webp)$/.test(filename)
+);
+
+export const getAxiosConfig = (options:any) => {
+  if (!options) return;
+  const { loggedInUser, formData, blob } = options;
+  const config:any = { headers: { "Content-Type": formData ? "multipart/form-data" : "application/json",}};
+  if (blob) config.responseType = "blob";
+  if (loggedInUser)
+    config.headers.Authorization = `Bearer ${loggedInUser.token}`;
+
+  return config;
+};

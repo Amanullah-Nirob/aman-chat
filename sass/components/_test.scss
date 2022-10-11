@@ -15,6 +15,66 @@
             }
         }
     }
+    .messageBody-main{
+        height: calc(100vh - 144px);
+    }
+
+ // message body --------------
+.messageBody-main{
+    .messageListShow{
+        padding: 0 20px;
+        display: flex;
+        flex-direction: column-reverse;
+        height: 100%;
+     .messageContentShowMain{
+        .messageBox{
+            display: flex;
+            flex-direction: column;
+            text-align: start;
+            padding: 6px;
+            position: relative;
+            
+            .msgOptionsIcon{
+                opacity: 0;
+            }
+            &:hover{
+                .msgOptionsIcon{
+                    opacity: 1;
+                }
+            }
+            .messageContentMain{
+                display: flex;
+                .messageTime{
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: flex-end;
+                    margin: 5px -2px -5px 15px;
+                    font-size: 14px;
+                    .sendStatusIcon{
+                        margin: 2px;
+                    }
+                }
+            }
+          
+
+        }
+     }
+    }
+    .senderAvatar {
+        @include getImgDimensions(0.31); 
+        background-color: transparent;
+        margin: 7px 10px 0px 2px;
+        cursor: pointer;
+      }
+
+}
+
+.msgDate{
+    margin: 0 auto;
+    padding: 10px 10px;
+}
+
+
 }
 
 //profileShowDialog
