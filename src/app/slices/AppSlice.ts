@@ -24,7 +24,7 @@ const AppSlice = createSlice({
     setSelectedChat: (state, action) => {
       state.selectedChat = action.payload;
     },
-    toggleRefresh: (state) => {
+    toggleRefresh: (state,action) => {
       state.refresh = !state.refresh;
     },
     setGroupInfo: (state, action) => {

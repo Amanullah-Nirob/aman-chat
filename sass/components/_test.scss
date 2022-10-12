@@ -26,6 +26,7 @@
         display: flex;
         flex-direction: column-reverse;
         height: 100%;
+
      .messageContentShowMain{
         .messageBox{
             display: flex;
@@ -45,10 +46,11 @@
             .messageContentMain{
                 display: flex;
                 .messageTime{
+                    min-width: 90px;
                     display: flex;
                     align-items: flex-end;
                     justify-content: flex-end;
-                    margin: 5px -2px -5px 15px;
+                    margin: 3px 0px -2px -5px;
                     font-size: 14px;
                     .sendStatusIcon{
                         margin: 2px;
@@ -107,5 +109,13 @@
  
 }
 
+// message attachment
 
+.msgImageWrapper{
+.imageEditIcons{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+}
 

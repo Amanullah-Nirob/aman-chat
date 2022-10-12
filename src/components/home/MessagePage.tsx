@@ -3,25 +3,30 @@ import React, { useEffect, useRef, useState } from 'react';
 import axios from "axios";
 // internal imports
 import { useAppSelector,useAppDispatch } from '../../app/hooks';
-import { selectAppState } from '../../app/slices/AppSlice';
+import { selectAppState, setClientSocket, setOnlineUsers, setSocketConnected, toggleRefresh } from '../../app/slices/AppSlice';
 import MsgHeader from '../utils/MsgHeader';
 import { setSelectedChat } from '../../app/slices/AppSlice';
 import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
 import ViewProfileBody from '../dialogs/ViewProfileBody';
 import { setFetchMsgs } from '../../app/slices/AppSlice';
-import { selectCurrentUser } from '../../app/slices/auth/authSlice';
+import { selectCurrentUser, setLoggedInUser } from '../../app/slices/auth/authSlice';
 import LoadingMsgs from '../utils/LoadingMsgs';
 import Message from '../utils/Message';
 import MsgOptionsMenu from '../menus/MsgOptionsMenu';
 import { displayToast } from '../../app/slices/ToastSlice';
 import { getAxiosConfig, isImageOrGifFile, parseInnerHTML } from '../utils/appUtils';
 import { setLoading } from '../../app/slices/LoadingSlice';
+import { selectTheme } from '../../app/slices/theme/ThemeSlice';
+import { Box } from '@mui/material';
+import io from "socket.io-client";
+
 
 let msgFileAlreadyExists = false;
 
 const MessagePage = ({setDialogBody}:any) => {
   const dispatch=useAppDispatch()
-  const {selectedChat,fetchMsgs}:any=useAppSelector(selectAppState)
+  const theme=useAppSelector(selectTheme)
+  const {selectedChat,fetchMsgs,clientSocket,isSocketConnected,refresh}:any=useAppSelector(selectAppState)
   const loggedinUser=useAppSelector(selectCurrentUser)
   const [loadingMsgs, setLoadingMsgs] = useState(false);
   const [sending, setSending] = useState(false);
@@ -34,17 +39,35 @@ const MessagePage = ({setDialogBody}:any) => {
   const [msgFileRemoved, setMsgFileRemoved] = useState(false);
   const [dontScrollToBottom, setDontScrollToBottom] = useState(false);
   const msgListBottom = useRef<any>(null);
+  const [downloadingFileId, setDownloadingFileId] = useState("");
+  const [loadingMediaId, setLoadingMediaId] = useState("");
+  const SOCKET_ENDPOINT:any = process.env.API_URL;
 
-// Some function
+  
+  
+// close select chat
   const close=()=>{
     setLoadingMsgs(false);
     dispatch(setSelectedChat(null));
   }
+
   const openViewProfileDialog = (props:any) => {
     dispatch(setShowDialogActions(false));
     setDialogBody(props? <ViewProfileBody {...props} />:<ViewProfileBody />);
     dispatch(displayDialog({ title: "View Profile" }));
   };
+
+
+// notification update
+const notificationUpdate=(notifications:any)=>{
+  const notificationsUpdate=[...notifications]
+ const updatedUser = {
+   ...loggedinUser,
+   notifications: notificationsUpdate?.reverse(),
+ };
+  dispatch(setLoggedInUser(updatedUser))
+}
+
 
 
 // fetch Messages start
@@ -63,23 +86,18 @@ const MessagePage = ({setDialogBody}:any) => {
 
       })
    }
-   useEffect(()=>{
-    if(fetchMsgs){
-      fetchMessages()
-    }
-   },[fetchMsgs])
+
 // fetch Messages end
+
 
 // srool bottom start
 const scrollToBottom = () => {
   msgListBottom.current?.scrollIntoView();
 };
 
-useEffect(() => {
-  if (!dontScrollToBottom) scrollToBottom();
-}, [messages]);
 
-// srool bottom start
+
+// srool bottom end
 
 // open Msg Options Menu
 const openMsgOptionsMenu = (e:any) => {
@@ -97,7 +115,7 @@ const resetMsgInput = (options:any) => {
   if (options?.discardAttachmentOnly) return;
 };
 // discard Attachment
-const discardAttachment = () =>  resetMsgInput({ discardAttachmentOnly: true });
+const discardAttachment = () => resetMsgInput({ discardAttachmentOnly: true });
 
 
 
@@ -149,7 +167,7 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
   try {
     const apiUrl = isNonImageFile ? `${process.env.API_URL}/api/message/update-in-s3` : `${process.env.API_URL}/api/message/update`;
     const formData = new FormData();
-
+     
 
   } catch (error) {
     console.log(error);
@@ -158,48 +176,36 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
 
 }
 
-
-
-
-// message click handler start
-   const msgsClickHandler=(e:any)=>{
-    const { dataset } = e.target;
-    const parentDataset = e.target.parentNode.dataset;
-    const senderData = (dataset.sender || parentDataset.sender)?.split("===");
-    const msgId = dataset.msg || parentDataset.msg;
-    const updateEditedMsg = dataset.updateMsg || parentDataset.updateMsg;
-
-    if(senderData?.length){
-      // Open view profile dialog
-      const props = {
-        memberProfilePic: senderData[0],
-        memberName: senderData[1],
-        memberEmail: senderData[2],
-      };
-      openViewProfileDialog(props);
-    }else if(msgId && !msgEditMode){
-      msgFileAlreadyExists = Boolean(dataset.fileExists || parentDataset.fileExists);
-      setClickedMsgId(msgId);
-      openMsgOptionsMenu(e);
-    }else if(updateEditedMsg){
-      const msgDate = dataset.msgCreatedAt || parentDataset.msgCreatedAt;
-      updateMessage(editableMsgContent?.current?.innerHTML,msgDate)
-    }
-
-
-
-   }
-
-
-// edit message area
+// edit message
 const editMsgHandler=()=>setMsgEditMode(true)
 
-
-// delete message area start
-const deleteMessage=()=>{
+// delete message area start ---------------------------------------------------------------------------------------------------------------------------------------------------------
+const deleteMessage= async()=>{
   dispatch(setLoading(true));
   setSending(true);
-  
+  const config = getAxiosConfig({ loggedinUser });
+ 
+  try {
+    await axios.put(`${process.env.API_URL}/api/message/delete`, { messageIds: JSON.stringify([clickedMsgId]) }, config );
+    if (isSocketConnected) {
+      clientSocket?.emit("msg deleted", {
+        deletedMsgId: clickedMsgId,
+        senderId: loggedinUser?._id,
+        chat: selectedChat,
+      });
+    }
+    dispatch(displayToast({ message:'message was deleted', type: "success", duration: 1500, positionVert: "bottom",positionHor:'center'}));
+    setMessages(messages.filter((msg:any) => msg?._id !== clickedMsgId));
+    dispatch(setLoading(false));
+    dispatch(toggleRefresh(!refresh));
+    setSending(false);
+    return "msgActionDone";
+  } catch (error:any) {
+    console.log(error);
+    dispatch(displayToast({title:'delete message filed', message: error.response?.data?.message || error.message, type: "error", duration: 5000, positionVert: "bottom",positionHor:'center'}));
+    dispatch(setLoading(false));
+    setSending(false);
+  }
 }
   const openDeleteMsgConfirmDialog = () => {
     dispatch(setShowDialogActions(true));
@@ -214,10 +220,131 @@ const deleteMessage=()=>{
       })
     );
   };
-// delete message area end
+// delete message area end ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
+  // Initializing Client Socket
+  useEffect(() => {
+    dispatch(
+      setClientSocket(io('http://localhost:5000/', { transports: ["websocket"] }))
+    );
+  }, []);
+
+
+
+
+
+
+// socket events start hare >>>>>>>>>------------------------------------------------------------------------------------------------------------------------------------------------
+// deleted Msg Socket Event Handler
+const deletedMsgSocketEventHandler = () => {
+  clientSocket.off("remove deleted msg")
+    .on("remove deleted msg", (deletedMsgData:any) => {
+      const { deletedMsgId, chat } = deletedMsgData;
+      dispatch(toggleRefresh(!refresh));
+      if (selectedChat && chat && selectedChat._id === chat._id) {
+        setMessages(messages.filter((m:any) => m?._id !== deletedMsgId));
+      } else {
+        const notifs = loggedinUser.notifications;
+        const updatedUser = {
+          ...loggedinUser,
+          notifications: notifs.filter((n:any) => n._id !== deletedMsgId),
+        };
+        dispatch(setLoggedInUser(updatedUser))
+      }
+    });
+};
+
+
+// Listening to all socket events
+useEffect(() => {
+  console.log(clientSocket);
+  if (!clientSocket) return;
+  if (!isSocketConnected && clientSocket) {
+    clientSocket.emit("init user", loggedinUser?._id);
+    clientSocket.on("get-users", (users:any) => {
+    
+      
+      dispatch(setOnlineUsers(users))
+    });
+    clientSocket.on("user connected", (userInfoNotification:any) => { 
+   if(userInfoNotification !== null){
+    if(loggedinUser?.notifications.length!==userInfoNotification.length){
+      notificationUpdate(userInfoNotification)
+    }
+   }
+    dispatch(setSocketConnected(true));
+});
+  }
+  deletedMsgSocketEventHandler();
+});
+
+
+
+// socket events end hare >>>>>------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// message click handler start
+const msgsClickHandler=(e:any)=>{
+  const { dataset } = e.target;
+  const parentDataset = e.target.parentNode.dataset;
+  const senderData = (dataset.sender || parentDataset.sender)?.split("===");
+  const msgId = dataset.msg || parentDataset.msg;
+  const updateEditedMsg = dataset.updateMsg || parentDataset.updateMsg;
+
+  if(senderData?.length){
+    // Open view profile dialog
+    const props = {
+      memberProfilePic: senderData[0],
+      memberName: senderData[1],
+      memberEmail: senderData[2],
+    };
+    openViewProfileDialog(props);
+  }else if(msgId && !msgEditMode){
+    msgFileAlreadyExists = Boolean(dataset.fileExists || parentDataset.fileExists);
+    setClickedMsgId(msgId);
+    openMsgOptionsMenu(e);
+  }else if(updateEditedMsg){
+    const msgDate = dataset.msgCreatedAt || parentDataset.msgCreatedAt;
+    updateMessage(editableMsgContent?.current?.innerHTML,msgDate)
+  }
+
+
+
+ }
+
+
+
+ useEffect(() => {
+  if (!dontScrollToBottom) scrollToBottom();
+}, [messages]);
+
+
+useEffect(()=>{
+  if(fetchMsgs){
+    fetchMessages()
+    if (isSocketConnected) clientSocket?.emit("join chat", selectedChat?._id);
+  }
+ },[fetchMsgs])
+
+
+  const customScroll={ 
+    overflow:"auto", scrollbarWidth: 'thin',
+    '&::-webkit-scrollbar': {
+      width: '0.4em',
+    },
+    '&::-webkit-scrollbar-track': {
+      background: theme==='light'?'#f1f1f1':'#424242',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      background: theme==='light'?'#88888896':'#7b7b7b',
+    },
+    '&::-webkit-scrollbar-thumb:hover': {
+      background: theme==='light'?'#A8a8a8':'#999',
+    }
+  }
 
 
 
@@ -233,8 +360,9 @@ const deleteMessage=()=>{
 
                       <section className="messageBody-main">
 {/* message main Content show */}
-                           <div className="messageListShow"
+                           <Box className="messageListShow"
                             onClick={msgsClickHandler}
+                            sx={customScroll}
                            >
                           <div className="msgListBottom" ref={msgListBottom}></div>
                            {loadingMsgs && !sending ? (
@@ -248,12 +376,14 @@ const deleteMessage=()=>{
                                    msgEditMode={msgEditMode}
                                    clickedMsgId={clickedMsgId}
                                    ref={editableMsgContent}
+                                   downloadingFileId={downloadingFileId}
+                                   loadingMediaId={loadingMediaId}
                                    prevMsg={i < msgs.length - 1 ? msgs[i + 1] : null}
                                 ></Message>
                               ))
                               )
                               }
-                           </div>
+                           </Box>
 
 {/* Edit/Delete Message menu */}
                         <MsgOptionsMenu

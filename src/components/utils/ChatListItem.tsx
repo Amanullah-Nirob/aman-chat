@@ -252,6 +252,7 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
              )
             }
 
+
             </p>
             )
         )

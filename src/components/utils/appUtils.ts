@@ -126,11 +126,24 @@ export const isImageOrGifFile = memoize((filename:any) =>
 
 export const getAxiosConfig = (options:any) => {
   if (!options) return;
-  const { loggedInUser, formData, blob } = options;
+
+  
+  const { loggedinUser, formData, blob } = options;
   const config:any = { headers: { "Content-Type": formData ? "multipart/form-data" : "application/json",}};
   if (blob) config.responseType = "blob";
-  if (loggedInUser)
-    config.headers.Authorization = `Bearer ${loggedInUser.token}`;
+  if (loggedinUser)
+    config.headers.Authorization = `Bearer ${loggedinUser?.token}`;
 
   return config;
 };
+
+
+export const getFileSizeString = memoize((fileSize:any) => {
+  return !fileSize
+    ? ""
+    : fileSize > ONE_MB
+    ? (fileSize / ONE_MB).toFixed(1) + " MB"
+    : fileSize > ONE_KB
+    ? (fileSize / ONE_KB).toFixed(0) + " KB"
+    : fileSize + " B";
+});

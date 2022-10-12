@@ -8,13 +8,17 @@ import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { selectAppState } from '../../app/slices/AppSlice';
 import { dateStringOf, msgDateStringOf, msgTimeStringOf, setCaretPosition } from './appUtils';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
+import MsgAttachment from './MsgAttachment';
 
 
-const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId}:any,editableMsgRef:any) => {
+
+
+const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,downloadingFileId,loadingMediaId}:any,editableMsgRef:any) => {
+  const dispatch=useAppDispatch()
   const loggedinUser=useAppSelector(selectCurrentUser)
   const theme=useAppSelector(selectTheme)
   const {selectedChat}:any=useAppSelector(selectAppState)
-  console.log(currMsg);
+
   
   const msgContentRef = useRef<any | null>(null);
   const { fileUrl, file_id, file_name } = currMsg;
@@ -31,6 +35,8 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId}:a
   const isClickedMsgCurrMsg=clickedMsgId === currMsgId
   const isEditMode = msgEditMode && isClickedMsgCurrMsg;
 
+
+
   useEffect(() => {
       if (msgContentRef?.current) {
         msgContentRef.current.innerHTML = currMsg?.content;
@@ -43,6 +49,25 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId}:a
         setCaretPosition(editableMsgRef?.current);
       }
     }, [msgEditMode]);
+
+
+
+    // file Edit Icons
+    const fileEditIcons = (
+      <>
+          <IconButton  data-remove-msg-file={true} className={`m-1 bg-black bg-opacity-75`}>
+            <Delete data-remove-msg-file={true} style={{ fontSize: 20 }} />
+          </IconButton>
+
+          <IconButton data-edit-msg-file={true} className={`m-1 bg-black bg-opacity-75`} >
+            <Edit data-edit-msg-file={true} style={{ fontSize: 20 }} />
+          </IconButton>
+      </>
+    );
+
+
+
+
 
 
   return (
@@ -92,6 +117,25 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId}:a
             </span>
           )}  
 
+
+{currMsg?.fileUrl && !isEditMode &&(
+  <MsgAttachment
+  msgSent={msgSent}
+  isEditMode={isEditMode}
+  fileEditIcons={fileEditIcons}
+  downloadingFileId={downloadingFileId}
+  loadingMediaId={loadingMediaId}
+  fileData={{
+    msgId: currMsgId,
+    fileUrl,
+    file_id,
+    file_name,
+  }}
+  ></MsgAttachment>
+)}
+
+
+
 {/* message options icon */}
           {isLoggedInUser && msgSent && (
             <span
@@ -114,7 +158,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId}:a
            <div className="messageContentMain">
            <span 
             id={`${currMsg?._id}---content`}
-            style={{ outline: "none" }}
+            style={{ outline: "none",width:'100%' }}
             contentEditable={isEditMode}
             data-msg-created-at={currMsg?.createdAt}
             ref={isEditMode ? editableMsgRef : msgContentRef}
