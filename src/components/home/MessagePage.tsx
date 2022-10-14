@@ -246,7 +246,7 @@ const deleteMessage= async()=>{
 
   // Initializing Client Socket
   useEffect(() => {
-    // console.log(io('http://localhost:5000/', { transports: ["websocket"] }));
+    console.log(io('http://localhost:5000/', { transports: ["websocket"] }));
     dispatch(
       setClientSocket(io('http://localhost:5000/', { transports: ["websocket"] }))
     );
