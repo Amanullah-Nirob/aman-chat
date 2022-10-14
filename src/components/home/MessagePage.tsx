@@ -36,7 +36,7 @@ const MessagePage = ({setDialogBody}:any) => {
   const [msgOptionsMenuAnchor, setMsgOptionsMenuAnchor] = useState(null);
   const editableMsgContent = useRef<any | null>(null);
   const [attachmentData, setAttachmentData] = useState<any | null>({ attachment: null, attachmentPreviewUrl: ""});
-  const [msgFileRemoved, setMsgFileRemoved] = useState<any | null >(false);
+  const [msgFileRemoved, setMsgFileRemoved] = useState<boolean | any >(false);
   const [dontScrollToBottom, setDontScrollToBottom] = useState(false);
   const msgListBottom = useRef<any>(null);
   const [downloadingFileId, setDownloadingFileId] = useState("");
@@ -44,7 +44,9 @@ const MessagePage = ({setDialogBody}:any) => {
   const SOCKET_ENDPOINT:any = process.env.API_URL;
   const msgFileInput = useRef<any | null>({});
   const [fileAttached, setFileAttached] = useState(false);
+  const msgContent = useRef<any | null>(null);
   
+
 // close select chat
   const close=()=>{
     setLoadingMsgs(false);
@@ -87,8 +89,8 @@ const resetMsgInput = (options:any) => {
     attachmentPreviewUrl: "",
   });
   if(msgFileInput.current.value) msgFileInput.current.value = "";
-
   if (options?.discardAttachmentOnly) return;
+  setFileAttached(false);
 };
 
 
@@ -146,6 +148,8 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
   setMsgEditMode(false);
   setDontScrollToBottom(true)
 
+  
+
   const msgData:any = { ...attachmentData,content: updatedMsgContent || ""};
   const isNonImageFile = !isImageOrGifFile(msgData.attachment?.name);
 
@@ -176,6 +180,8 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
   try {
     const apiUrl = isNonImageFile ? `${process.env.API_URL}/api/message/update-in-s3` : `${process.env.API_URL}/api/message/update`;
     const formData = new FormData();
+
+    formData.append("attachment", msgData.attachment);
     formData.append("msgFileRemoved", msgFileRemoved); 
     formData.append("mediaDuration", msgData?.mediaDuration);
     formData.append("updatedContent", msgData.content);
@@ -183,6 +189,8 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
     const { data } = await axios.put(apiUrl, formData, config);
     if (isSocketConnected) clientSocket?.emit("msg updated", data);
     fetchMessages({ updatingMsg: true });
+
+    dispatch(toggleRefresh(!refresh));
     setMsgFileRemoved(false);
 
   } catch (error) {
@@ -216,6 +224,7 @@ const deleteMessage= async()=>{
     setMessages(messages.filter((msg:any) => msg?._id !== clickedMsgId));
     dispatch(setLoading(false));
     setSending(false);
+    dispatch(toggleRefresh(!refresh));
     return "msgActionDone";
   } catch (error:any) {
     console.log(error);
@@ -237,6 +246,7 @@ const deleteMessage= async()=>{
 
   // Initializing Client Socket
   useEffect(() => {
+    // console.log(io('http://localhost:5000/', { transports: ["websocket"] }));
     dispatch(
       setClientSocket(io('http://localhost:5000/', { transports: ["websocket"] }))
     );
@@ -257,6 +267,7 @@ const updatedMsgSocketEventHandler = () => {
     .on("update modified msg", (updatedMsg:any) => {
       if (!updatedMsg) return;
       const { chat } = updatedMsg;
+      dispatch(toggleRefresh(!refresh));
       if (selectedChat && chat && selectedChat._id === chat._id) {
         updatedMsg["sent"] = true;
         updatedMsg["chat"] = updatedMsg.chat?._id;
@@ -269,6 +280,8 @@ const updatedMsgSocketEventHandler = () => {
            let updateContent= document.getElementById(`${updatedMsg._id}---content`) as HTMLInputElement
            updateContent.innerHTML= updatedMsg.content;
           }
+          // let updateImage= document.getElementById(`${updatedMsg._id}---image`) as HTMLInputElement
+          // updateImage.src= updatedMsg.fileUrl;
         }, 10);
         // Updating 'state' is the only way to update attachment
       }
@@ -280,6 +293,7 @@ const deletedMsgSocketEventHandler = () => {
   clientSocket.off("remove deleted msg")
     .on("remove deleted msg", (deletedMsgData:any) => {
       const { deletedMsgId, chat } = deletedMsgData;
+      dispatch(toggleRefresh(!refresh));
       if (selectedChat && chat && selectedChat._id === chat._id) {
         setMessages(messages.filter((m:any) => m?._id !== deletedMsgId));
       } else {
@@ -369,6 +383,7 @@ const msgsClickHandler=(e:any)=>{
   const attachMsgFileClicked = dataset.attachMsgFile || parentDataset.attachMsgFile;
   const editMsgFileClicked = dataset.editMsgFile || parentDataset.editMsgFile;
   const discardDraftClicked =  dataset.discardDraft || parentDataset.discardDraft;
+  const removeMsgFileClicked = dataset.removeMsgFile || parentDataset.removeMsgFile;
 
   if(senderData?.length){
     // Open view profile dialog
@@ -389,6 +404,9 @@ const msgsClickHandler=(e:any)=>{
     selectAttachment()
   }else if(discardDraftClicked){
     openDiscardDraftConfirmDialog();
+  }else if(removeMsgFileClicked){
+    setMsgFileRemoved(true);
+    discardAttachment()
   }
 
 
@@ -412,6 +430,7 @@ useEffect(()=>{
 
   const customScroll={ 
     overflow:"auto", scrollbarWidth: 'thin',
+    // display: fileAttached && !msgEditMode ? 'none':'flex',
     '&::-webkit-scrollbar': {
       width: '0.4em',
     },
@@ -423,7 +442,8 @@ useEffect(()=>{
     },
     '&::-webkit-scrollbar-thumb:hover': {
       background: theme==='light'?'#A8a8a8':'#999',
-    }
+    },
+  
   }
 
 // ---------------------------------------------------------- input file  area ---------------------------------------------------------------------
@@ -498,6 +518,8 @@ useEffect(()=>{
                                    ref={editableMsgContent}
                                    downloadingFileId={downloadingFileId}
                                    loadingMediaId={loadingMediaId}
+                                   attachmentData={attachmentData}
+                                   msgFileRemoved={msgFileRemoved}
                                    prevMsg={i < msgs.length - 1 ? msgs[i + 1] : null}
                                 ></Message>
                               ))
@@ -514,7 +536,19 @@ useEffect(()=>{
                          openDeleteMsgConfirmDialog={openDeleteMsgConfirmDialog}
                         />
 
+
+                      <div className='messageInput'>
+                         <input type="text"
+                   
+                         ref={msgContent}
+                         placeholder='Aa'
+                         style={{backgroundColor:theme==='light'?'#f0f2f5':'#3a3b3c'}}
+                          />
+                      </div>
+
                        </section>
+
+
 
                   <input
                   type="file"

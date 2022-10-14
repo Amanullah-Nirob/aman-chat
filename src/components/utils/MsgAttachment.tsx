@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React from 'react';
 import { getFileSizeString, isImageOrGifFile } from './appUtils';
 import {Box} from '@mui/material'
-const MsgAttachment = ({msgSent,isEditMode,fileEditIcons,downloadingFileId,loadingMediaId,isPreview,fileData,}:any) => {
+const MsgAttachment = ({msgSent,isEditMode,fileEditIcons,downloadingFileId,loadingMediaId,isPreview,fileData,currMsg}:any) => {
 
     let { fileUrl, file_id, file_name, size } = fileData;
 
@@ -14,6 +14,7 @@ const MsgAttachment = ({msgSent,isEditMode,fileEditIcons,downloadingFileId,loadi
                <span className="msgImageWrapper" style={{position:'relative',width:'260px',height:'200px', display:'inline-block'}}>
 
                 <Image
+                 id={`${currMsg?._id}---image`}
                  src={fileUrl}
                  alt={file_name}
                  title={file_name}

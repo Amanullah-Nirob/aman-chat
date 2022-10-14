@@ -9,11 +9,12 @@ import { selectAppState } from '../../app/slices/AppSlice';
 import { dateStringOf, msgDateStringOf, msgTimeStringOf, setCaretPosition } from './appUtils';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import MsgAttachment from './MsgAttachment';
+import AttachmentPreview from './AttachmentPreview';
 
 
 
 
-const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,downloadingFileId,loadingMediaId}:any,editableMsgRef:any) => {
+const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,downloadingFileId,loadingMediaId,attachmentData,msgFileRemoved}:any,editableMsgRef:any) => {
   const dispatch=useAppDispatch()
   const loggedinUser=useAppSelector(selectCurrentUser)
   const theme=useAppSelector(selectTheme)
@@ -55,20 +56,19 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
     // file Edit Icons
     const fileEditIcons = (
       <>
-          <IconButton  data-remove-msg-file={true} className={`m-1 bg-black bg-opacity-75`}>
-            <Delete data-remove-msg-file={true} style={{ fontSize: 20 }} />
+          <IconButton  data-remove-msg-file={true} sx={{margin:'5px',backgroundColor:'#000',opacity:'75'}}>
+            <Delete data-remove-msg-file={true} sx={{ fontSize: 20,color:'#fff' }} />
           </IconButton>
 
-          <IconButton data-edit-msg-file={true} className={`m-1 bg-black bg-opacity-75`} >
-            <Edit data-edit-msg-file={true} style={{ fontSize: 20 }} />
+          <IconButton data-edit-msg-file={true} sx={{margin:'5px',backgroundColor:'#000',opacity:'75'}} >
+            <Edit data-edit-msg-file={true} sx={{ fontSize: 20,color:'#fff' }} />
           </IconButton>
       </>
     );
 
 
 
-
-
+   
 
   return (
       <>
@@ -93,11 +93,11 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
         {isEditMode ? (
             <div style={{ margin: "-5px 25px 3px 0px",display:'flex',justifyContent:'end' }} >
 
-              {(!currMsg?.fileUrl && (
+              {(!currMsg?.fileUrl || (msgFileRemoved && !attachmentData?.attachment)) && (
                   <IconButton data-attach-msg-file={true} sx={{ transform: "rotateZ(45deg)" }}>
                     <AttachFile data-attach-msg-file={true} style={{ fontSize: 20 }} />
                   </IconButton>
-              ))}
+              )}
 
                 <IconButton data-discard-draft={true}>
                   <Close data-discard-draft={true} style={{ fontSize: 20 }} />
@@ -117,7 +117,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
             </span>
           )}  
 
-
+{/* if edit mode na OF */}
 {currMsg?.fileUrl && !isEditMode &&(
   <MsgAttachment
   msgSent={msgSent}
@@ -125,6 +125,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
   fileEditIcons={fileEditIcons}
   downloadingFileId={downloadingFileId}
   loadingMediaId={loadingMediaId}
+  currMsg={currMsg}
   fileData={{
     msgId: currMsgId,
     fileUrl,
@@ -134,7 +135,32 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
   ></MsgAttachment>
 )}
 
+{/* image preview */}
+    {isEditMode && attachmentData?.attachment && (
+       <AttachmentPreview
+       isEditMode={isEditMode}
+       attachmentData={attachmentData}
+       fileEditIcons={fileEditIcons}
+       ></AttachmentPreview>
+    )}
 
+       {/* if edit mode is ON */}
+            {currMsg?.fileUrl && isEditMode && !attachmentData?.attachment && !msgFileRemoved && 
+            (
+                <MsgAttachment
+                  msgSent={msgSent}
+                  isEditMode={isEditMode}
+                  fileEditIcons={fileEditIcons}
+                  downloadingFileId={downloadingFileId}
+                  loadingMediaId={loadingMediaId}
+                  fileData={{
+                    msgId: currMsgId,
+                    fileUrl,
+                    file_id,
+                    file_name,
+                  }}
+                />
+             )}
 
 {/* message options icon */}
           {isLoggedInUser && msgSent && (
@@ -162,7 +188,6 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
             contentEditable={isEditMode}
             data-msg-created-at={currMsg?.createdAt}
             ref={isEditMode ? editableMsgRef : msgContentRef}
-
            ></span>
               <span className='messageTime'>
               {msgTimeStringOf(currMsgDate)}
@@ -176,6 +201,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
                     />
                   ) : (
                     <CircularProgress
+                    sx={{color:'red'}}
                       size={10}
                       className="sendStatusIcon"
                     />

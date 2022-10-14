@@ -61,6 +61,7 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
         >
 
         {/* user Photo */}
+        <div style={{position:'relative'}}>
         <Avatar
             src={chatDisplayPic}
             alt={chatName}
@@ -68,7 +69,9 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
             data-has-notifs={chatNotifCount}
             sx={{width:'55px',height:'55px'}}
         />
-      
+               <span style={{display:isOnline?'block':'none',borderColor:theme==='light'?'#fff':'#000'}} className='activeStatus'></span>
+        </div>
+
 
      <div
         data-chat={_id}
@@ -84,7 +87,6 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
          title={tooltipTitle}
          className="chatListName">
          {truncateString(chatName , 31, 28)}
-         {/* <span style={{color:isOnline?'green':'red',marginLeft:'10px'}}>{isOnline?"online":"offline"}</span> */}
        </p>
 
        {/* last message date */}

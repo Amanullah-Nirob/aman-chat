@@ -21,13 +21,21 @@
 
  // message body --------------
 .messageBody-main{
+  position: relative;
     .messageListShow{
         padding: 0 20px;
-        display: flex;
         flex-direction: column-reverse;
-        height: 100%;
-
+        height: calc(100% - 65px);
+        display: flex;
      .messageContentShowMain{
+        .preFile{
+            position: relative;
+            .preFalseImage{
+                position: relative;
+                width: 260px;
+                height: 200px;
+            }
+        }
         .messageBox{
             display: flex;
             flex-direction: column;
@@ -61,6 +69,20 @@
 
         }
      }
+    }
+
+    .messageInput{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        margin-bottom: 9px;
+      input{
+        width: 100%;
+        border: 0;
+        border-radius: 17px;
+        padding: 11px 13px;
+        outline: none;
+      }
     }
     .senderAvatar {
         @include getImgDimensions(0.31); 

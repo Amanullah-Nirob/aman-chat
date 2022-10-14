@@ -44,6 +44,16 @@
         align-items: center;
         padding: 6px 12px;
         border-radius: 9px;
+        .activeStatus{
+            background-color: #46ab5e;
+            width: 14px;
+            height: 14px;
+            position: absolute;
+            bottom: 3px;
+            right: 2px;
+            border-radius: 23px;
+            border: 1px solid;
+        }
         p{
             margin: 0;
         }
