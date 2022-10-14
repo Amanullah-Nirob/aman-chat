@@ -10,15 +10,17 @@ import LoadingList from '../utils/LoadingList';
 import { useGetChatQuery } from '../../app/apisAll/chat';
 import { selectAppState, setDeleteNotifsOfChat, setFetchMsgs, setGroupInfo, setSelectedChat } from '../../app/slices/AppSlice';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
-import { debounce, getOneToOneChatReceiver, truncateString } from '../utils/appUtils';
+import { debounce, getAxiosConfig, getOneToOneChatReceiver, truncateString } from '../utils/appUtils';
 import ChatListItem from '../utils/ChatListItem';
+import axios from 'axios';
+import { displayToast } from '../../app/slices/ToastSlice';
 
 
 
 const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
  const theme=useAppSelector(selectTheme)
  const loggedinUser=useAppSelector(selectCurrentUser)
- const [loading, setLoading] = useState(false);
+ const [loading, setLoading] = useState(true);
  const dispatch=useAppDispatch()
  const { selectedChat, refresh,onlineUsers }:any = useAppSelector(selectAppState);
 //  const { data, isError, isLoading, isSuccess, error }=useGetChatQuery('')
@@ -26,14 +28,12 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
  const notifs = [...loggedinUser?.notifications];
 
 
- const fetchChats= (onlineUsers:any)=>{
-      try {
-      setLoading(true)
-      fetch(`${process.env.API_URL}/api/chat`,{
-          headers: {'Authorization': `Bearer ${loggedinUser.token}`},
-      }).then(res=>res.json())
-      .then(data=>{
+ const fetchChats= async (onlineUsers:any)=>{
+   const config = getAxiosConfig({ loggedinUser });
 
+      try {
+       const { data } = await axios.get(`${process.env.API_URL}/api/chat`, config);
+          
         const mappedChats = data.map((chat:any) => {
           const { isGroupChat, users } = chat;
           if (!isGroupChat) {
@@ -64,12 +64,14 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
 
         setChats(mappedChats);
         setFilteredChats(mappedChats);
-        setLoading(false)
+        if (loading) setLoading(false);
 
-      })
-      } catch (error) {
+      } catch (error:any) {
          console.log(error);
-         setLoading(false)
+         dispatch(
+          displayToast({ title: "Couldn't Fetch Chats", message: error.response?.data?.message || error.message, type: "error", duration: 5000,positionVert: "bottom",positionHor:'center'})
+        );
+        if (loading) setLoading(false);
       }
  }
 

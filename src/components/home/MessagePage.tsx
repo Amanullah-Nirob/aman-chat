@@ -14,11 +14,11 @@ import LoadingMsgs from '../utils/LoadingMsgs';
 import Message from '../utils/Message';
 import MsgOptionsMenu from '../menus/MsgOptionsMenu';
 import { displayToast } from '../../app/slices/ToastSlice';
-import { getAxiosConfig, isImageOrGifFile, parseInnerHTML } from '../utils/appUtils';
+import { FIVE_MB, getAxiosConfig, isImageOrGifFile, parseInnerHTML } from '../utils/appUtils';
 import { setLoading } from '../../app/slices/LoadingSlice';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import { Box } from '@mui/material';
-import io from "socket.io-client";
+import io from 'socket.io-client'
 
 
 let msgFileAlreadyExists = false;
@@ -35,15 +35,15 @@ const MessagePage = ({setDialogBody}:any) => {
   const [msgEditMode, setMsgEditMode] = useState(false);
   const [msgOptionsMenuAnchor, setMsgOptionsMenuAnchor] = useState(null);
   const editableMsgContent = useRef<any | null>(null);
-  const [attachmentData, setAttachmentData] = useState({ attachment: null, attachmentPreviewUrl: ""});
-  const [msgFileRemoved, setMsgFileRemoved] = useState(false);
+  const [attachmentData, setAttachmentData] = useState<any | null>({ attachment: null, attachmentPreviewUrl: ""});
+  const [msgFileRemoved, setMsgFileRemoved] = useState<any | null >(false);
   const [dontScrollToBottom, setDontScrollToBottom] = useState(false);
   const msgListBottom = useRef<any>(null);
   const [downloadingFileId, setDownloadingFileId] = useState("");
   const [loadingMediaId, setLoadingMediaId] = useState("");
   const SOCKET_ENDPOINT:any = process.env.API_URL;
-
-  
+  const msgFileInput = useRef<any | null>({});
+  const [fileAttached, setFileAttached] = useState(false);
   
 // close select chat
   const close=()=>{
@@ -69,24 +69,53 @@ const notificationUpdate=(notifications:any)=>{
 }
 
 
+// displayError
+const displayError = ( error:any = "Oops! Something went wrong", title = "Operation Failed") => {
+  dispatch(
+     displayToast({  title, message: error.response?.data?.message || error.message, type: "error",duration: 5000, positionVert: "bottom",positionHor:'center'})
+  );
+};
+
+const selectAttachment = () => {
+  msgFileInput.current?.click();
+};
+
+// reset Msg Input
+const resetMsgInput = (options:any) => {
+  setAttachmentData({
+    attachment: null,
+    attachmentPreviewUrl: "",
+  });
+  if(msgFileInput.current.value) msgFileInput.current.value = "";
+
+  if (options?.discardAttachmentOnly) return;
+};
+
+
+
 
 // fetch Messages start
-   const fetchMessages=(options?:any)=>{
+   const fetchMessages=async(options?:any)=>{
     setLoadingMsgs(true);
-    fetch(`${process.env.API_URL}/api/message/${selectedChat?._id}`,{
-         headers: {'Authorization': `Bearer ${loggedinUser.token}`},
-      }).then(res=>res.json())
-      .then(data=>{
-        
-       setMessages(data.map((msg:any) => {msg["sent"] = true; return msg}));
-
-       setLoadingMsgs(false);
-       if (fetchMsgs) dispatch(setFetchMsgs(false));
-       setSending(false);
-
-      })
-   }
-
+    const config = getAxiosConfig({ loggedinUser });
+    try {
+      const { data } = await axios.get(
+        `${process.env.API_URL}/api/message/${selectedChat?._id}`,
+        config
+      );
+      setMessages(data.map((msg:any) => {msg["sent"] = true; return msg}));
+  
+      setLoadingMsgs(false);
+      if (fetchMsgs) dispatch(setFetchMsgs(false));
+      setSending(false);
+    } 
+    catch (error) {
+      displayError(error, "Couldn't Fetch Messages");
+      console.log(error);
+      dispatch(setLoading(false));
+      setSending(false);
+    }
+}
 // fetch Messages end
 
 
@@ -94,10 +123,8 @@ const notificationUpdate=(notifications:any)=>{
 const scrollToBottom = () => {
   msgListBottom.current?.scrollIntoView();
 };
-
-
-
 // srool bottom end
+
 
 // open Msg Options Menu
 const openMsgOptionsMenu = (e:any) => {
@@ -106,32 +133,16 @@ const openMsgOptionsMenu = (e:any) => {
 };
 
 
-// reset Msg Input
-const resetMsgInput = (options:any) => {
-  setAttachmentData({
-    attachment: null,
-    attachmentPreviewUrl: "",
-  });
-  if (options?.discardAttachmentOnly) return;
-};
-// discard Attachment
-const discardAttachment = () => resetMsgInput({ discardAttachmentOnly: true });
-
 
 
 
 // update message area
 const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
+
   if (!(attachmentData.attachment || (msgFileAlreadyExists && !msgFileRemoved)) && !parseInnerHTML(updatedMsgContent) ) {
-    return dispatch(
-      displayToast({
-        message: "A Message Must Contain Either a File or some Text Content",
-        type: "warning",
-        duration: 5000,
-        position: "top-center",
-      })
-    );
+    return dispatch( displayToast({ message: "A Message Must Contain Either a File or some Text Content", type: "warning", duration: 5000, positionVert: "top",positionHor:'center'}));
   }
+
   setMsgEditMode(false);
   setDontScrollToBottom(true)
 
@@ -149,9 +160,7 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
     fileUrl: msgData?.attachmentPreviewUrl,
     file_id: "",
     file_name: msgData?.attachment?.name +
-      `${
-        msgData?.mediaDuration  ? `===${msgData.mediaDuration}`  : isNonImageFile  ? `===${msgData.attachment?.size || ""}`: ""
-       }`,
+      `${  msgData?.mediaDuration  ? `===${msgData.mediaDuration}`  : isNonImageFile  ? `===${msgData.attachment?.size || ""}`: ""}`,
     content: msgData?.content,
     createdAt: msgDate,
     sent: false,
@@ -167,11 +176,20 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
   try {
     const apiUrl = isNonImageFile ? `${process.env.API_URL}/api/message/update-in-s3` : `${process.env.API_URL}/api/message/update`;
     const formData = new FormData();
-     
+    formData.append("msgFileRemoved", msgFileRemoved); 
+    formData.append("mediaDuration", msgData?.mediaDuration);
+    formData.append("updatedContent", msgData.content);
+    formData.append("messageId", clickedMsgId);
+    const { data } = await axios.put(apiUrl, formData, config);
+    if (isSocketConnected) clientSocket?.emit("msg updated", data);
+    fetchMessages({ updatingMsg: true });
+    setMsgFileRemoved(false);
 
   } catch (error) {
     console.log(error);
-    
+    displayError(error, "Couldn't Update Message");
+    setSending(false);
+    setMsgFileRemoved(false);
   }
 
 }
@@ -197,30 +215,23 @@ const deleteMessage= async()=>{
     dispatch(displayToast({ message:'message was deleted', type: "success", duration: 1500, positionVert: "bottom",positionHor:'center'}));
     setMessages(messages.filter((msg:any) => msg?._id !== clickedMsgId));
     dispatch(setLoading(false));
-    dispatch(toggleRefresh(!refresh));
     setSending(false);
     return "msgActionDone";
   } catch (error:any) {
     console.log(error);
-    dispatch(displayToast({title:'delete message filed', message: error.response?.data?.message || error.message, type: "error", duration: 5000, positionVert: "bottom",positionHor:'center'}));
+    displayError(error, "Couldn't Delete Messages");
     dispatch(setLoading(false));
     setSending(false);
   }
 }
+// message sure option
   const openDeleteMsgConfirmDialog = () => {
     dispatch(setShowDialogActions(true));
     setDialogBody(<>Are you sure you want to delete this message?</>);
-    dispatch(
-      displayDialog({
-        title: "Delete Message",
-        nolabel: "NO",
-        yeslabel: "YES",
-        loadingYeslabel: "Deleting...",
-        action: deleteMessage,
-      })
-    );
+    dispatch(displayDialog({ title: "Delete Message", nolabel: "NO", yeslabel: "YES", loadingYeslabel: "Deleting...", action: deleteMessage}));
   };
 // delete message area end ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -236,13 +247,39 @@ const deleteMessage= async()=>{
 
 
 
+
 // socket events start hare >>>>>>>>>------------------------------------------------------------------------------------------------------------------------------------------------
+
+// updated Msg Socket Event Handler
+const updatedMsgSocketEventHandler = () => {
+  clientSocket
+    .off("update modified msg")
+    .on("update modified msg", (updatedMsg:any) => {
+      if (!updatedMsg) return;
+      const { chat } = updatedMsg;
+      if (selectedChat && chat && selectedChat._id === chat._id) {
+        updatedMsg["sent"] = true;
+        updatedMsg["chat"] = updatedMsg.chat?._id;
+        setTimeout(() => {
+          // Only updating msg content using 'document' method
+          // as updating 'messages' state will re-render all
+          // msgs and scroll to bottom, which may prevent the
+          // receiver to edit or view his/her msg, causing bad UX
+          if (parseInnerHTML(updatedMsg.content)) {
+           let updateContent= document.getElementById(`${updatedMsg._id}---content`) as HTMLInputElement
+           updateContent.innerHTML= updatedMsg.content;
+          }
+        }, 10);
+        // Updating 'state' is the only way to update attachment
+      }
+    });
+};
+
 // deleted Msg Socket Event Handler
 const deletedMsgSocketEventHandler = () => {
   clientSocket.off("remove deleted msg")
     .on("remove deleted msg", (deletedMsgData:any) => {
       const { deletedMsgId, chat } = deletedMsgData;
-      dispatch(toggleRefresh(!refresh));
       if (selectedChat && chat && selectedChat._id === chat._id) {
         setMessages(messages.filter((m:any) => m?._id !== deletedMsgId));
       } else {
@@ -257,9 +294,10 @@ const deletedMsgSocketEventHandler = () => {
 };
 
 
+
+
 // Listening to all socket events
 useEffect(() => {
-  console.log(clientSocket);
   if (!clientSocket) return;
   if (!isSocketConnected && clientSocket) {
     clientSocket.emit("init user", loggedinUser?._id);
@@ -278,11 +316,46 @@ useEffect(() => {
 });
   }
   deletedMsgSocketEventHandler();
+  updatedMsgSocketEventHandler()
 });
 
 
-
 // socket events end hare >>>>>------------------------------------------------------------------------------------------------------------------------------------------------
+
+// cancel edit option
+const discardAttachment = () =>  resetMsgInput({ discardAttachmentOnly: true });
+const discardMsgDraft = () => {
+  discardAttachment()
+  setMsgEditMode(false);
+  setSending(true);
+   // To execute after the entire code is run
+  setMessages([]);
+  setTimeout(() => {
+    setMessages(messages);
+    setSending(false);
+    // To execute after all the messages have been mapped
+    setTimeout(() => {
+      document.getElementById(clickedMsgId)?.scrollIntoView();
+    }, 10);
+  }, 0);
+  setMsgFileRemoved(false);
+  return "msgActionDone";
+}
+
+  // Open discard draft confirm dialog
+  const openDiscardDraftConfirmDialog = () => {
+    dispatch(setShowDialogActions(true));
+    setDialogBody(<>Are you sure you want to discard this draft?</>);
+    dispatch(
+      displayDialog({
+        title: "Discard Draft",
+        nolabel: "NO",
+        yeslabel: "YES",
+        loadingYeslabel: "Discarding...",
+        action: discardMsgDraft,
+      })
+    );
+  };
 
 
 
@@ -293,6 +366,9 @@ const msgsClickHandler=(e:any)=>{
   const senderData = (dataset.sender || parentDataset.sender)?.split("===");
   const msgId = dataset.msg || parentDataset.msg;
   const updateEditedMsg = dataset.updateMsg || parentDataset.updateMsg;
+  const attachMsgFileClicked = dataset.attachMsgFile || parentDataset.attachMsgFile;
+  const editMsgFileClicked = dataset.editMsgFile || parentDataset.editMsgFile;
+  const discardDraftClicked =  dataset.discardDraft || parentDataset.discardDraft;
 
   if(senderData?.length){
     // Open view profile dialog
@@ -309,6 +385,10 @@ const msgsClickHandler=(e:any)=>{
   }else if(updateEditedMsg){
     const msgDate = dataset.msgCreatedAt || parentDataset.msgCreatedAt;
     updateMessage(editableMsgContent?.current?.innerHTML,msgDate)
+  }else if(attachMsgFileClicked || editMsgFileClicked){
+    selectAttachment()
+  }else if(discardDraftClicked){
+    openDiscardDraftConfirmDialog();
   }
 
 
@@ -346,7 +426,47 @@ useEffect(()=>{
     }
   }
 
+// ---------------------------------------------------------- input file  area ---------------------------------------------------------------------
 
+  const setMediaDuration = (mediaUrl:any, msgFile:any) => {
+    const media = new Audio(mediaUrl);
+    media.onloadedmetadata = () => {
+      const { duration }:any = media;
+      const minutes = duration / 60
+      const seconds = duration % 60;
+      setAttachmentData({
+        attachment: msgFile,
+        attachmentPreviewUrl: mediaUrl,
+        mediaDuration: `${minutes}:${
+          seconds < 10 ? `0${seconds}` : seconds
+        }+++${msgFile.type}`,
+      });
+      setFileAttached(true);
+    };
+  };
+
+  const handleMsgFileInputChange=(e:any)=>{
+    const msgFile = e.target.files[0];
+    if (!msgFile) return;
+    if (msgFile.size >= FIVE_MB) {
+      msgFileInput.current.value = "";
+      return dispatch(
+        displayToast({ message: "Please Select a File Smaller than 5 MB", type: "warning", duration: 4000, positionVert: "bottom",positionHor:'center'})
+      );
+    }
+
+    const fileUrl = URL.createObjectURL(msgFile);
+    if (/^(video\/|audio\/)/.test(msgFile.type)) {
+      setMediaDuration(fileUrl, msgFile);
+    } else {
+      setAttachmentData({
+        attachment: msgFile,
+        attachmentPreviewUrl: fileUrl,
+      });
+      setFileAttached(true);
+    }
+
+  }
 
     return (
         <div className='messageMainView'>
@@ -395,6 +515,17 @@ useEffect(()=>{
                         />
 
                        </section>
+
+                  <input
+                  type="file"
+                  accept="*"
+                  onChange={handleMsgFileInputChange}
+                  name="attachment"
+                  id="attachMsgFile"
+                  ref={msgFileInput}
+                  style={{display:'none'}}
+                  disabled={loadingMsgs}
+                />
                      </>
                ):(
             
