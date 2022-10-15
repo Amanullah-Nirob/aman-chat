@@ -118,22 +118,22 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
           )}  
 
 {/* if edit mode na OF */}
-{currMsg?.fileUrl && !isEditMode &&(
-  <MsgAttachment
-  msgSent={msgSent}
-  isEditMode={isEditMode}
-  fileEditIcons={fileEditIcons}
-  downloadingFileId={downloadingFileId}
-  loadingMediaId={loadingMediaId}
-  currMsg={currMsg}
-  fileData={{
-    msgId: currMsgId,
-    fileUrl,
-    file_id,
-    file_name,
-  }}
-  ></MsgAttachment>
-)}
+    {currMsg?.fileUrl && !isEditMode &&(
+      <MsgAttachment
+      msgSent={msgSent}
+      isEditMode={isEditMode}
+      fileEditIcons={fileEditIcons}
+      downloadingFileId={downloadingFileId}
+      loadingMediaId={loadingMediaId}
+      currMsg={currMsg}
+      fileData={{
+        msgId: currMsgId,
+        fileUrl,
+        file_id,
+        file_name,
+      }}
+      ></MsgAttachment>
+    )}
 
 {/* image preview */}
     {isEditMode && attachmentData?.attachment && (
@@ -144,23 +144,23 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
        ></AttachmentPreview>
     )}
 
-       {/* if edit mode is ON */}
-            {currMsg?.fileUrl && isEditMode && !attachmentData?.attachment && !msgFileRemoved && 
-            (
-                <MsgAttachment
-                  msgSent={msgSent}
-                  isEditMode={isEditMode}
-                  fileEditIcons={fileEditIcons}
-                  downloadingFileId={downloadingFileId}
-                  loadingMediaId={loadingMediaId}
-                  fileData={{
-                    msgId: currMsgId,
-                    fileUrl,
-                    file_id,
-                    file_name,
-                  }}
-                />
-             )}
+{/* if edit mode is ON */}
+    {currMsg?.fileUrl && isEditMode && !attachmentData?.attachment && !msgFileRemoved && 
+    (
+        <MsgAttachment
+          msgSent={msgSent}
+          isEditMode={isEditMode}
+          fileEditIcons={fileEditIcons}
+          downloadingFileId={downloadingFileId}
+          loadingMediaId={loadingMediaId}
+          fileData={{
+            msgId: currMsgId,
+            fileUrl,
+            file_id,
+            file_name,
+          }}
+        />
+      )}
 
 {/* message options icon */}
           {isLoggedInUser && msgSent && (

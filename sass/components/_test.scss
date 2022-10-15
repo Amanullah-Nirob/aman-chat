@@ -25,17 +25,10 @@
     .messageListShow{
         padding: 0 20px;
         flex-direction: column-reverse;
-        height: calc(100% - 65px);
+        // height: calc(100% - 65px);
         display: flex;
      .messageContentShowMain{
-        .preFile{
-            position: relative;
-            .preFalseImage{
-                position: relative;
-                width: 260px;
-                height: 200px;
-            }
-        }
+
         .messageBox{
             display: flex;
             flex-direction: column;
@@ -76,13 +69,34 @@
         bottom: 0;
         width: 100%;
         margin-bottom: 9px;
-      input{
-        width: 100%;
-        border: 0;
-        border-radius: 17px;
-        padding: 11px 13px;
-        outline: none;
-      }
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .fileattach{
+          position: relative;
+        }
+        .inputTextMain{
+        position: relative;
+        width: 93%;
+            input{
+                width: 100%;
+                border: 0;
+                padding: 11px 13px;
+                outline: none;
+            }
+            .emojiIcon{
+                position: absolute;
+                right: 0;
+                bottom: -3px;
+            }
+            .emojiShow{
+                position: absolute;
+                bottom: calc(100% + 8px);
+                right: 0px;
+                z-index: 1;
+            }
+        }
+
     }
     .senderAvatar {
         @include getImgDimensions(0.31); 
@@ -91,6 +105,19 @@
         cursor: pointer;
       }
 
+}
+
+.preFileDirect{
+    position: absolute;
+    bottom: 37px;
+    left: 0px;
+    border-top-left-radius: 17px;
+    border-top-right-radius: 17px;
+    height: 195px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .msgDate{
@@ -112,6 +139,10 @@
         margin: 0;
         }
     }
+}
+
+#preview {
+    display: none !important;
 }
 
 
@@ -141,3 +172,22 @@
 }
 }
 
+.typingIndicator {
+    position: absolute;
+    z-index: 2;
+    & > span {
+      margin-top: 2px;
+      color: #a9c7f5;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: "Trebuchet MS";
+    }
+  }
+  .displayTyping {
+    animation: slideUp 0.3s 1;
+    bottom: 55px;
+  }
+  .hideTyping {
+    animation: slideDown 0.4s 1;
+    bottom: 10px;
+  }

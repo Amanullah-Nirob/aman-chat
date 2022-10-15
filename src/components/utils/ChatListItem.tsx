@@ -8,6 +8,7 @@ import { selectAppState } from '../../app/slices/AppSlice';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { dateStringOf, isImageFile, msgDateStringOf, msgTimeStringOf, truncateString } from './appUtils';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
+import TypingIndicator from './TypingIndicator';
 
 const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
     const loggedinUser=useAppSelector(selectCurrentUser)
@@ -116,9 +117,9 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
         )}
 
          {/* Last Message content */}
-         {typingChatUser ? (
+         {!typingChatUser ? (
           <span style={{ color: "#73F76D", margin: "-6px 0px -4px -30px" }}>
-           typing ......
+             <TypingIndicator typingChatUser={typingChatUser} />
           </span>
         ):(
             (lastMessage || lastMessage === null || isGroupChat) && (

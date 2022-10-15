@@ -1,6 +1,12 @@
 // external imports
 import React, { useEffect, useRef, useState } from 'react';
 import axios from "axios";
+import { Box, IconButton,Grid } from '@mui/material';
+import io from 'socket.io-client'
+
+
+import { AttachFile, EmojiEmotions } from '@mui/icons-material';
+import SendIcon from '@mui/icons-material/Send';
 // internal imports
 import { useAppSelector,useAppDispatch } from '../../app/hooks';
 import { selectAppState, setClientSocket, setOnlineUsers, setSocketConnected, toggleRefresh } from '../../app/slices/AppSlice';
@@ -14,16 +20,17 @@ import LoadingMsgs from '../utils/LoadingMsgs';
 import Message from '../utils/Message';
 import MsgOptionsMenu from '../menus/MsgOptionsMenu';
 import { displayToast } from '../../app/slices/ToastSlice';
-import { FIVE_MB, getAxiosConfig, isImageOrGifFile, parseInnerHTML } from '../utils/appUtils';
+import { FIVE_MB, getAxiosConfig, isImageOrGifFile, parseInnerHTML, setCaretPosition } from '../utils/appUtils';
 import { setLoading } from '../../app/slices/LoadingSlice';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
-import { Box } from '@mui/material';
-import io from 'socket.io-client'
+import Picker from '@emoji-mart/react'
+import AttachmentPreview from '../utils/AttachmentPreview';
+import TypingIndicator from '../utils/TypingIndicator';
 
 
 let msgFileAlreadyExists = false;
 
-const MessagePage = ({setDialogBody}:any) => {
+const MessagePage = ({setDialogBody,typingChatUser}:any) => {
   const dispatch=useAppDispatch()
   const theme=useAppSelector(selectTheme)
   const {selectedChat,fetchMsgs,clientSocket,isSocketConnected,refresh}:any=useAppSelector(selectAppState)
@@ -45,7 +52,7 @@ const MessagePage = ({setDialogBody}:any) => {
   const msgFileInput = useRef<any | null>({});
   const [fileAttached, setFileAttached] = useState(false);
   const msgContent = useRef<any | null>(null);
-  
+  const [enableMsgSend, setEnableMsgSend] = useState(false);
 
 // close select chat
   const close=()=>{
@@ -83,14 +90,15 @@ const selectAttachment = () => {
 };
 
 // reset Msg Input
-const resetMsgInput = (options:any) => {
+const resetMsgInput = (options?:any) => {
+  setFileAttached(false);
   setAttachmentData({
     attachment: null,
     attachmentPreviewUrl: "",
   });
   if(msgFileInput.current.value) msgFileInput.current.value = "";
   if (options?.discardAttachmentOnly) return;
-  setFileAttached(false);
+  msgContent.current.innerHTML = "";
 };
 
 
@@ -220,7 +228,6 @@ const deleteMessage= async()=>{
         chat: selectedChat,
       });
     }
-    dispatch(displayToast({ message:'message was deleted', type: "success", duration: 1500, positionVert: "bottom",positionHor:'center'}));
     setMessages(messages.filter((msg:any) => msg?._id !== clickedMsgId));
     dispatch(setLoading(false));
     setSending(false);
@@ -259,6 +266,23 @@ const deleteMessage= async()=>{
 
 
 // socket events start hare >>>>>>>>>------------------------------------------------------------------------------------------------------------------------------------------------
+ // new Msg Socket Event Handler
+ const newMsgSocketEventHandler = () => {
+  // off() prevents on() from executing multiple times
+  clientSocket.off("new msg received")
+    .on("new msg received", (newMsg:any, notifications:any) => {
+      const { chat } = newMsg; 
+      dispatch(toggleRefresh(!refresh));
+      if (selectedChat && chat && selectedChat._id === chat._id ) {
+        newMsg["sent"] = true;
+        setMessages([newMsg, ...messages]);
+        // deletePersistedNotifs([newMsg._id]);
+      } else {
+        notificationUpdate(notifications)
+      }
+    });
+};
+
 
 // updated Msg Socket Event Handler
 const updatedMsgSocketEventHandler = () => {
@@ -329,6 +353,7 @@ useEffect(() => {
     dispatch(setSocketConnected(true));
 });
   }
+  newMsgSocketEventHandler()
   deletedMsgSocketEventHandler();
   updatedMsgSocketEventHandler()
 });
@@ -428,25 +453,7 @@ useEffect(()=>{
  },[fetchMsgs])
 
 
-  const customScroll={ 
-    overflow:"auto", scrollbarWidth: 'thin',
-    // display: fileAttached && !msgEditMode ? 'none':'flex',
-    '&::-webkit-scrollbar': {
-      width: '0.4em',
-    },
-    '&::-webkit-scrollbar-track': {
-      background: theme==='light'?'#f1f1f1':'#424242',
-    },
-    '&::-webkit-scrollbar-thumb': {
-      background: theme==='light'?'#88888896':'#7b7b7b',
-    },
-    '&::-webkit-scrollbar-thumb:hover': {
-      background: theme==='light'?'#A8a8a8':'#999',
-    },
-  
-  }
-
-// ---------------------------------------------------------- input file  area ---------------------------------------------------------------------
+// ---------------------------------------------------------- input file  area start ---------------------------------------------------------------------
 
   const setMediaDuration = (mediaUrl:any, msgFile:any) => {
     const media = new Audio(mediaUrl);
@@ -485,8 +492,160 @@ useEffect(()=>{
       });
       setFileAttached(true);
     }
-
+   
   }
+
+// ---------------------------------------------------------- input file  area end ---------------------------------------------------------------------
+
+  // Emoji picker config
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const onEmojiIconClick = () => {
+    setShowEmojiPicker(!showEmojiPicker);
+  };
+
+  const hideEmojiPicker = () => {
+    if (showEmojiPicker) setShowEmojiPicker(false);
+  };
+  const addEmoji = (e:any) => {
+    let sym = e.unified.split("-");
+    let codesArray:any = [];
+    sym.forEach((el:any) => codesArray.push("0x" + el));
+    let emoji = String.fromCodePoint(...codesArray);
+    msgContent.current.value+=emoji
+    setCaretPosition(msgContent.current);
+    setEnableMsgSend(true);
+  };
+
+// message input start=====================================================================>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+let typing = false;
+let timeout: string | number | NodeJS.Timeout | undefined = undefined;
+
+function timeoutFunction(){
+  typing = false;
+  clientSocket?.emit("stop typing", selectedChat, loggedinUser);
+}
+const msgInputHandler =(e: { key: string; }) => {
+  if(isSocketConnected && typing === false) {
+    if(e.key !== "Enter") {
+      typing = true
+      clientSocket?.emit("typing", selectedChat, loggedinUser);
+      timeout = setTimeout(timeoutFunction, 5000);
+    }
+  } 
+  else {
+    clearTimeout(timeout);
+    timeout = setTimeout(timeoutFunction, 5000);
+  }
+
+};
+// input change
+const inputChange=(e:any)=>{
+  if(e.target.value){
+    setEnableMsgSend(true)
+  }else{
+    setEnableMsgSend(false)
+  }
+
+}
+
+// send message >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const sendMessage= async()=>{
+  timeoutFunction()
+  hideEmojiPicker();  
+  if (!attachmentData.attachment && !msgContent.current?.value) return;
+  const msgData = {
+    ...attachmentData,
+    content: msgContent.current?.value || "",
+  };
+  const isNonImageFile = !isImageOrGifFile(msgData.attachment?.name);
+
+    const newMsg = {
+      _id: Date.now(),
+      sender: {
+        _id: loggedinUser?._id,
+        profilePic: "",
+        name: "",
+        email: "",
+      },
+      fileUrl: msgData?.attachmentPreviewUrl,
+      file_id: "",
+      file_name:
+        msgData?.attachment?.name +
+        `${
+          msgData?.mediaDuration
+            ? `===${msgData.mediaDuration}`
+            : isNonImageFile
+            ? `===${msgData.attachment?.size || ""}`
+            : ""
+        }`,
+      content: msgData?.content,
+      createdAt: new Date().toISOString(),
+      sent: false,
+    };
+    setDontScrollToBottom(false);
+    // const newMessage={...newMsg,"sent":true}
+    // setMessages([newMessage, ...messages]);
+    resetMsgInput();
+    setSending(true);
+    const config = getAxiosConfig({ loggedinUser, formData: true });
+    try {
+        // Upload img/gif to cloudinary, and all other files to aws s3
+        const apiUrl = isNonImageFile? `${process.env.API_URL}/api/message/upload-to-s3`: `${process.env.API_URL}/api/message/`;
+
+        const formData = new FormData();
+        formData.append("attachment", msgData.attachment);
+        formData.append("mediaDuration", msgData?.mediaDuration);
+        formData.append("content", msgData.content);
+        formData.append("chatId", selectedChat?._id);
+        const { data } = await axios.post(apiUrl, formData, config);
+        const newMessage={...data,"sent":true}
+        setMessages([newMessage, ...messages]);
+
+        if (isSocketConnected) clientSocket?.emit("new msg sent", data);
+        dispatch(toggleRefresh(!refresh));
+        setSending(false);
+        msgContent.current.value = ""
+
+    } catch (error) {
+      displayError(error, "Couldn't Send Message");
+      setSending(false);
+    }
+
+}
+
+// keydown
+const msgKeydownHandler = (e: any) => {
+  hideEmojiPicker();
+  if (e.key === "Enter" && !e.shiftKey && (enableMsgSend || fileAttached || msgEditMode)) {
+    e.preventDefault();
+    if (msgEditMode) {
+      const msgDate = e.target.dataset.msgCreatedAt || e.target.parentNode.dataset.msgCreatedAt;
+      updateMessage(editableMsgContent?.current?.innerHTML, msgDate);
+    } else {
+      sendMessage();
+    }
+  }
+};
+
+
+const customScroll={ 
+  overflow:"auto", scrollbarWidth: 'thin',
+  height: fileAttached && !msgEditMode?'calc(100% - 255px)':'calc(100% - 65px)',
+  '&::-webkit-scrollbar': {
+    width: '0.4em',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: theme==='light'?'#f1f1f1':'#424242',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: theme==='light'?'#88888896':'#7b7b7b',
+  },
+  '&::-webkit-scrollbar-thumb:hover': {
+    background: theme==='light'?'#A8a8a8':'#999',
+  },
+
+}
+
 
     return (
         <div className='messageMainView'>
@@ -536,30 +695,94 @@ useEffect(()=>{
                          openDeleteMsgConfirmDialog={openDeleteMsgConfirmDialog}
                         />
 
+            {/* Typing indicator */}
+            <span className={`${typingChatUser ? "d-inline-block" : "d-none"}`}>
+              <TypingIndicator
+                typingChatUser={typingChatUser}
+                showAvatar={true}
+              />
+            </span>
 
-                      <div className='messageInput'>
-                         <input type="text"
-                   
+                  <div className='messageInput'>
+{/*file attach  */}
+  
+                  <div className="fileattach"> 
+                      <IconButton onClick={selectAttachment}>
+                        <AttachFile style={{ fontSize: 22 }} />
+                      </IconButton>
+{/* file attach   */}
+                     <input
+                      type="file"
+                      accept="*"
+                      onChange={handleMsgFileInputChange}
+                      name="attachment"
+                      id="attachMsgFile"
+                      ref={msgFileInput}
+                      style={{display:'none'}}
+                      disabled={loadingMsgs}
+                    />
+                  </div>
+
+  
+                    <div className="inputTextMain"
+                       onClick={(e:any) => {
+                        const { dataset } = e.target;
+                        const parentDataset = e.target.parentNode.dataset;
+                        const discardFileClicked = dataset.discardFile || parentDataset.discardFile;
+                        if (discardFileClicked) discardAttachment();
+                      }}
+                    >
+{/* emoji icon */}
+                    <div className="emojiIcon">
+                    <IconButton onClick={onEmojiIconClick}>
+                        <EmojiEmotions style={{ fontSize: 28 }} />
+                    </IconButton>
+                    </div>
+{/* emoji show */}
+                     {showEmojiPicker && (
+                        <div className='emojiShow'>
+                            <Picker onEmojiSelect={addEmoji} theme={theme==='light'?'light':'dark'} set='facebook' previewPosition='none'/>
+                         </div>
+                       )} 
+ {/* message attach show preview */}
+                      {fileAttached && !msgEditMode && (
+                              <AttachmentPreview
+                                attachmentData={attachmentData}
+                              />
+                        )}
+{/* main input text    */}
+                       <input type="text"
+                         onKeyUp={msgInputHandler}
+                         onKeyDown={msgKeydownHandler}
+                         onInput={inputChange} 
+                         onClick={hideEmojiPicker}
                          ref={msgContent}
                          placeholder='Aa'
-                         style={{backgroundColor:theme==='light'?'#f0f2f5':'#3a3b3c'}}
+                         style={{backgroundColor:theme==='light'?'#f0f2f5':'#3a3b3c',color:theme==='light'?'#000':'#fff',
+                         borderTopLeftRadius: fileAttached && !msgEditMode?'0':'17px',
+                         borderTopRightRadius: fileAttached && !msgEditMode?'0':'17px',
+                         borderBottomLeftRadius: '17px',
+                         borderBottomRightRadius: '17px',
+                        }}
                           />
+                    </div>
+  
+                      <div className='sendButton'>
+                      <IconButton  onClick={sendMessage}>
+                      <SendIcon />
+                      </IconButton>
+                      </div>
+
+      
+               
+                  
                       </div>
 
                        </section>
 
 
 
-                  <input
-                  type="file"
-                  accept="*"
-                  onChange={handleMsgFileInputChange}
-                  name="attachment"
-                  id="attachMsgFile"
-                  ref={msgFileInput}
-                  style={{display:'none'}}
-                  disabled={loadingMsgs}
-                />
+               
                      </>
                ):(
             
