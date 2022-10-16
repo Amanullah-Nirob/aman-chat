@@ -147,3 +147,5 @@ export const getFileSizeString = memoize((fileSize:any) => {
     ? (fileSize / ONE_KB).toFixed(0) + " KB"
     : fileSize + " B";
 });
+
+

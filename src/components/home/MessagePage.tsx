@@ -26,6 +26,7 @@ import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import Picker from '@emoji-mart/react'
 import AttachmentPreview from '../utils/AttachmentPreview';
 import TypingIndicator from '../utils/TypingIndicator';
+import FullSizeImage from '../utils/FullSizeImage';
 
 
 let msgFileAlreadyExists = false;
@@ -100,6 +101,35 @@ const resetMsgInput = (options?:any) => {
   if (options?.discardAttachmentOnly) return;
   msgContent.current.innerHTML = "";
 };
+
+
+  // download file
+  const downloadFile = async (fileId:any) => {
+    if (!fileId) return;
+    setDownloadingFileId(fileId);
+    setSending(true);
+    const config = getAxiosConfig({ loggedinUser, blob: true });
+    try {
+    const { data } = await axios.get(`${process.env.API_URL}/api/message/files/${fileId}`, config);
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(new Blob([data]));
+      link.setAttribute("download", fileId.split("---")[1] || fileId);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setDownloadingFileId("");
+      setSending(false);
+    } catch (error) {
+      displayError(error, "Couldn't Download File");
+      setDownloadingFileId("");
+      setSending(false);
+    }
+  };
+
+
+
 
 
 
@@ -265,6 +295,7 @@ const deleteMessage= async()=>{
 
 
 
+
 // socket events start hare >>>>>>>>>------------------------------------------------------------------------------------------------------------------------------------------------
  // new Msg Socket Event Handler
  const newMsgSocketEventHandler = () => {
@@ -397,6 +428,56 @@ const discardMsgDraft = () => {
   };
 
 
+  // displayFullSizeImage
+  const displayFullSizeImage = (e:any) => {
+    dispatch(setShowDialogActions(false));
+    setDialogBody(<FullSizeImage event={e} />);
+    dispatch(
+      displayDialog({
+        isFullScreen: true,
+        title: e.target?.alt || "Display Pic",
+      })
+    );
+  };
+
+   // viewMedia
+   const viewMedia = (src:any, fileData:any) => {
+    if (!src || !fileData) return;
+    const { fileName, isAudio } = fileData;
+    dispatch(setShowDialogActions(false));
+    setDialogBody(
+      <FullSizeImage
+        audioSrc={isAudio ? src : null}
+        videoSrc={!isAudio ? src : null}
+      />
+    );
+    dispatch(
+      displayDialog({
+        isFullScreen: true,
+        title: fileName || `${isAudio ? "Audio" : "Video"} File`,
+      })
+    );
+    setLoadingMediaId("");
+  };
+
+  // load media
+  const loadMedia = async (fileId:any, options:any) => {
+    if (!fileId || !options) return;
+    setLoadingMediaId(fileId);
+    const { fileName, isAudio } = options;
+    const config = getAxiosConfig({ loggedinUser, blob: true });
+    try {
+      const { data } = await axios.get(`${process.env.API_URL}/api/message/files/${fileId}`, config);
+
+      const mediaSrc = URL.createObjectURL(new Blob([data]));
+      viewMedia(mediaSrc, { fileName, isAudio });
+    } catch (error) {
+      displayError(error, "Couldn't Load Media");
+      setLoadingMediaId("");
+    }
+  };
+
+
 
 // message click handler start
 const msgsClickHandler=(e:any)=>{
@@ -409,8 +490,15 @@ const msgsClickHandler=(e:any)=>{
   const editMsgFileClicked = dataset.editMsgFile || parentDataset.editMsgFile;
   const discardDraftClicked =  dataset.discardDraft || parentDataset.discardDraft;
   const removeMsgFileClicked = dataset.removeMsgFile || parentDataset.removeMsgFile;
+  const fileId = dataset.download || parentDataset.download;
+  const videoId = dataset.video || parentDataset.video;
+  const audioId = dataset.audio || parentDataset.audio;
 
-  if(senderData?.length){
+  hideEmojiPicker();
+  if(fileId){
+    downloadFile(fileId);
+  }
+   else if(senderData?.length){
     // Open view profile dialog
     const props = {
       memberProfilePic: senderData[0],
@@ -432,6 +520,20 @@ const msgsClickHandler=(e:any)=>{
   }else if(removeMsgFileClicked){
     setMsgFileRemoved(true);
     discardAttachment()
+  }else if (dataset.imageId) {
+    displayFullSizeImage(e);
+  } else if (videoId) {
+    // Load video
+    loadMedia(videoId, {
+      fileName: dataset.videoName || parentDataset.videoName,
+      isAudio: false,
+    });
+  } else if (audioId) {
+    // Load audio
+    loadMedia(audioId, {
+      fileName: dataset.audioName || parentDataset.audioName,
+      isAudio: true,
+    });
   }
 
 
@@ -455,22 +557,24 @@ useEffect(()=>{
 
 // ---------------------------------------------------------- input file  area start ---------------------------------------------------------------------
 
-  const setMediaDuration = (mediaUrl:any, msgFile:any) => {
-    const media = new Audio(mediaUrl);
-    media.onloadedmetadata = () => {
-      const { duration }:any = media;
-      const minutes = duration / 60
-      const seconds = duration % 60;
-      setAttachmentData({
-        attachment: msgFile,
-        attachmentPreviewUrl: mediaUrl,
-        mediaDuration: `${minutes}:${
-          seconds < 10 ? `0${seconds}` : seconds
-        }+++${msgFile.type}`,
-      });
-      setFileAttached(true);
-    };
+const setMediaDuration = (mediaUrl:any, msgFile:any) => {
+  const media = new Audio(mediaUrl);
+  media.onloadedmetadata = () => {
+    const { duration }= media;
+
+    const minutes =duration / 60;
+    const seconds = duration % 60;
+
+    setAttachmentData({
+      attachment: msgFile,
+      attachmentPreviewUrl: mediaUrl,
+      mediaDuration: `${minutes}:${
+        seconds < 10 ? `0${seconds}` : seconds
+      }+++${msgFile.type}`,
+    });
+    setFileAttached(true);
   };
+};
 
   const handleMsgFileInputChange=(e:any)=>{
     const msgFile = e.target.files[0];
@@ -583,8 +687,8 @@ const sendMessage= async()=>{
       sent: false,
     };
     setDontScrollToBottom(false);
-    // const newMessage={...newMsg,"sent":true}
-    // setMessages([newMessage, ...messages]);
+    const newMessageImmediately={...newMsg,"sent":false}
+    setMessages([newMessageImmediately, ...messages]);
     resetMsgInput();
     setSending(true);
     const config = getAxiosConfig({ loggedinUser, formData: true });
@@ -630,7 +734,7 @@ const msgKeydownHandler = (e: any) => {
 
 const customScroll={ 
   overflow:"auto", scrollbarWidth: 'thin',
-  height: fileAttached && !msgEditMode?'calc(100% - 255px)':'calc(100% - 65px)',
+  height: fileAttached && !msgEditMode?'calc(100% - 255px)':'calc(100% - 90px)',
   '&::-webkit-scrollbar': {
     width: '0.4em',
   },
@@ -696,7 +800,7 @@ const customScroll={
                         />
 
             {/* Typing indicator */}
-            <span className={`${typingChatUser ? "d-inline-block" : "d-none"}`}>
+            <span style={{display:typingChatUser ? "inline-block" : "none",marginLeft:'19px',marginTop:'8px'}}>
               <TypingIndicator
                 typingChatUser={typingChatUser}
                 showAvatar={true}
@@ -713,7 +817,7 @@ const customScroll={
 {/* file attach   */}
                      <input
                       type="file"
-                      accept="*"
+                      accept="image/*"
                       onChange={handleMsgFileInputChange}
                       name="attachment"
                       id="attachMsgFile"

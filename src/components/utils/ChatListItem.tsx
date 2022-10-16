@@ -117,10 +117,10 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
         )}
 
          {/* Last Message content */}
-         {!typingChatUser ? (
-          <span style={{ color: "#73F76D", margin: "-6px 0px -4px -30px" }}>
+         {typingChatUser ? (
+          <p style={{ color: "red",}} className='chatListLastMessage' data-chat={_id} data-has-notifs={chatNotifCount}>
              <TypingIndicator typingChatUser={typingChatUser} />
-          </span>
+          </p>
         ):(
             (lastMessage || lastMessage === null || isGroupChat) && (
              <p data-chat={_id} data-has-notifs={chatNotifCount} className="chatListLastMessage" style={{color:theme==='light'?'rgb(129 129 129)':'rgb(167 167 167)'}}> 

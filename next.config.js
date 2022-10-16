@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['res.cloudinary.com'],
+    domains: ['res.cloudinary.com','localhost'],
   },
   env: {
     // API_URL:'https://chat-zoned.up.railway.app',

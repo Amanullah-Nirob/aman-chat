@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React,{ useEffect, useRef, useState} from 'react';
 import logo from '../../../public/static/images/favi.png'
-import { useAppSelector } from '../../app/hooks';
+import { useAppSelector,useAppDispatch } from '../../app/hooks';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import SearchIcon from '@mui/icons-material/Search';
 import Router from 'next/router';
@@ -12,8 +12,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CloseIcon from '@mui/icons-material/Close';
 import {Avatar,IconButton} from '@mui/material';
 import ProfileSettings from '../menus/ProfileSettings';
-
-
+import { getAxiosConfig } from '../utils/appUtils';
+import { setLoading } from '../../app/slices/LoadingSlice'
+import axios from 'axios'
+import { setFetchMsgs, setSelectedChat } from '../../app/slices/AppSlice';
+import { displayToast } from '../../app/slices/ToastSlice';
 
 function useDebounce(value:string, delay:number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -33,6 +36,7 @@ function useDebounce(value:string, delay:number) {
 
  
 const Header = ({setDialogBody}:any) => {
+ const dispatch=useAppDispatch()
  const theme=useAppSelector(selectTheme)
  const loggedinUser=useAppSelector(selectCurrentUser)
  const inputEl = useRef(null);
@@ -93,7 +97,7 @@ const Header = ({setDialogBody}:any) => {
              key={user._id} />
         ));
     } else {
-        productItemsView = <p>No product found.</p>;
+        productItemsView = <p>No User found.</p>;
     }
     if (keyword !== '') {
         clearTextView = (
@@ -111,6 +115,23 @@ const Header = ({setDialogBody}:any) => {
 }
 
 
+const createOrRetrieveChat= async (userId:any)=>{
+    handleClearKeyword()
+    const config = getAxiosConfig({ loggedinUser });
+    try {
+        const { data } = await axios.post(`${process.env.API_URL}/api/chat`, { userId }, config);
+        dispatch(setSelectedChat(data));
+        dispatch(setFetchMsgs(true));
+        // dispatch(setDeleteNotifsOfChat(data._id));
+    } catch (error:any) {
+        dispatch(
+            displayToast({  title: "Couldn't Create/Retrieve Chat", message: error.response?.data?.message || error.message, type: "error",
+              duration: 4000,
+              position: "bottom-center",
+            })
+          ); 
+    }
+}
 
 
 
@@ -144,6 +165,7 @@ const Header = ({setDialogBody}:any) => {
                     const userId = e.target.dataset.user || e.target.alt;
                     console.log(userId);
                     if (!userId) return;
+                    createOrRetrieveChat(userId);
                 }}>{productItemsView}</div>
 
             </div>

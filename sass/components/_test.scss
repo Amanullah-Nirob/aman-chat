@@ -173,21 +173,83 @@
 }
 
 .typingIndicator {
-    position: absolute;
+    position: relative;
+    bottom: 0;
     z-index: 2;
+    display: flex;
+    align-items: center;
+    padding: 0;
     & > span {
-      margin-top: 2px;
       color: #a9c7f5;
-      font-size: 16px;
-      font-weight: 600;
-      font-family: "Trebuchet MS";
+      font-size: 15px;
     }
   }
+
   .displayTyping {
-    animation: slideUp 0.3s 1;
-    bottom: 55px;
+    animation: slideUp 0.4s 1;
+    bottom: 0px;
   }
   .hideTyping {
     animation: slideDown 0.4s 1;
     bottom: 10px;
+  }
+
+
+  .pdfFile {
+    background-color: #f83333dc;
+    text-align: center;
+    @include setFileSizeColor(#f3d0f7);
+  }
+  .excelFile {
+    @include setFileSizeColor(#c2f1ef);
+  }
+  .pptFile {
+    background-color: #d1560e;
+    @include setFileSizeColor(#f7e7e7);
+  }
+  .wordFile {
+    background-color: #0102027e;
+    @include setFileSizeColor(#c2f1ef);
+  }
+  .mediaFile {
+    background-color: #4b0539be;
+    padding-bottom: 6px;
+    @include setFileSizeColor(#f3d0f7);
+    .mediaMsg {
+      display: flex;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+      border-radius: 5px;
+      min-width: 180px;
+      background-color: #666666aa;
+      transition: transform 0.2s ease;
+      padding: 10px 0;
+      color: #fff;
+      &:hover {
+        background-color: #777777aa;
+      }
+      &:active {
+        background-color: #888888aa;
+        transform: scale(0.98);
+      }
+      .playMedia {
+        transition: transform 0.2s ease;
+        &:active {
+          color: #d2e9e7;
+          transform: scale(0.8);
+        }
+      }
+      .mediaDuration {
+        position: absolute;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .videoDuration {
+    @include setPositions($bottom: 0px, $left: 5px);
+      }
+      .audioDuration {
+        @include setPositions($bottom: 2px, $left: 3px);
+      }
+    }
   }

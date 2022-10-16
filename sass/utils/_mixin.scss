@@ -4,17 +4,30 @@
 }
 @keyframes slideUp {
     0% {
-      bottom: 10px;
+      bottom: 5px;
     }
     100% {
-      bottom: 55px;
+      bottom: 15px;
     }
   }
+
   @keyframes slideDown {
     0% {
-      bottom: 55px;
+      bottom: 15px;
     }
     100% {
       bottom: 10px;
     }
   }
+
+  @mixin setFileSizeColor($fontColor) {
+    & > div {
+      color: $fontColor;
+    }
+  }
+  @mixin setPositions($top: auto, $bottom: auto, $left: auto, $right: auto) {
+    top: $top;
+    bottom: $bottom;
+    left: $left;
+    right: $right;
+  }  

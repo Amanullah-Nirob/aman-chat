@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import {Avatar} from '@mui/material'
-import AppGif from './LottieAnimation'
+import LottieAnimation from './LottieAnimation'
 import typingAnimData from "../../../public/animation/typing.json";
 
 const TypingIndicator = ({ typingChatUser, showAvatar }:any) => {
@@ -9,23 +9,22 @@ const TypingIndicator = ({ typingChatUser, showAvatar }:any) => {
     const typingUserName = typingUserData[1] || "";
     const isGroupChat = typingUserData[3] === "true";
     return (
-      <span className={`typingIndicator ${ typingChatUser ? "displayTyping" : "hideTyping"} 
-        d-flex pt-2 rounded-3 ps-2 ms-3`}
+      <span className={`typingIndicator ${typingChatUser ? "displayTyping" : "hideTyping"}`} 
       >
         {showAvatar && (
           <Avatar
             alt={typingUserName || "Receiver"}
             src={typingUserData[2] || "Receiver"}
-            style={{ height: 30, width: 30 }}
+            style={{ height: 30, width: 30,marginRight:'6px' }}
           />
         )}
-        <span className="ms-2">
-          {typingUserName && isGroupChat ? `${typingUserName} is ` : ""}typing
+        <span>
+          {typingUserName && isGroupChat ? `${typingUserName} is ` : ""}Typing
         </span>
-        <AppGif
+        <LottieAnimation
           ref={typingGif}
           className={""}
-          style={{ height: 30, bottom: 0 }}
+          style={{ height: 22, bottom: 0,}}
           animationData={typingAnimData}
         />
       </span>

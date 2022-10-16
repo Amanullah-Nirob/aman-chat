@@ -32,18 +32,18 @@ const AttachmentPreview = ({isEditMode,attachmentData,fileEditIcons}:any) => {
                 <Image src={attachmentPreviewUrl || PLACEHOLDER_IMG} alt="msgAttachment" layout='fill' />
               </div>
             ):attachment?.type?.startsWith("audio/") ? (
-                <div style={{ width: "clamp(190px, 48vw, 290px)" }}>
+                <div style={{ width: "clamp(100px, 250px, 260px)",position:'relative', }}>
                   <span className="m-2" style={{ zIndex: 6 }}>
                     {fileEditIcons}
                   </span>
-                  <audio src={attachmentPreviewUrl || ""} controls autoPlay>
+                  <audio src={attachmentPreviewUrl || ""} controls autoPlay style={{width:'100%'}}>
                     {attachment?.name}
                   </audio>
                 </div>
               ) : attachment?.type?.startsWith("video/") ? (
-                <div>
+                <div style={{ width: "clamp(100px, 250px, 260px)",marginTop: '12px',position:'relative', }}>
                   {editIconsWrapper}
-                  <video src={attachmentPreviewUrl || ""}  controls  autoPlay>
+                  <video src={attachmentPreviewUrl || ""}  controls  autoPlay style={{ width: '100%'}}>
                     {attachment?.name}
                   </video>
                 </div>
@@ -85,24 +85,27 @@ const AttachmentPreview = ({isEditMode,attachmentData,fileEditIcons}:any) => {
                   </audio>
                 </div>
               ) : attachment?.type?.startsWith("video/") ? (
-                <div>
+                <div style={{ width: "clamp(100px, 250px, 82px)",marginTop: '12px' }}>
                   {editIconsWrapper}
-                  <video src={attachmentPreviewUrl || ""}  controls  autoPlay>
+                  <video src={attachmentPreviewUrl || ""}  controls  autoPlay style={{width:'100%'}}>
                     {attachment?.name}
                   </video>
                 </div>
               ):(
-                <MsgAttachment
+                <div style={{width:'300px'}}>
+                  <MsgAttachment
                   isEditMode={isEditMode}
                   fileEditIcons={fileEditIcons}
                   isPreview={true}
                   fileData={{
                     fileUrl: attachmentPreviewUrl,
                     file_id: "",
-                    file_name: name,
+                    file_name: attachment?.name,
                     size:attachment?.size,
                   }}
                 />
+                </div>
+                
               )}
     
             </Box>
