@@ -88,7 +88,7 @@ const CustomDialog = ({dialogData,showDialogActions,showDialogClose,closeDialog,
             ) : (
               <>
                 {yeslabel === "Next" ? (
-                  <span>
+                  <span style={{display:'flex',alignItems:'center'}}>
                     Next
                     <KeyboardDoubleArrowRight
                       className="btnArrowIcons"

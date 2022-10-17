@@ -10,13 +10,15 @@ import {selectCurrentUser} from '../../app/slices/auth/authSlice'
 import UserListItem from './UserListItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloseIcon from '@mui/icons-material/Close';
-import {Avatar,IconButton} from '@mui/material';
+import {Avatar,IconButton,Badge} from '@mui/material';
 import ProfileSettings from '../menus/ProfileSettings';
 import { getAxiosConfig } from '../utils/appUtils';
 import { setLoading } from '../../app/slices/LoadingSlice'
 import axios from 'axios'
-import { setFetchMsgs, setSelectedChat } from '../../app/slices/AppSlice';
+import { setDeleteNotifsOfChat, setFetchMsgs, setSelectedChat } from '../../app/slices/AppSlice';
 import { displayToast } from '../../app/slices/ToastSlice';
+import { Notifications } from "@mui/icons-material";
+import NotificationsMenu from '../menus/NotificationsMenu';
 
 function useDebounce(value:string, delay:number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -35,7 +37,7 @@ function useDebounce(value:string, delay:number) {
 }
 
  
-const Header = ({setDialogBody}:any) => {
+const Header = ({setDialogBody,chats}:any) => {
  const dispatch=useAppDispatch()
  const theme=useAppSelector(selectTheme)
  const loggedinUser=useAppSelector(selectCurrentUser)
@@ -46,8 +48,35 @@ const Header = ({setDialogBody}:any) => {
  const [loading, setLoading] = useState(false);
  const debouncedSearchTerm = useDebounce(keyword, 300);
  const [profileSettingsMenuAnchor, setProfileSettingsMenuAnchor] = useState<any | null>(null);
+ const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState(null);
+ const [animateNotif, setAnimateNotif] = useState(false);
 
 
+// notification area start
+ const notifCount = loggedinUser?.notifications?.length || "";
+ const nitificationCountArry:any=[]
+ loggedinUser?.notifications.forEach((notification:any)=>{
+   if(nitificationCountArry.indexOf(notification?.sender?._id) ===-1){
+     nitificationCountArry.push(notification?.sender?._id)
+   }
+ }) 
+ const nitificationArryCount=nitificationCountArry.length || ""
+
+ const openNotificationMenu = (e:any) => setNotificationsMenuAnchor(e.target);
+
+ useEffect(() => {
+    if (animateNotif) return;
+    setAnimateNotif(true);
+    let timeout = setTimeout(() => {
+      setAnimateNotif(false);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, [nitificationArryCount]);
+
+// notification area end
+
+
+// search area =========================================
  useEffect(() => {
   if (debouncedSearchTerm) {
       setLoading(true);
@@ -75,14 +104,11 @@ const Header = ({setDialogBody}:any) => {
   }
 }, [debouncedSearchTerm]);
 
-
-
  function handleClearKeyword() {
   setKeyword('');
   setIsSearch(false);
   setLoading(false);
 }
-
 
 
   // Views
@@ -115,6 +141,7 @@ const Header = ({setDialogBody}:any) => {
 }
 
 
+// create chat
 const createOrRetrieveChat= async (userId:any)=>{
     handleClearKeyword()
     const config = getAxiosConfig({ loggedinUser });
@@ -122,7 +149,7 @@ const createOrRetrieveChat= async (userId:any)=>{
         const { data } = await axios.post(`${process.env.API_URL}/api/chat`, { userId }, config);
         dispatch(setSelectedChat(data));
         dispatch(setFetchMsgs(true));
-        // dispatch(setDeleteNotifsOfChat(data._id));
+        dispatch(setDeleteNotifsOfChat(data._id));
     } catch (error:any) {
         dispatch(
             displayToast({  title: "Couldn't Create/Retrieve Chat", message: error.response?.data?.message || error.message, type: "error",
@@ -173,6 +200,21 @@ const createOrRetrieveChat= async (userId:any)=>{
       </div>
 
       <div className='right-area'>
+      <div className="notification-area" style={{position:'relative'}}>
+      <IconButton
+            onClick={openNotificationMenu}
+          >
+            {nitificationArryCount && (
+              <Badge badgeContent={nitificationArryCount} color="error" className={`${animateNotif ? "notifCountChange" : "" }`}
+                sx={{ top: '-10px', left: '25px'}}
+              >
+              </Badge>
+            )}
+            <Notifications />
+        </IconButton>
+
+      </div>
+
       <div className="profile-area">
       <IconButton sx={{ color: "#999999",marginRight:'15px'}} onClick={(e) => setProfileSettingsMenuAnchor(e.target)}>
             <Avatar alt="LoggedInUser" src={loggedinUser?.profilePic}  />
@@ -184,6 +226,12 @@ const createOrRetrieveChat= async (userId:any)=>{
          setAnchor={setProfileSettingsMenuAnchor}
          setDialogBody={setDialogBody}
      ></ProfileSettings>
+
+    <NotificationsMenu 
+      chats={chats}
+      anchor={notificationsMenuAnchor}
+      setAnchor={setNotificationsMenuAnchor}
+    />
     </header>
     );
 };

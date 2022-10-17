@@ -96,7 +96,7 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
             className="lastMsgDate"
             data-chat={_id}
             data-has-notifs={chatNotifCount}
-            style={{ color: chatNotifCount ? "#50F0B8" : "#b9b9b9" }}
+            style={{ color: chatNotifCount ? "#1770e6" : "gray",fontWeight:chatNotifCount?'400':'' }}
           >
             {lastMsgDateString === "Today" ? msgTimeStringOf(lastMsgDate) : lastMsgDateString !== "Yesterday" ? dateStringOf(lastMsgDate) : "Yesterday"}
           </span>
@@ -123,7 +123,9 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
           </p>
         ):(
             (lastMessage || lastMessage === null || isGroupChat) && (
-             <p data-chat={_id} data-has-notifs={chatNotifCount} className="chatListLastMessage" style={{color:theme==='light'?'rgb(129 129 129)':'rgb(167 167 167)'}}> 
+             <p data-chat={_id} data-has-notifs={chatNotifCount} className="chatListLastMessage" 
+             style={{color:theme==='light'?chatNotifCount ?'#1770e6':'rgb(129 129 129)':chatNotifCount ?'#rgb(62 104 255)':'rgb(167 167 167)',fontWeight:chatNotifCount?'bold':''}}
+             > 
 
               {/* last message check ## you or me */}
               <span data-chat={_id} data-has-notifs={chatNotifCount}>

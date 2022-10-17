@@ -126,8 +126,6 @@ export const isImageOrGifFile = memoize((filename:any) =>
 
 export const getAxiosConfig = (options:any) => {
   if (!options) return;
-
-  
   const { loggedinUser, formData, blob } = options;
   const config:any = { headers: { "Content-Type": formData ? "multipart/form-data" : "application/json",}};
   if (blob) config.responseType = "blob";

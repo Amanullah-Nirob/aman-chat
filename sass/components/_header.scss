@@ -103,4 +103,15 @@
 
 
     }
+
+    .right-area{
+        display:flex;
+        align-items: center;
+        .notification-area {
+            margin-right: 16px;
+            .notifCountChange {
+                animation: growAndShrink 0.3s 1;
+            }
+        }
+    }
 } 

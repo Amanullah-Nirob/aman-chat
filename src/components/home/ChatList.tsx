@@ -14,6 +14,8 @@ import { debounce, getAxiosConfig, getOneToOneChatReceiver, truncateString } fro
 import ChatListItem from '../utils/ChatListItem';
 import axios from 'axios';
 import { displayToast } from '../../app/slices/ToastSlice';
+import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
+import AddMembersToGroup from '../dialogs/AddMembersToGroup';
 
 
 
@@ -87,11 +89,34 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
   }, 600);
 
 
-
  useEffect(()=>{
   fetchChats(onlineUsers)
  },[refresh,onlineUsers])
 
+
+ // create group area
+ const DEFAULT_GROUP_DP = process.env.DEFAULTImage;
+const openCreateGroupChatDialog=()=>{
+  dispatch(
+    setGroupInfo({
+      chatDisplayPic: null,
+      chatDisplayPicUrl: DEFAULT_GROUP_DP,
+      chatName: "",
+      users: [],
+    })
+  );
+  dispatch(setShowDialogActions(true));
+  setDialogBody(<AddMembersToGroup forCreateGroup={true} />);
+  dispatch(
+    displayDialog({
+      title: "Add Group Members",
+      nolabel: "Cancel",
+      yeslabel: "Next",
+      action: null,
+    })
+  );
+
+}
 
 
 
@@ -103,10 +128,10 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
            <div className="titleMain">
              <h2>Chat</h2>
             </div>
-          <div className='groupChatCreate' style={{backgroundColor:theme==='light'?'#ddd':'#4e4f50'}}>
-            <Button
-            sx={{borderRadius:'82px',minWidth: '40px',padding:'6px 0',color:theme==='light'?'#000':'#fff'}}
-            ><GroupIcon /></Button>
+          <div className='groupChatCreate' style={{backgroundColor:theme==='light'?'#ddd':'#4e4f50'}}onClick={openCreateGroupChatDialog}>
+            <Button sx={{borderRadius:'82px',minWidth: '40px',padding:'6px 0',color:theme==='light'?'#000':'#fff'}}>
+            <GroupIcon />
+            </Button>
           </div>
            </div>
            <div className="headerSearch">

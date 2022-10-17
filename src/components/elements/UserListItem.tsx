@@ -1,4 +1,4 @@
-import { Avatar } from "@mui/material";
+import { Avatar, ListItemButton } from "@mui/material";
 import { truncateString,useHover } from "../../components/utils/appUtils";
 import * as React from 'react';
 import { selectTheme } from "../../app/slices/theme/ThemeSlice";
@@ -29,7 +29,7 @@ const UserListItem = ({ user, truncateValues }:props) => {
   
   
   return (
-    <div data-user={_id} className='user-list-area'{...hover}>
+    <ListItemButton data-user={_id} className='user-list-area'{...hover}>
        <div className="userPhoto">
        <Avatar src={profilePic}  alt={_id} data-user={_id} />
        </div>
@@ -41,7 +41,7 @@ const UserListItem = ({ user, truncateValues }:props) => {
           {truncateString(email, max, index)}
         </p>
       </div>
-    </div>
+    </ListItemButton>
 
   );
 };
