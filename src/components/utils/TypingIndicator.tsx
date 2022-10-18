@@ -13,8 +13,8 @@ const TypingIndicator = ({ typingChatUser, showAvatar }:any) => {
       >
         {showAvatar && (
           <Avatar
-            alt={typingUserName || "Receiver"}
-            src={typingUserData[2] || "Receiver"}
+            alt={typingUserName}
+            src={typingUserData[2]}
             style={{ height: 30, width: 30,marginRight:'6px' }}
           />
         )}

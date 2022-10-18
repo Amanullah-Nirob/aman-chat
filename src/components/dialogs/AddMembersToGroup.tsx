@@ -73,6 +73,11 @@ const AddMembersToGroup = ({ getAddedMembers, forCreateGroup }:any) => {
     }, [groupData]);
 
     useEffect(() => {
+      // For add more group members
+      if (!forCreateGroup) getAddedMembers([...addedMembers]);
+    }, [addedMembers]);
+
+    useEffect(() => {
       setGroupData(groupInfo);
     }, [groupInfo]); 
 

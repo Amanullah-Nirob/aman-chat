@@ -10,12 +10,12 @@ import {selectCurrentUser} from '../../app/slices/auth/authSlice'
 import UserListItem from './UserListItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloseIcon from '@mui/icons-material/Close';
-import {Avatar,IconButton,Badge} from '@mui/material';
+import {Avatar,IconButton,Badge,Box} from '@mui/material';
 import ProfileSettings from '../menus/ProfileSettings';
 import { getAxiosConfig } from '../utils/appUtils';
 import { setLoading } from '../../app/slices/LoadingSlice'
 import axios from 'axios'
-import { setDeleteNotifsOfChat, setFetchMsgs, setSelectedChat } from '../../app/slices/AppSlice';
+import { selectAppState, setDeleteNotifsOfChat, setFetchMsgs, setSelectedChat } from '../../app/slices/AppSlice';
 import { displayToast } from '../../app/slices/ToastSlice';
 import { Notifications } from "@mui/icons-material";
 import NotificationsMenu from '../menus/NotificationsMenu';
@@ -50,14 +50,19 @@ const Header = ({setDialogBody,chats}:any) => {
  const [profileSettingsMenuAnchor, setProfileSettingsMenuAnchor] = useState<any | null>(null);
  const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState(null);
  const [animateNotif, setAnimateNotif] = useState(false);
-
+ const {selectedChat}=useAppSelector(selectAppState)
 
 // notification area start
  const notifCount = loggedinUser?.notifications?.length || "";
+
  const nitificationCountArry:any=[]
  loggedinUser?.notifications.forEach((notification:any)=>{
    if(nitificationCountArry.indexOf(notification?.sender?._id) ===-1){
      nitificationCountArry.push(notification?.sender?._id)
+   }else{
+     if(notification?.chat?.isGroupChat){
+      nitificationCountArry.push(notification?.sender?._id)
+     }
    }
  }) 
  const nitificationArryCount=nitificationCountArry.length || ""
@@ -163,7 +168,14 @@ const createOrRetrieveChat= async (userId:any)=>{
 
 
     return (
-     <header className='header' style={{backgroundColor:theme==='light'?'#fff':'transparent',boxShadow:theme==='light'?'rgb(66 66 66 / 6%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'',borderColor:theme==='light'?'transparent':'#303030'}}>
+     <Box className='header' sx={{
+      backgroundColor:theme==='light'?'#fff':'transparent',
+      boxShadow:theme==='light'?'rgb(66 66 66 / 6%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'',
+      borderColor:theme==='light'?'transparent':'#303030',
+      display:{xl:'flex', lg:'flex', md:'flex', sm:'flex',xs:selectedChat?'none':'flex'}
+    }}
+     
+     >
       <div className='left-area'>
         <div className="logo">
           <Image src={logo} layout='fill'></Image>
@@ -204,8 +216,8 @@ const createOrRetrieveChat= async (userId:any)=>{
       <IconButton
             onClick={openNotificationMenu}
           >
-            {nitificationArryCount && (
-              <Badge badgeContent={nitificationArryCount} color="error" className={`${animateNotif ? "notifCountChange" : "" }`}
+            {notifCount && (
+              <Badge badgeContent={notifCount} color="error" className={`${animateNotif ? "notifCountChange" : "" }`}
                 sx={{ top: '-10px', left: '25px'}}
               >
               </Badge>
@@ -232,7 +244,7 @@ const createOrRetrieveChat= async (userId:any)=>{
       anchor={notificationsMenuAnchor}
       setAnchor={setNotificationsMenuAnchor}
     />
-    </header>
+    </Box>
     );
 };
 

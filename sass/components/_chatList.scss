@@ -86,3 +86,8 @@
 }
 }
 
+@media screen and (max-width:'768px') {
+    .chatListArea-main {
+        border-right: 0
+    }
+}

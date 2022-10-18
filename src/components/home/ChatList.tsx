@@ -16,7 +16,7 @@ import axios from 'axios';
 import { displayToast } from '../../app/slices/ToastSlice';
 import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
 import AddMembersToGroup from '../dialogs/AddMembersToGroup';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
@@ -28,7 +28,7 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
 //  const { data, isError, isLoading, isSuccess, error }=useGetChatQuery('')
  const [filteredChats, setFilteredChats] = useState(chats);
  const notifs = [...loggedinUser?.notifications];
-
+ const matches = useMediaQuery('(max-width:600px)');
 
  const fetchChats= async (onlineUsers:any)=>{
    const config = getAxiosConfig({ loggedinUser });
@@ -144,7 +144,7 @@ const openCreateGroupChatDialog=()=>{
           <Box className='chatListAreaMain' 
           sx={{ overflow:"auto", scrollbarWidth: 'thin',
           '&::-webkit-scrollbar': {
-            width: '0.4em',
+            width: matches?'0':'0.4em',
           },
           '&::-webkit-scrollbar-track': {
             background: theme==='light'?'#f1f1f1':'#424242',

@@ -1,6 +1,6 @@
 // external imports
 import React from 'react';
-import { Avatar, IconButton,AppBar } from "@mui/material";
+import { Avatar, IconButton,AppBar,Box } from "@mui/material";
 // internal imports
 import { selectAppState } from '../../app/slices/AppSlice';
 import { useAppSelector } from '../../app/hooks';
@@ -8,8 +8,8 @@ import { getOneToOneChatReceiver, truncateString } from './appUtils';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import { Close } from '@mui/icons-material';
-
-const MsgHeader = ({close,openViewProfileDialog}:any) => {
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
     const loggedInUser=useAppSelector(selectCurrentUser)
     const {selectedChat}:any=useAppSelector(selectAppState)
     const theme=useAppSelector(selectTheme)
@@ -19,9 +19,15 @@ const MsgHeader = ({close,openViewProfileDialog}:any) => {
     : getOneToOneChatReceiver(loggedInUser, selectedChat?.users)?.name;
 
     return (
-        <div className='messageHeader' style={{boxShadow:theme==='light'?'rgb(0 0 0 / 6%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'rgb(0 0 0 / 40%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px'}}>
-       
-    <div className="photoAndName" onClick={openViewProfileDialog}>
+ <div className='messageHeader' style={{boxShadow:theme==='light'?'rgb(0 0 0 / 6%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'rgb(0 0 0 / 40%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px'}}>
+    
+    <Box className='mobileLeftArrow'>
+         <IconButton onClick={close}>
+          <ArrowBackIcon />
+        </IconButton>
+    </Box>
+    <div className="photoAndName"
+    onClick={selectedChat?.isGroupChat ? openGroupInfoDialog : openViewProfileDialog}>
         <IconButton >
         <Avatar
             src={ selectedChat?.isGroupChat ? selectedChat?.chatDisplayPic : getOneToOneChatReceiver(loggedInUser, selectedChat?.users)?.profilePic || "" }
@@ -35,10 +41,8 @@ const MsgHeader = ({close,openViewProfileDialog}:any) => {
     </div>
 
     <div className="msgHeaderOthers">
-        <IconButton onClick={close}>
-          <Close />
-        </IconButton>
-     </div>
+        {/* audio and video call coming soon */}
+     </div> 
 
         </div>
     );

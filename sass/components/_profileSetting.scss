@@ -37,8 +37,12 @@
     form {
         display: flex;
         flex-direction: column;
+    }}
+    .updateGPName{
+        margin: 10px 0;
+        h2 {
+            margin: 0;
+        }
     }
-
-   }
 
 }

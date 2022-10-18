@@ -9,7 +9,7 @@ import { AttachFile, EmojiEmotions } from '@mui/icons-material';
 import SendIcon from '@mui/icons-material/Send';
 // internal imports
 import { useAppSelector,useAppDispatch } from '../../app/hooks';
-import { selectAppState, setClientSocket, setOnlineUsers, setSocketConnected, toggleRefresh } from '../../app/slices/AppSlice';
+import { selectAppState, setClientSocket, setGroupInfo, setOnlineUsers, setSocketConnected, toggleRefresh } from '../../app/slices/AppSlice';
 import MsgHeader from '../utils/MsgHeader';
 import { setSelectedChat } from '../../app/slices/AppSlice';
 import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
@@ -27,6 +27,8 @@ import Picker from '@emoji-mart/react'
 import AttachmentPreview from '../utils/AttachmentPreview';
 import TypingIndicator from '../utils/TypingIndicator';
 import FullSizeImage from '../utils/FullSizeImage';
+import GroupInfoBody from '../dialogs/GroupInfoBody';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 
 let msgFileAlreadyExists = false;
@@ -55,7 +57,9 @@ const MessagePage = ({setDialogBody,typingChatUser}:any) => {
   const msgContent = useRef<any | null>(null);
   const [enableMsgSend, setEnableMsgSend] = useState(false);
 
-// close select chat
+  const matches = useMediaQuery('(max-width:600px)');
+
+// close select chat 
   const close=()=>{
     setLoadingMsgs(false);
     dispatch(setSelectedChat(null));
@@ -66,6 +70,15 @@ const MessagePage = ({setDialogBody,typingChatUser}:any) => {
     setDialogBody(props? <ViewProfileBody {...props} />:<ViewProfileBody />);
     dispatch(displayDialog({ title: "View Profile" }));
   };
+
+  const openGroupInfoDialog = () => {
+    // Open group info dialog
+    dispatch(setGroupInfo(selectedChat));
+    dispatch(setShowDialogActions(false));
+    setDialogBody(<GroupInfoBody messages={messages} />);
+    dispatch(displayDialog({ title: "Group Info" }));
+  };
+
 
 
 // notification update
@@ -283,9 +296,9 @@ const deleteMessage= async()=>{
 
   // Initializing Client Socket
   useEffect(() => {
-    console.log(io('http://localhost:5000/', { transports: ["websocket"] }));
+    console.log(io(`${process.env.API_URL}`, { transports: ["websocket"] }));
     dispatch(
-      setClientSocket(io('http://localhost:5000/', { transports: ["websocket"] }))
+      setClientSocket(io(`${process.env.API_URL}`, { transports: ["websocket"] }))
     );
   }, []);
 
@@ -736,7 +749,7 @@ const customScroll={
   overflow:"auto", scrollbarWidth: 'thin',
   height: fileAttached && !msgEditMode?'calc(100% - 255px)':'calc(100% - 90px)',
   '&::-webkit-scrollbar': {
-    width: '0.4em',
+    width: matches?'0':'0.4em',
   },
   '&::-webkit-scrollbar-track': {
     background: theme==='light'?'#f1f1f1':'#424242',
@@ -758,7 +771,9 @@ const customScroll={
                      <>
                      <MsgHeader
                        close={close}
-                       openViewProfileDialog={openViewProfileDialog}>
+                       openViewProfileDialog={openViewProfileDialog}
+                       openGroupInfoDialog={openGroupInfoDialog}
+                       >
                      </MsgHeader>
 
                       <section className="messageBody-main">

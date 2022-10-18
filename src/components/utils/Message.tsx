@@ -197,7 +197,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
                     <DoneAll
                       data-msg={currMsgId}
                       data-file-exists={file_id}
-                      sx={{width:'17px',marginLeft:'5px'}}
+                      sx={{width:'14px',marginLeft:'4px'}}
                     />
                   ) : (
                     <CircularProgress

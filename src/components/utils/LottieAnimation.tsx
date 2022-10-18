@@ -12,7 +12,9 @@ const LottieAnimation = forwardRef((props:any, gifRef:any) => {
     });
     return () => instance.destroy();
   }, []);
-  return <div ref={gifRef} className={className} style={style}></div>;
+  return (
+    <span  ref={gifRef} className={className} style={style}></span>
+  );
 });
 LottieAnimation.displayName = 'LottieAnimation';
 export default LottieAnimation;
