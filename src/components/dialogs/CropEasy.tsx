@@ -16,11 +16,15 @@ import { useProfilePhotoUpdateMutation } from '../../app/apisAll/userApi';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { setLoggedInUser } from '../../app/slices/auth/authSlice';
 import EditProfile from './EditProfile';
+import MainProfileDrawer from '../drawer/MainProfileDrawer';
+import { selectAppState } from '../../app/slices/AppSlice';
 
 const CropEasy = ({photoURL,setDialogBody}:any) => {
+
+  
 const dispatch=useAppDispatch()
 const loggedInUser=useAppSelector(selectCurrentUser)
-
+const {isMobile}=useAppSelector(selectAppState)
 const [profilePhotoUpdate,{isLoading,error,isError}]=useProfilePhotoUpdateMutation()
 
 
@@ -111,15 +115,15 @@ const handleBack=()=>{
 
 
    return (
-    <>
+    <Box>
       <DialogContent
         dividers
         sx={{
           background: '#333',
           position: 'relative',
-          height: 400,
-          width: 'auto',
-          minWidth: { sm: 500 },
+          height: isMobile?350 : 400,
+          width: isMobile?'325px':'auto',
+          minWidth: { sm: 500, },
         }}
       >
         <Cropper
@@ -166,13 +170,20 @@ const handleBack=()=>{
             flexWrap: 'wrap',
           }}
         >
-          <Button
+
+          {isMobile?'':(
+            <Button
             variant="outlined"
             startIcon={<ArrowBackIosIcon />}
             onClick={handleBack}
             disabled={uploading?true:false} >
-            Back
-          </Button>
+             Back
+            </Button>
+          )
+          }
+           
+
+      
 
           <LoadingButton
             variant="contained"
@@ -182,7 +193,7 @@ const handleBack=()=>{
           </LoadingButton>
         </Box>
       </DialogActions>
-    </>
+    </Box>
   );
 };
 

@@ -8,6 +8,7 @@ import { persistStore } from "redux-persist";
 import MusterLayout from '../components/layouts/MusterLayout'
 import '/sass/style.scss';
 // import '/public/static/css/bootstrap.min.css';
+import '/public/static/css/slick.scss';
 import {store} from '../app/store'
 
 let persistor = persistStore(store);

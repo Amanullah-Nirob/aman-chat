@@ -15,6 +15,7 @@ import { displayToast } from '../../app/slices/ToastSlice';
 import { setLoading,selectLoadingState } from '../../app/slices/LoadingSlice';
 import { useProfileNameUpdateMutation } from '../../app/apisAll/userApi';
 import LoadingButton from '@mui/lab/LoadingButton';
+import { selectAppState } from '../../app/slices/AppSlice';
 
 
 const EditProfile = ({setDialogBody}:any) => {
@@ -24,7 +25,8 @@ const EditProfile = ({setDialogBody}:any) => {
     const {childDialogMethods}:any=useAppSelector(selectChildDialogState)
     const {setChildDialogBody,displayChildDialog,closeChildDialog}=childDialogMethods
     const loading =useAppSelector(selectLoadingState)
-
+    const {isMobile}=useAppSelector(selectAppState)
+    
   const displayWarning = (message = "Warning", duration = 3000) => {
     dispatch(
       displayToast({
@@ -66,7 +68,7 @@ const EditProfile = ({setDialogBody}:any) => {
       dispatch(setShowDialogActions(false));
       setDialogBody(<CropEasy photoURL={URL.createObjectURL(file)} setDialogBody={setDialogBody} />);
       dispatch(
-        displayDialog({
+        displayDialog({ 
           title: `Crop Profile Photo`,
         })
       );
@@ -104,13 +106,14 @@ const EditProfile = ({setDialogBody}:any) => {
 
     return (
         <Box sx={{width:{xs:'100%',sm:'500px'},padding:'4px 24px 21px'}}>
-           <div className="profile-area">
+           <div className="profile-area" style={{display:'flex',flexDirection:isMobile?'column':'row'}}>
            <div className='profile-Image'>
-           <Avatar  alt="Profile Photo" sx={{ width: 106, height: 106 }} >
-           <Image src={loggedinUser?.profilePic} layout='fill' /> 
+           <Avatar  alt="Profile Photo" sx={{  width: isMobile?95:106, height:isMobile?95:106 }} 
+            src={loggedinUser?.profilePic}
+           >
            </Avatar>
 
-            <div className="profile-img-icon" style={{backgroundColor:theme==='light'?'#d8dfda':'#18191a'}}>
+            <div className="profile-img-icon" style={{backgroundColor:theme==='light'?'#d8dfda':'#18191a',right:isMobile?'-11px':'0',bottom:isMobile?'-10px':'0'}}>
             <label htmlFor="profilePhoto">
             <input accept="image/*" id="profilePhoto" type="file" style={{ display: 'none' }}
               onChange={handleChange}
@@ -118,20 +121,19 @@ const EditProfile = ({setDialogBody}:any) => {
              <CameraAltIcon />
             </label>
             </div>
-
             </div>
             {!editName ? 
-               <div className='profile-content'>
+               <div className='profile-content' style={{width:isMobile?'':'55%',textAlign:isMobile?'center':'start',lineHeight:isMobile?'23px':'none',marginTop:isMobile?'8px':'0'}}>
                <div>
                <h2>{loggedinUser?.name}</h2>
                <h4>{loggedinUser?.email}</h4>
                </div>
-                <Box sx={{marginTop:{xs:'5px',sm:'12px'}}} onClick={()=>setEditName(true)}>
+                <Box sx={{marginTop:{xs:'5px',sm:'12px',transform:isMobile?'translate(21px, 3px)':''}}} onClick={()=>setEditName(true)}>
                 <ModeEditIcon />
                 </Box>
               </div>
               :
-              <div className='editNameFrom'>
+              <div className='editNameFrom' style={{marginTop:isMobile?'15px':'0'}}>
                 <form onSubmit={handleUpdateName}>
                 <TextField variant="outlined" defaultValue={name} onChange={(e:any)=>setName(e.target.value)}/>
 

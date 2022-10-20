@@ -52,7 +52,7 @@ const ProfileSettings = ({anchor,setAnchor,setDialogBody}:any) => {
   // profile update
   const openEditProfileDialog=()=>{
     dispatch(setShowDialogActions(false));
-    setDialogBody(<EditProfile setDialogBody={setDialogBody} />);
+    setDialogBody(<EditProfile setDialogBody={setDialogBody}/>);
     dispatch(
       displayDialog({
         title: `Edit Profile`,

@@ -1,15 +1,13 @@
 .profile-area{
-    display: flex;
     align-items: center;
     
     .profile-Image{
         position: relative;
-        width: 110px;
-        height: 109px;
+
         .profile-img-icon {
             position: absolute;
-            bottom: 0;
-            right: 0;
+            // bottom: 0;
+            // right: 0;
             text-align: center;
             background-color: #d8dfda;
             padding: 6px 6px 0px 6px;
@@ -25,7 +23,6 @@
         margin-left: 15px;
         display: flex;
         justify-content: space-between;
-        width: 55%;
         h2,h4{
             margin: 0;
         }
@@ -45,4 +42,13 @@
         }
     }
 
+}
+.notificationUserList {
+    width: 307px;
+    padding: 10px;
+}
+.notificationListItem p {
+    margin: 0;
+    line-height: 19px;
+    margin-left: 9px;
 }

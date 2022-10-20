@@ -1,4 +1,5 @@
 import { Edit,KeyboardDoubleArrowLeft } from '@mui/icons-material';
+import { Box } from '@mui/material';
 import Image from 'next/image';
 import React, { useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
@@ -109,7 +110,7 @@ const createGroupChat=async()=>{
 
 
     return (
-        <section className="newGroup">
+        <Box className="newGroup" sx={{width:{sm:'clamp(230px, 55vw, 300px)',xs:'clamp(230px, 76vw, 300px)'}}}>
           <div className='groupCrtImage'>
           <Avatar src={chatDisplayPicUrl} sx={{width:'200px',height:'200px'}}></Avatar>
             <div className="profileImageIcon">
@@ -160,7 +161,7 @@ const createGroupChat=async()=>{
       </DialogActions>
 
 
-        </section>
+        </Box>
     );
 };
 

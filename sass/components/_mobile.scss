@@ -1,0 +1,51 @@
+.modeStatus p {
+    margin: 0;
+    line-height: 19px;
+}
+
+.modeStatus p:last-child {
+    font-size: 13px;
+    color: #8b8888;
+}
+.changePassword {
+    margin-top: 10px;
+    display: flex;
+    padding: 13px 0px;
+    .changePassIcon {
+        margin-right: 24px;
+        background: aqua;
+        border-radius: 42px;
+        width: 37px;
+        height: 37px;
+        padding: 4px 8px;
+        transform: translate(3px, 0px);
+    }
+    .changPassTxt {
+        p {
+            margin: 0;
+            line-height: 15px;
+            &:last-child{
+                font-weight: bold;
+                letter-spacing: 4px;
+                font-size: 19px;
+            }
+        }
+    }
+}
+.logout-area {
+    display: flex;
+    align-items: center;
+    .logoutIcon {
+        margin-right: 24px;
+        background: red;
+        border-radius: 42px;
+        width: 37px;
+        height: 37px;
+        padding: 6px 8px;
+        transform: translate(3px, 0px);
+    }
+    
+}
+.notification-area.mobile {
+    margin: 0;
+}

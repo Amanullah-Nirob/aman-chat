@@ -188,7 +188,7 @@ const AddMembersToGroup = ({ getAddedMembers, forCreateGroup }:any) => {
 
 
     return (
-        <div className='addGroupMembers'>
+        <Box className='addGroupMembers' sx={{width:{sm:'clamp(250px, 70vw, 360px)',xs:'clamp(250px, 82vw, 378px)'}}}>
         <section
         className=""
         style={{
@@ -260,7 +260,7 @@ const AddMembersToGroup = ({ getAddedMembers, forCreateGroup }:any) => {
         showChildDialogActions={showDialogActions}
         showChildDialogClose={showDialogClose}
       />
-        </div>
+        </Box>
     );
 };
 

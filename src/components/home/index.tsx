@@ -7,12 +7,15 @@ import { hideDialog, selectCustomDialogState } from '../../app/slices/CustomDial
 import CustomDialog from '../utils/CustomDialog';
 import ChatList from './ChatList';
 import MessagePage from './MessagePage';
-import {Grid} from '@mui/material'
+import {Grid,Box} from '@mui/material'
 import { selectAppState, setDeleteNotifsOfChat, setGroupInfo, setSelectedChat, toggleRefresh } from '../../app/slices/AppSlice';
 import { getAxiosConfig, truncateString } from '../utils/appUtils';
 import axios from 'axios';
 import { displayToast } from '../../app/slices/ToastSlice';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
+import MobileHeader from '../elements/MobileHeader';
+import MainProfileDrawer from '../drawer/MainProfileDrawer';
+import MobileNavigation from '../mobile/MobileNavigation';
 
 const ChatHome = () => {
 const loggedinUser=useAppSelector(selectCurrentUser)
@@ -22,7 +25,7 @@ const {dialogData,showDialogActions}=useAppSelector(selectCustomDialogState)
 const [dialogBody, setDialogBody] = useState<any | null >(<></>);
 const [chats, setChats] = useState<any | null>([]);
 const [typingChatUsers, setTypingChatUsers] = useState<any | null>([]);
-
+const matches = useMediaQuery('(max-width:600px)');
 
 
 const getTypingUserName = (typingUser:any) => truncateString(typingUser.name?.toString().split(" ")[0], 12, 9) || " ";
@@ -90,8 +93,6 @@ const groupSocketEventHandlers = () => {
     dispatch(toggleRefresh(!refresh));
   });
 };
-
-
 
 
 const typingSocketEventHandler = () => {
@@ -168,7 +169,12 @@ const typingSocketEventHandler = () => {
         <>
         {loggedinUser && 
          <>
+          <Box sx={{display:matches?'none':'block'}}>
           <Header chats={chats}  setDialogBody={setDialogBody}></Header>
+          </Box>
+
+
+           
           {/* applicationMainBody */}
          <Grid container>
               <Grid item xl={2.5} lg={3.1} md={3.7} sm={12} xs={12} sx={{display:selectedChat?{lg:'block',md:'block',sm:'none',xs:'none'}:'block'}}>
@@ -191,7 +197,11 @@ const typingSocketEventHandler = () => {
                 </Grid>
           </Grid>
 
-         
+          <Box sx={{display:!matches || selectedChat?'none':'block'}}>
+           <MobileNavigation
+             chats={chats} 
+           ></MobileNavigation>
+          </Box>
 
 
             <CustomDialog

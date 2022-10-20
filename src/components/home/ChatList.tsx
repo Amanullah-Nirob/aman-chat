@@ -1,14 +1,14 @@
 // external import
 import React, { useEffect, useState } from 'react';
 import GroupIcon from '@mui/icons-material/Group';
-import { Box,Button,List,ListItemButton} from '@mui/material';
+import { Box,Button,List,ListItemButton,Avatar,IconButton} from '@mui/material';
 
 // internal imports
 import { useAppSelector,useAppDispatch } from '../../app/hooks';
 import {selectTheme} from '../../app/slices/theme/ThemeSlice'
 import LoadingList from '../utils/LoadingList';
 import { useGetChatQuery } from '../../app/apisAll/chat';
-import { selectAppState, setDeleteNotifsOfChat, setFetchMsgs, setGroupInfo, setSelectedChat } from '../../app/slices/AppSlice';
+import { selectAppState, setDeleteNotifsOfChat, setFetchMsgs, setGroupInfo, setSelectedChat,setIsMobile } from '../../app/slices/AppSlice';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { debounce, getAxiosConfig, getOneToOneChatReceiver, truncateString } from '../utils/appUtils';
 import ChatListItem from '../utils/ChatListItem';
@@ -17,6 +17,14 @@ import { displayToast } from '../../app/slices/ToastSlice';
 import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
 import AddMembersToGroup from '../dialogs/AddMembersToGroup';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Slider from 'react-slick';
+import { Skeleton } from "@mui/material";
+import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
+import { settings } from '../../../utilities/carouselHelpers';
+import MainProfileDrawer from '../drawer/MainProfileDrawer';
+import { styled, useTheme } from '@mui/material/styles';
+
+
 
 
 const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
@@ -24,11 +32,15 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
  const loggedinUser=useAppSelector(selectCurrentUser)
  const [loading, setLoading] = useState(true);
  const dispatch=useAppDispatch()
- const { selectedChat, refresh,onlineUsers }:any = useAppSelector(selectAppState);
+ const { selectedChat, refresh,onlineUsers, }:any = useAppSelector(selectAppState);
 //  const { data, isError, isLoading, isSuccess, error }=useGetChatQuery('')
  const [filteredChats, setFilteredChats] = useState(chats);
  const notifs = [...loggedinUser?.notifications];
  const matches = useMediaQuery('(max-width:600px)');
+
+
+
+
 
  const fetchChats= async (onlineUsers:any)=>{
    const config = getAxiosConfig({ loggedinUser });
@@ -77,6 +89,10 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
       }
  }
 
+ const activeUsers=filteredChats.filter((users:any)=>users?.isOnline===true)
+
+  
+ 
    // Debouncing filterChats method to limit the no. of fn calls
    const searchChats = debounce((e:any) => {
     const chatNameInput = e.target.value?.toLowerCase().trim();
@@ -119,28 +135,142 @@ const openCreateGroupChatDialog=()=>{
 }
 
 
+// mobile area start
+const [open, setOpen] = useState(false);
+const handleDrawerOpen = () => {
+  dispatch(setIsMobile(true))
+  setOpen(true);
+};
+const handleDrawerClose = () => {
+  dispatch(setIsMobile(false))
+  setOpen(false);
+};
+
+
+
+
 
     return (
         <div className='chatListArea-main' style={{borderColor:theme==='light'?'rgb(233 226 226)':'#444242'}}>
 
-          <Box className="chatListHeader">
+          <Box className="chatListHeader" >
+{/* header title and search */}
            <div className="headerTitle">
            <div className="titleMain">
-             <h2>Chat</h2>
+             {!matches?<h2>Chat</h2>:(
+               <div className='mobileChatTitle'>
+                 <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  edge="end"
+                  onClick={handleDrawerOpen}
+                  sx={{padding:'0',marginRight:'10px'}}
+                >
+                <Avatar
+                 src={loggedinUser?.profilePic}
+                 alt={loggedinUser?.name}
+                ></Avatar>
+                </IconButton>
+          
+                <h2>Chat</h2>
+               </div>
+             )}
             </div>
-          <div className='groupChatCreate' style={{backgroundColor:theme==='light'?'#ddd':'#4e4f50'}}onClick={openCreateGroupChatDialog}>
+          <div className='groupChatCreate' style={{backgroundColor:theme==='light'?'#ddd':'rgba(56, 56, 56, 0.64)'}}onClick={openCreateGroupChatDialog}>
             <Button sx={{borderRadius:'82px',minWidth: '40px',padding:'6px 0',color:theme==='light'?'#000':'#fff'}}>
             <GroupIcon />
             </Button>
           </div>
-           </div>
+           </div> 
+
+{/* header search */}
            <div className="headerSearch">
-             <input  type="text" placeholder='Search Chat' style={{backgroundColor:theme==='light'?'#f0f2f5':'#3b3b3b',color:theme==='light'?'#000':'#eee'}}
+             <input  type="text" placeholder='Search Chat' style={{backgroundColor:theme==='light'?'#f0f2f5':'rgb(56 56 56 / 64%)',color:theme==='light'?'#000':'#eee'}}
               onChange={(e) => searchChats(e)} 
               />
            </div>
-          </Box>
+{/* active users */}
+           <div className="activeUsers">
+            <div className='createOthers'>
+               <div>
+               <Avatar sx={{width:'50px',height:'50px',backgroundColor:theme==='light'?'':'rgb(56 56 56 / 64%)'}}>
+                  <OnlinePredictionIcon sx={{color:theme==='light'?'#000':'#fff'}} />
+               </Avatar>
+               </div>
+               <p>Online Users</p>
+            </div>
+            <div 
+            className="userActiveLists">
+            <Slider {...settings}>
+            {loading? (
+              [...Array(9)].map((e, i) => (
+                <div key={`loadingListOf${'activeUsers' + i}`} style={{width:'50px'}}>
+                  <Skeleton
+                    variant="circular"
+                    className="loadingDp"
+                    style={{ backgroundColor: "#999", width: '49px', height: '49px' }}
+                  />
+                </div>
+                ))
+            ):(
+             
+                 activeUsers?.length > 0 ?(
+                      activeUsers.map((activeUser:any)=>(
+                        <div className='activeUserItem' key={activeUser._id}
+                        onClick={(e:any)=>{
+                          const { dataset }:any = e.target;
+                          const parentDataset = e.target.parentNode.dataset;
+                          const clickedChatId = dataset.chat || parentDataset.chat;
+                          const hasNotifs = dataset.hasNotifs || parentDataset.hasNotifs;
+                          if (!clickedChatId) return;
+                          const clickedChat = filteredChats.find((chat:any) => chat._id === clickedChatId);
+                          if (clickedChat._id === selectedChat?._id) return;
+                          dispatch(setSelectedChat(clickedChat));
+                          dispatch(setFetchMsgs(true));
+                          if (clickedChat?.isGroupChat) dispatch(setGroupInfo(clickedChat));
+                          if (hasNotifs) dispatch(setDeleteNotifsOfChat(clickedChatId));
+                         }}
+                        >
+                        <IconButton sx={{padding:'0'}}
+                        data-chat={activeUser?._id}
+                        data-has-notifs={activeUser?.chatNotifCount}
+                        >
+                        <div className='userAvatar'
+                        data-chat={activeUser?._id}
+                        data-has-notifs={activeUser?.chatNotifCount}
+                        >
+                          <Avatar 
+                          data-chat={activeUser?._id}
+                          data-has-notifs={activeUser?.chatNotifCount}
+                           src={activeUser?.chatDisplayPic}
+                           alt={activeUser?.chatName}
+                           sx={{width:'50px',height:'50px'}}
+                          ></Avatar>
+                            <span style={{display:activeUser?.isOnline?'block':'none',borderColor:theme==='light'?'#fff':'#000'}} className='activeStatus'></span>
+                           </div>
+                        </IconButton>
+                        <div className='userActiveName'
+                         data-chat={activeUser?._id}
+                         data-has-notifs={activeUser?.chatNotifCount}
+                        >
+                          <p>{truncateString(activeUser?.chatName.split(" ")[0] , 5, 5)}</p>
+                          <p>{truncateString(activeUser?.chatName.split(" ")[1] , 6, 5)}</p>
+                         </div>
+    
+                        </div>
+                       ))
+                  ):(
+                    ''
+                  )
+                  
 
+            )
+          }
+            </Slider>
+            </div>
+        </div>
+          </Box>
+{/* main chat list */}
           <Box className='chatListAreaMain' 
           sx={{ overflow:"auto", scrollbarWidth: 'thin',
           '&::-webkit-scrollbar': {
@@ -221,6 +351,15 @@ const openCreateGroupChatDialog=()=>{
           }
            </Box> 
 
+         
+            <MainProfileDrawer
+            setDialogBody={setDialogBody}
+            open={open}
+            handleDrawerClose={handleDrawerClose}
+           ></MainProfileDrawer>
+    
+           
+  
         </div>
     );
 };

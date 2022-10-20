@@ -3,8 +3,56 @@
     height: calc(100vh - 68px);
     overflow: hidden;
     border-right: 0.1rem solid;
+
+    .activeUsers{
+        display: flex;
+        .createOthers {
+            width: 19%;
+            p {
+                margin: 0;
+                font-size: 13px;
+                line-height: 15px;
+                margin-top: 6px;
+                margin-left: 5px;
+            }
+        }
+        .userActiveLists {
+            width: 90%;
+        }
+        h3{
+            margin: 0;
+        }
+        .activeUserItem{
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            .userActiveName {
+                text-align: center;
+                margin-top: 6px;
+                line-height: 14px;
+                p {
+                    margin: 0;
+                    font-size: 13px;
+                }
+            }
+            .userAvatar{
+                position: relative;
+                .activeStatus {
+                    background-color: #46ab5e;
+                    width: 14px;
+                    height: 14px;
+                    position: absolute;
+                    bottom: 3px;
+                    right: 2px;
+                    border-radius: 23px;
+                    border: 1px solid;
+                }
+            }
+        }
+    }
     .chatListHeader {
-        padding: 10px 15px;
+        padding: 10px 15px 0px;
+
         .headerTitle{
             display: flex;
             align-items: center;
@@ -19,9 +67,10 @@
                 border-radius: 29px;
             }
         }
+
         .headerSearch {
             margin-top: 5px;
-            margin-bottom: 13px;
+            margin-bottom: 17px;
             input {
                 width: 100%;
                 padding: 10px 16px;
@@ -31,7 +80,9 @@
                 font-size: 16px;
             }
         }
-
+        .mobileChatTitle {
+            display: flex;
+        }
     }
 
     .chatListAreaMain {

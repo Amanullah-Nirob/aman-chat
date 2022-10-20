@@ -186,7 +186,7 @@ const createOrRetrieveChat= async (userId:any)=>{
                     ref={inputEl}
                     type="text"
                     value={keyword}
-                    placeholder='Search' style={{backgroundColor:theme==='light'?'#f0f2f5':'#3b3b3b',color:theme==='light'?'#000':'#fff'}}
+                    placeholder='Search' style={{backgroundColor:theme==='light'?'#f0f2f5':'rgb(56 56 56 / 64%)',color:theme==='light'?'#000':'#fff'}}
                     onChange={(e) => setKeyword(e.target.value)}
                 />
                 {clearTextView}

@@ -18,6 +18,7 @@ const AppSlice = createSlice({
     deleteNotifsOfChat: "",
     clientSocket: null,
     isSocketConnected: false,
+    isMobile: false,
   },
 
   reducers: {
@@ -45,6 +46,9 @@ const AppSlice = createSlice({
     setOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
     },
+    setIsMobile: (state, action) => {
+      state.isMobile = action.payload;
+    },
   },
 
 });
@@ -57,7 +61,8 @@ export const {
   setDeleteNotifsOfChat,
   setClientSocket,
   setSocketConnected,
-  setOnlineUsers
+  setOnlineUsers,
+  setIsMobile
 } = AppSlice.actions;
 
 export const selectAppState = (state: RootState) => state.AppData;

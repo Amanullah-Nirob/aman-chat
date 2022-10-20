@@ -2,11 +2,13 @@ import React from 'react';
 import { FormControlLabel, Hidden, Switch,styled } from '@mui/material';
 import { switchTheme,selectTheme } from '../../app/slices/theme/ThemeSlice';
 import { useAppSelector,useAppDispatch } from '../../app/hooks';
+import { selectAppState } from '../../app/slices/AppSlice';
 
 const SwitchToggle = () => {
 
   const dispatch = useAppDispatch();
   const theme = useAppSelector(selectTheme); 
+  const {isMobile}=useAppSelector(selectAppState)
   const handleChange = (_event: any) => {
     dispatch(switchTheme(theme == 'dark' ? 'light' : 'dark'))
 };
@@ -57,7 +59,18 @@ const SwitchToggle = () => {
                 <FormControlLabel
                   control={<MaterialUISwitch sx={{ m: 1 }} checked={theme == 'dark'}
                   onChange={handleChange}   />}
-                  label={ <Hidden mdDown>{theme == 'dark' ? 'Dark': 'Light'}</Hidden>}
+                  label={isMobile?<Hidden>{theme == 'dark' ? (
+                       <div className='modeStatus'>
+                         <p>Dark mode</p>
+                         <p>On</p>
+                       </div>
+                  ): (
+                    <div className='modeStatus'>
+                    <p>Dark mode</p>
+                    <p>Off</p>
+                  </div>
+                  )}
+                  </Hidden>:<Hidden mdDown>{theme == 'dark' ? 'Dark': 'Light'}</Hidden>}
                 />
         </div>
     );
