@@ -13,7 +13,9 @@ import authSliceReducer from './slices/auth/authSlice'
 import CustomDialogReducer from './slices/CustomDialogSlice'
 import LoadingReducer from './slices/LoadingSlice'
 import ChildDialogReducer from './slices/ChildDialogSlice'
+import VideoChatsReducer from './slices/VideoChatsSlice'
 import { chatApi } from "./apisAll/chat";
+import localStreamReducer from './videoChats/videoChatReducer'
 
 const persistConfig = {
     key: "root",
@@ -31,7 +33,9 @@ const rootReducer = combineReducers({
   ToastData:toastReducer,
   CustomDialogData:CustomDialogReducer,
   LoadingData:LoadingReducer,
-  ChildDialogData:ChildDialogReducer
+  ChildDialogData:ChildDialogReducer,
+  VideoChats:VideoChatsReducer,
+  localStreamData:localStreamReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -109,6 +109,7 @@ const Header = ({setDialogBody,chats}:any) => {
   }
 }, [debouncedSearchTerm]);
 
+
  function handleClearKeyword() {
   setKeyword('');
   setIsSearch(false);
@@ -159,7 +160,8 @@ const createOrRetrieveChat= async (userId:any)=>{
         dispatch(
             displayToast({  title: "Couldn't Create/Retrieve Chat", message: error.response?.data?.message || error.message, type: "error",
               duration: 4000,
-              position: "bottom-center",
+              positionVert: "bottom",
+              positionHor: "center",
             })
           ); 
     }

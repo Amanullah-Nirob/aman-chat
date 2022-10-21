@@ -307,7 +307,6 @@ const handleDrawerClose = () => {
               dispatch(setSelectedChat(clickedChat));
               dispatch(setFetchMsgs(true));
               if (clickedChat?.isGroupChat) dispatch(setGroupInfo(clickedChat));
-
               if (hasNotifs) dispatch(setDeleteNotifsOfChat(clickedChatId));
 
              }}

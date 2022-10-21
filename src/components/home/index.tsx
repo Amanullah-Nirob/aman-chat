@@ -16,8 +16,14 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import MobileHeader from '../elements/MobileHeader';
 import MainProfileDrawer from '../drawer/MainProfileDrawer';
 import MobileNavigation from '../mobile/MobileNavigation';
+import IncomingCall from '../CallAudioAndVideo/IncomingCall';
+import CallHome from '../CallAudioAndVideo';
+
+
 
 const ChatHome = () => {
+
+const localStream=useAppSelector(state=>state.localStreamData.localStream)
 const loggedinUser=useAppSelector(selectCurrentUser)
 const dispatch=useAppDispatch()
 const {selectedChat,clientSocket,isSocketConnected, deleteNotifsOfChat,refresh}:any=useAppSelector(selectAppState)
@@ -211,6 +217,11 @@ const typingSocketEventHandler = () => {
               {dialogBody}
             </CustomDialog>
          
+
+          {localStream && <CallHome />} 
+           <IncomingCall />
+
+
          </>
         }
 

@@ -49,3 +49,26 @@
 .notification-area.mobile {
     margin: 0;
 }
+
+
+
+// people area
+.headerSearch {
+    margin-top: 5px;
+    margin-bottom: 17px;
+    input {
+        width: 100%;
+        padding: 10px 16px;
+        border-radius: 2px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+}
+.user-Info {
+    margin-left: 16px;
+    line-height: 18px;
+    p{
+        margin: 0;
+    }
+}

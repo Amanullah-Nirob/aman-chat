@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from "axios";
 import { Box, IconButton,Grid } from '@mui/material';
-import io from 'socket.io-client'
+import io from "socket.io-client";
 
 
 import { AttachFile, EmojiEmotions } from '@mui/icons-material';
@@ -29,6 +29,7 @@ import TypingIndicator from '../utils/TypingIndicator';
 import FullSizeImage from '../utils/FullSizeImage';
 import GroupInfoBody from '../dialogs/GroupInfoBody';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { setCallRequest, setCallStatus, setOtherUserId } from '../../app/slices/VideoChatsSlice';
 
 
 let msgFileAlreadyExists = false;
@@ -293,12 +294,13 @@ const deleteMessage= async()=>{
 
 
 
-
   // Initializing Client Socket
   useEffect(() => {
-    console.log(io(`${process.env.API_URL}`, { transports: ["websocket"] }));
+    console.log(io(`${process.env.API_URL}`, {transports: ["websocket"] }));
     dispatch(
-      setClientSocket(io(`${process.env.API_URL}`, { transports: ["websocket"] }))
+      setClientSocket(io(`${process.env.API_URL}`, { 
+        transports: ["websocket"]
+       }))
     );
   }, []);
 
@@ -375,7 +377,20 @@ const deletedMsgSocketEventHandler = () => {
     });
 };
 
+// call Request Even Handler
+const callRequestEvenHandler=()=>{
+  clientSocket.on("call-request", (data:any) => {
+    console.log(data);
+    dispatch(setCallRequest(data) as any);
+ })
+}
 
+
+const notifyChatLeft=()=>{
+  clientSocket.on("notify-chat-left", () => {
+    dispatch( displayToast({message:'User left the chat', type: "info", duration: 4000, positionVert: "bottom",positionHor: "center"}));
+})
+}
 
 
 // Listening to all socket events
@@ -384,26 +399,27 @@ useEffect(() => {
   if (!isSocketConnected && clientSocket) {
     clientSocket.emit("init user", loggedinUser?._id);
     clientSocket.on("get-users", (users:any) => {
-    
-      
       dispatch(setOnlineUsers(users))
     });
-    clientSocket.on("user connected", (userInfoNotification:any) => { 
+  clientSocket.on("user connected", (userInfoNotification:any) => { 
    if(userInfoNotification !== null){
     if(loggedinUser?.notifications.length!==userInfoNotification.length){
       notificationUpdate(userInfoNotification)
     }
    }
     dispatch(setSocketConnected(true));
-});
+  });
   }
+
+  callRequestEvenHandler()
+  notifyChatLeft()
   newMsgSocketEventHandler()
   deletedMsgSocketEventHandler();
   updatedMsgSocketEventHandler()
 });
 
 
-// socket events end hare >>>>>------------------------------------------------------------------------------------------------------------------------------------------------
+// socket events end >>>>>------------------------------------------------------------------------------------------------------------------------------------------------
 
 // cancel edit option
 const discardAttachment = () =>  resetMsgInput({ discardAttachmentOnly: true });

@@ -7,10 +7,10 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ChatIcon from '@mui/icons-material/Chat';
 import { Notifications } from "@mui/icons-material";
-import { useAppSelector } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import NotificationMobile from '../drawer/NotificationMobile';
-import { selectAppState } from '../../app/slices/AppSlice';
+import { selectAppState, setIsMobile } from '../../app/slices/AppSlice';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Peoples from '../drawer/Peoples';
 
@@ -18,6 +18,7 @@ const MobileNavigation = ({chats}:any) => {
     const loggedinUser=useAppSelector(selectCurrentUser)
     const [animateNotif, setAnimateNotif] = useState(false);
     const {selectedChat}=useAppSelector(selectAppState)
+    const dispatch=useAppDispatch()
 // notification area start
 const notifCount = loggedinUser?.notifications?.length || "";
 const nitificationCountArry:any=[]
@@ -61,6 +62,7 @@ const handleNotificationDrawerClose = () => {
 const [openPeoples, setOpenPeoples] = useState(false);
 const handlePeoplesDrawerOpen = () => {
   setOpenPeoples(true);
+  dispatch(setIsMobile(true))
 };
 const handlePeoplesDrawerClose = () => {
   setOpenPeoples(false);

@@ -3,6 +3,7 @@ import { truncateString,useHover } from "../../components/utils/appUtils";
 import * as React from 'react';
 import { selectTheme } from "../../app/slices/theme/ThemeSlice";
 import { useAppSelector } from '../../app/hooks';
+import { selectAppState } from "../../app/slices/AppSlice";
 
 
 interface props{
@@ -21,7 +22,7 @@ interface props{
 const UserListItem = ({ user, truncateValues }:props) => {
   const { _id, name, email, profilePic } = user;
   const [max, index] = truncateValues;
-
+  const {isMobile}=useAppSelector(selectAppState)
   const theme=useAppSelector(selectTheme)
 
   
@@ -37,9 +38,12 @@ const UserListItem = ({ user, truncateValues }:props) => {
         <p data-user={_id} className='userName'>
           {truncateString(name, max, index)}
         </p>
-        <p data-user={_id} className='userEmail'>
-          {truncateString(email, max, index)}
-        </p>
+        {!isMobile&&
+            <p data-user={_id} className='userEmail'>
+            {truncateString(email, max, index)}
+            </p>
+        }
+       
       </div>
     </ListItemButton>
 
