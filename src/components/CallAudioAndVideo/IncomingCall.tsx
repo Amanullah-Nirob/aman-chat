@@ -77,7 +77,7 @@ const IncomingCall = () => {
          sx={{
             zIndex: (theme) => theme.zIndex.drawer + 1,
             display: "flex",
-            color:'#fff',
+            color:theme==='light'?'#000':'#fff',
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
@@ -110,7 +110,7 @@ const IncomingCall = () => {
                   <h2>{callRequest?.callerName} is </h2>
                   <h2>calling you</h2>
                   </div>
-                 <p style={{color:theme==='light'?'#fff':'#c3c3c3'}}>The call will start as soon as you accept</p>
+                 <p style={{color:theme==='light'?'gray':'#c3c3c3'}}>The call will start as soon as you accept</p>
             </div>
 
    

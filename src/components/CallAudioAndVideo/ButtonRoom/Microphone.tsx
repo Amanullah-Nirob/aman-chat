@@ -21,8 +21,7 @@ const Microphone: React.FC<{
         <div style={{backgroundColor:theme==='light'?'#3333':'rgb(255 255 255 / 8%)',borderRadius:'29px',marginRight:'20px'}}
         >
          <IconButton onClick={handleToggleMic}>
-            {/* {micEnabled ? <MicIcon /> : <MicOffIcon />} */}
-           <MicIcon /> 
+            {micEnabled ? <MicIcon /> : <MicOffIcon />}
         </IconButton>
         </div>
       

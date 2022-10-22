@@ -18,29 +18,24 @@ const MainContainer = styled("div")({
 });
 
 
+
 const ButtonRoom: React.FC<{isRoomMinimized: boolean;}> = ({ isRoomMinimized }) => {
     const {audioOnly,}=useAppSelector(selectVideoChats)
     const localStream=useAppSelector(state=>state.localStreamData.localStream)
     const matches = useMediaQuery("(max-width:800px)");
 
-    // if (!localStream) {
-    //     return null;
-    // }
+    if (!localStream) {
+        return null;
+    }
 
     return (
         <MainContainer>
-            {/* {!audioOnly && (
+           {!audioOnly && (
                 <>
                     <ScreenShare  />
                     <Camera  />
                 </>
-            )} */}
-   
-       
-                    <ScreenShare  />
-                    <Camera  />
-   
-
+            )} 
             <Microphone localStream={localStream} />
             <CloseRoom localStream={localStream}/>
         </MainContainer>

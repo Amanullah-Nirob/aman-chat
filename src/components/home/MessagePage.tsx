@@ -917,7 +917,7 @@ const customScroll={
                       </div>
                       </div>
                  {/* call chat show */}
-                   <CallHome />
+                    {localStream && <CallHome />} 
                        </section>
 
 
