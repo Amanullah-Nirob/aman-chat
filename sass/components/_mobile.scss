@@ -72,3 +72,51 @@
         margin: 0;
     }
 }
+
+
+
+// incoming call
+.callerPhoto {
+    margin-top: 16px;
+}
+
+.callerInfo {
+    text-align: center;
+    line-height: 26px;
+    p {
+        margin: 0;  
+        margin-top: 5px;
+        font-size: 16px;
+    }
+    .callerName {
+        margin-top: 13px;
+        h2 {
+            margin: 0;
+        }
+    }
+   
+}
+
+.callAction {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    margin-top: 14px;
+    margin-bottom: 11px;
+    .callButton {
+        text-align: center;
+        width: 100px;
+        .callBtnIcon {
+            border-radius: 32px;
+            width: 45px;
+            height: 45px;
+            padding: 3px 3px;
+            margin: auto;
+            margin-bottom: 6px;
+        }
+        p {
+            margin: 0;
+        }
+        
+    }
+}

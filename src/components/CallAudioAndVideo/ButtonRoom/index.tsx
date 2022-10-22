@@ -11,11 +11,7 @@ import Camera from "./Camera";
 
 
 const MainContainer = styled("div")({
-    height: "15%",
     width: "100%",
-    backgroundColor: "#5865f2",
-    borderTopLeftRadius: "8px",
-    borderTopRightRadius: "8px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -27,27 +23,24 @@ const ButtonRoom: React.FC<{isRoomMinimized: boolean;}> = ({ isRoomMinimized }) 
     const localStream=useAppSelector(state=>state.localStreamData.localStream)
     const matches = useMediaQuery("(max-width:800px)");
 
-    if (!localStream) {
-        return null;
-    }
+    // if (!localStream) {
+    //     return null;
+    // }
 
     return (
-        <MainContainer
-            sx={{
-                ...(matches &&
-                    isRoomMinimized && {
-                        height: "100%",
-                        width: "15%",
-                        flexDirection: "column",
-                    }),
-            }}
-        >
-            {!audioOnly && (
+        <MainContainer>
+            {/* {!audioOnly && (
                 <>
                     <ScreenShare  />
                     <Camera  />
                 </>
-            )}
+            )} */}
+   
+       
+                    <ScreenShare  />
+                    <Camera  />
+   
+
             <Microphone localStream={localStream} />
             <CloseRoom localStream={localStream}/>
         </MainContainer>

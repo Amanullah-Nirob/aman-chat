@@ -5,14 +5,15 @@ import { currentPeerConnection } from '../../utils/MsgHeader';
 import IconButton from "@mui/material/IconButton";
 import ScreenShareIcon from "@mui/icons-material/ScreenShare";
 import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
+import { selectTheme } from '../../../app/slices/theme/ThemeSlice';
 
 const ScreenShare = () => {
     const dispatch=useAppDispatch()
     const localStream=useAppSelector(state=>state.localStreamData.localStream)
-
+     
     const [screenShareEnabled, setScreenShareEnabled] = useState(false);
     const {screenSharingStream}=useAppSelector(selectVideoChats)
-
+    const theme=useAppSelector(selectTheme)
     const handleScreenShareToggle = async () => {
 
         if (screenShareEnabled) {
@@ -38,6 +39,8 @@ const ScreenShare = () => {
                 video: true,
                 audio: false,
             });
+
+            
             dispatch(setScreenSharingStream(screenShareStream));
             setScreenShareEnabled(true);
 
@@ -60,9 +63,9 @@ const ScreenShare = () => {
 
 
     return (
-        <IconButton
+        <div style={{backgroundColor:theme==='light'?'#3333':'rgb(255 255 255 / 8%)',borderRadius:'29px',marginRight:'20px'}}>
+    <IconButton 
         onClick={handleScreenShareToggle}
-        style={{ color: "white" }}
     >
         {screenShareEnabled ? (
             <StopScreenShareIcon />
@@ -70,6 +73,8 @@ const ScreenShare = () => {
             <ScreenShareIcon />
         )}
     </IconButton>
+        </div>
+     
     );
 };
 

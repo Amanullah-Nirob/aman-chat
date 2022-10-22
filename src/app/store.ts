@@ -35,7 +35,7 @@ const rootReducer = combineReducers({
   LoadingData:LoadingReducer,
   ChildDialogData:ChildDialogReducer,
   VideoChats:VideoChatsReducer,
-  localStreamData:localStreamReducer
+  localStreamData:localStreamReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -44,6 +44,7 @@ export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
+        immutableCheck: false,
         serializableCheck: false,
       }) 
       .concat(userApi.middleware)

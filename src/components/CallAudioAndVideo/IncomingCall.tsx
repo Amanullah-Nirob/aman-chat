@@ -12,18 +12,11 @@ import { getOneToOneChatReceiver } from '../utils/appUtils';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { selectAppState } from '../../app/slices/AppSlice';
 import { getLocalStreamPreview, newPeerConnection } from '../../webRTC/webRTC';
+import { Avatar, Box } from '@mui/material';
+import { selectTheme } from '../../app/slices/theme/ThemeSlice';
+import CloseIcon from '@mui/icons-material/Close';
 
 
-
-const MainContainer = styled("div")({
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: "15px 20px",
-    borderRadius: "30px",
-});
 
 let currentPeerConnection: any = null;
 const IncomingCall = () => {
@@ -31,8 +24,7 @@ const IncomingCall = () => {
     const {callRequest} =useAppSelector(selectVideoChats)
     const loggedInUser=useAppSelector(selectCurrentUser)
     const {selectedChat,clientSocket}:any=useAppSelector(selectAppState)
-    const sender =  getOneToOneChatReceiver(loggedInUser, selectedChat?.users)
-
+   const theme=useAppSelector(selectTheme)
 
 
     const callResponse = (accepted: boolean, audioOnly : boolean) => {
@@ -83,67 +75,81 @@ const IncomingCall = () => {
     return (
         <Backdrop
          sx={{
-            color: "#fff",
             zIndex: (theme) => theme.zIndex.drawer + 1,
             display: "flex",
+            color:'#fff',
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
         }}
         open={!!callRequest?.callerUserId}
     >
-        <MainContainer>
-            <Typography
-                sx={{
-                    color: "black",
-                    marginBottom: "3px",
-                    fontSize: "20px",
-                    fontWeight: "bold",
-                }}
+        {/* main content */}
+    <Box
+        sx={{
+            backgroundColor:theme==='light'?'#ddd':'rgba(56, 56, 56, 0.64)',
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "15px 20px",
+            borderRadius: "5px",
+        }}
+        >
+{/* caller photo */}
+        <div className='callerPhoto'>
+            <Avatar src={callRequest?.callerPhoto} alt={callRequest?.callerName}
+             sx={{width:'64px',height:'64px'}}
             >
-                Incoming Call from {callRequest?.callerName}
-            </Typography>
+            </Avatar>
+         </div>
 
-            <div>
-                {/* {!callRequest?.audioOnly && (
-                    <IconButton
-                        color="success"
-                        onClick={() => {
-                            handleCall(true, false);
-                        }}
-                    >
+{/* caller Name */}
+            <div className='callerInfo'>
+                  <div className="callerName">
+                  <h2>{callRequest?.callerName} is </h2>
+                  <h2>calling you</h2>
+                  </div>
+                 <p style={{color:theme==='light'?'#fff':'#c3c3c3'}}>The call will start as soon as you accept</p>
+            </div>
+
+   
+{/* accept or Decline */}
+            <div className='callAction'>
+                {!callRequest?.audioOnly ? (
+                    <div className='callButton'>
+                      <div className="callBtnIcon" style={{backgroundColor:'#46d159'}}>
+                      <IconButton onClick={() => {callResponse(true, false)}}>
                         <VideocamIcon />
                     </IconButton>
-                )} */}
-
-                <IconButton
-                    color="success"
-                    onClick={() => {
-                        callResponse(true, false);
-                    }}
-                >
-                    <VideocamIcon />
+                      </div>
+                    <p>Accept</p>
+                    </div>
+                 
+                ):(
+                 <div className='callButton'>
+                      <div className="callBtnIcon" style={{backgroundColor:'#46d159'}}>
+                    <IconButton onClick={() => {callResponse(true, true)}}>
+                        <PhoneInTalkIcon />
+                    </IconButton>
+                      </div>
+               
+                <p>Accept</p>
+               </div>
+         
+                )
+            }
+              <div className='callButton'>
+              <div className="callBtnIcon" style={{backgroundColor:'#ff443d'}}>
+              <IconButton onClick={() => {callResponse(false, true)}}>
+                    <CloseIcon />
                 </IconButton>
-
-                <IconButton
-                    color="success"
-                    onClick={() => {
-                        callResponse(true, true);
-                    }}
-                >
-                    <PhoneInTalkIcon />
-                </IconButton>
-
-                <IconButton
-                    color="error"
-                    onClick={() => {
-                        callResponse(false, true);
-                    }}
-                >
-                    <PhoneDisabledIcon />
-                </IconButton>
+              </div>
+                <p>Decline</p>
+              </div>
+            
             </div>
-        </MainContainer>
+        </Box>
     </Backdrop>
     );
 };

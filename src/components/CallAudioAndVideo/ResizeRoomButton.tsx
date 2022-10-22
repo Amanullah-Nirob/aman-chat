@@ -1,13 +1,13 @@
 import React from "react";
 import { styled } from "@mui/system";
 import IconButton from "@mui/material/IconButton";
-import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen";
-import OpenInFullIcon from "@mui/icons-material/OpenInFull";
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 const MainContainer = styled("div")({
     position: "absolute",
-    top: "10px",
-    left: "10px",
+    bottom: '0',
+    right:'10px'
 });
 
 
@@ -18,8 +18,8 @@ const ResizeRoomButton: React.FC<{
 }> = ({ isRoomMinimized, handleRoomResize }) => {
     return (
         <MainContainer>
-            <IconButton style={{ color: "white" }} onClick={handleRoomResize}>
-                {isRoomMinimized ? <OpenInFullIcon /> : <CloseFullscreenIcon />}
+            <IconButton onClick={handleRoomResize}>
+                {isRoomMinimized ? <FullscreenIcon /> : <FullscreenExitIcon />}
             </IconButton>
         </MainContainer>
     );

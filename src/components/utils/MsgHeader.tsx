@@ -32,6 +32,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
     const callRequest = (data: { 
         receiverUserId: string;
         callerName: string;
+        callerPhoto: string;
         audioOnly: boolean;
         senderId:string
     }) => {
@@ -108,6 +109,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
                 callRequest({
                     audioOnly: true,
                     senderId:loggedInUser._id,
+                    callerPhoto:loggedInUser.profilePic,
                     callerName: loggedInUser.name,
                     receiverUserId: sender?._id!,
                 })
@@ -123,6 +125,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
                     audioOnly: false,
                     senderId:loggedInUser._id,
                     callerName: loggedInUser.name,
+                    callerPhoto:loggedInUser.profilePic,
                     receiverUserId: sender?._id!,
                 })
             }}

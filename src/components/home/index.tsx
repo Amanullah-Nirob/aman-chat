@@ -22,7 +22,6 @@ import CallHome from '../CallAudioAndVideo';
 
 
 const ChatHome = () => {
-
 const localStream=useAppSelector(state=>state.localStreamData.localStream)
 const loggedinUser=useAppSelector(selectCurrentUser)
 const dispatch=useAppDispatch()
@@ -218,7 +217,8 @@ const typingSocketEventHandler = () => {
             </CustomDialog>
          
 
-          {localStream && <CallHome />} 
+          {/* {localStream && <CallHome />}  */}
+           {/* <CallHome /> */}
            <IncomingCall />
 
 

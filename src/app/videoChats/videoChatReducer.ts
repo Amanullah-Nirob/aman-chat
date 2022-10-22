@@ -19,10 +19,8 @@ const videoChatReducer: Reducer<VideoChatState, VideoChatActions> = (
                 ...state,
                 localStream: action.payload,
             };
-
         default:
             return state;
     }
 };
-
 export default videoChatReducer;

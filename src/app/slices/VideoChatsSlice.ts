@@ -50,13 +50,13 @@ const VideoChatsSlice = createSlice({
         state.otherUserId = action.payload;
     },
     setScreenSharingStream:(state, action) => {
-        state.screenSharingStream = action.payload.stream;
-        state.screenSharing=action.payload.isScreenSharing
+        state.screenSharingStream = action.payload;
+        state.screenSharing=!!action.payload
     },
     setAudioOnly:(state, action) => {
         state.audioOnly = action.payload;
     },
-    setReset:(state,action) =>{
+    setReset:(state) =>{
         state.remoteStream = null;
         state.callStatus = null;
         state.callRequest = null;

@@ -29,7 +29,10 @@ import TypingIndicator from '../utils/TypingIndicator';
 import FullSizeImage from '../utils/FullSizeImage';
 import GroupInfoBody from '../dialogs/GroupInfoBody';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { setCallRequest, setCallStatus, setOtherUserId } from '../../app/slices/VideoChatsSlice';
+import { selectVideoChats, setCallRequest, setCallStatus, setOtherUserId } from '../../app/slices/VideoChatsSlice';
+import { store } from '../../app/store';
+import { setLocalStream } from '../../app/videoChats/videoChatActions';
+import CallHome from '../CallAudioAndVideo';
 
 
 let msgFileAlreadyExists = false;
@@ -57,6 +60,8 @@ const MessagePage = ({setDialogBody,typingChatUser}:any) => {
   const [fileAttached, setFileAttached] = useState(false);
   const msgContent = useRef<any | null>(null);
   const [enableMsgSend, setEnableMsgSend] = useState(false);
+  const {otherUserId,screenSharingStream}=useAppSelector(selectVideoChats)
+  const localStream=useAppSelector(state=>state.localStreamData.localStream)
 
   const matches = useMediaQuery('(max-width:600px)');
 
@@ -388,6 +393,9 @@ const callRequestEvenHandler=()=>{
 
 const notifyChatLeft=()=>{
   clientSocket.on("notify-chat-left", () => {
+    localStream?.getTracks().forEach((track:any) => track.stop());
+    screenSharingStream?.getTracks().forEach((track:any) => track.stop());
+    store.dispatch(setLocalStream(null) as any);
     dispatch( displayToast({message:'User left the chat', type: "info", duration: 4000, positionVert: "bottom",positionHor: "center"}));
 })
 }
@@ -907,12 +915,9 @@ const customScroll={
                       <SendIcon />
                       </IconButton>
                       </div>
-
-      
-               
-                  
                       </div>
-
+                 {/* call chat show */}
+                   <CallHome />
                        </section>
 
 

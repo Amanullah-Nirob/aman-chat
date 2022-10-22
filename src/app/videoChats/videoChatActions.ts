@@ -1,7 +1,4 @@
-import { Dispatch } from "redux";
-import SimplePeer from "simple-peer";
-import { RootState } from "../store";
-import { actionTypes } from "./types";
+import { actionTypes} from "./types";
 
 export const setLocalStream = (stream: MediaStream | null) => {
     return {
@@ -9,4 +6,3 @@ export const setLocalStream = (stream: MediaStream | null) => {
         payload: stream,
     };
 };
-
