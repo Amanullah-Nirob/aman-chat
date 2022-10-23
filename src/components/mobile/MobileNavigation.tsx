@@ -13,6 +13,7 @@ import NotificationMobile from '../drawer/NotificationMobile';
 import { selectAppState, setIsMobile } from '../../app/slices/AppSlice';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Peoples from '../drawer/Peoples';
+import Media from '../drawer/Media';
 
 const MobileNavigation = ({chats}:any) => {
     const loggedinUser=useAppSelector(selectCurrentUser)
@@ -59,9 +60,22 @@ const handleNotificationDrawerClose = () => {
   setOpenNotification(false);
 };
 
+// media 
+const [openMedia, setOpenMedia] = useState(false);
+const handleMediaDrawerOpen = () => {
+  setOpenMedia(true);
+  dispatch(setIsMobile(true))
+};
+const handleMediaDrawerClose = () => {
+  setOpenMedia(false);
+};
+
+
+// people
 const [openPeoples, setOpenPeoples] = useState(false);
 const handlePeoplesDrawerOpen = () => {
   setOpenPeoples(true);
+  handleMediaDrawerClose()
   dispatch(setIsMobile(true))
 };
 const handlePeoplesDrawerClose = () => {
@@ -70,11 +84,11 @@ const handlePeoplesDrawerClose = () => {
 
 
 
-
 // all drawer close home back
  const homePageBackAndAllDrawerClose=()=>{
     handleNotificationDrawerClose()
     handlePeoplesDrawerClose()
+    handleMediaDrawerClose()
  }
 
     return (
@@ -113,6 +127,7 @@ const handlePeoplesDrawerClose = () => {
 
 {/* folder */}
       <BottomNavigationAction 
+      onClick={handleMediaDrawerOpen}
       label="Folder"
        value="folder"  icon={<FolderIcon />} />
     </BottomNavigation>
@@ -124,13 +139,15 @@ const handlePeoplesDrawerClose = () => {
 <NotificationMobile
     chats={chats}
     open={openNotification}
-    handleDrawerClose={handleNotificationDrawerClose}
 ></NotificationMobile>
 
   <Peoples
       open={openPeoples}
-      handleDrawerClose={handlePeoplesDrawerClose}
   ></Peoples>
+
+  <Media
+      open={openMedia}
+  ></Media>
 
 
 

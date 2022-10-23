@@ -28,7 +28,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 
-const Peoples = ({open,handleDrawerClose}:any) => {
+const Peoples = ({open}:any) => {
  const loggedinUser=useAppSelector(selectCurrentUser)
  const theme=useAppSelector(selectTheme)
  const dispatch=useAppDispatch()
@@ -90,14 +90,10 @@ const createOrRetrieveChat= async (userId:any)=>{
         anchor="right"
         open={open}
       >
-{/* drawer header */}
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            <ArrowBackIcon /> 
-          </IconButton>
-        </DrawerHeader>
+
 {/* main part */}
        <Box sx={{padding:'0 8px'}}>
+       <h3 style={{margin: '4px 13px 5px',padding:'8px 0'}}>All people</h3>
          {/* header search */}
          <div className="headerSearch">
              <input  type="text" placeholder='Search Chat' style={{backgroundColor:theme==='light'?'#f0f2f5':'rgb(56 56 56 / 64%)',color:theme==='light'?'#000':'#eee'}}

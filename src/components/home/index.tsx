@@ -181,8 +181,6 @@ const typingSocketEventHandler = () => {
           <Header chats={chats}  setDialogBody={setDialogBody}></Header>
           </Box>
 
-
-           
           {/* applicationMainBody */}
          <Grid container>
               <Grid item xl={2.5} lg={3.1} md={3.7} sm={12} xs={12} sx={{display:selectedChat?{lg:'block',md:'block',sm:'none',xs:'none'}:'block'}}>

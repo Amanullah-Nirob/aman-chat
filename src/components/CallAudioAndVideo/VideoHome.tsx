@@ -15,12 +15,12 @@ const MainContainer = styled("div")({
 
 
 const mobileMinimizedVideoHomeStyle = {
-    height: "90%",
+    height: "47%",
     width: "97%",
     flexDirection: "column"
 };
 const mobileFullVideoHomeStyle = {
-    height: "90%",
+    height: "47%",
     width: "97%",
     flexDirection: "column"
 };
