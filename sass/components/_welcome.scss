@@ -1,0 +1,12 @@
+.welcome {
+    height: 100%;
+    .welcomeImage {
+        position: relative;
+        width: 100%;
+        height: 39rem;
+    }
+    .welcomeInfo {
+        text-align: center;
+        h1 {margin: 0;font-size: 7vh;}
+    }
+}

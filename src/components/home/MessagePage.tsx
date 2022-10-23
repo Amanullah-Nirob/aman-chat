@@ -33,6 +33,7 @@ import { store } from '../../app/store';
 import { setLocalStream } from '../../app/videoChats/videoChatActions';
 import CallHome from '../CallAudioAndVideo';
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
+import Welcome from '../elements/Welcome';
 
 let msgFileAlreadyExists = false;
 
@@ -921,9 +922,9 @@ const customScroll={
                      </>
                ):(
             
-                     <h2 style={{margin:'0'}}>
-                      welcome to AMAN CHAT
-                     </h2>
+                  <div style={{padding:'10px',height:'100%'}}>
+                     <Welcome></Welcome>
+                  </div>
         
                )
             }

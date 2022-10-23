@@ -96,7 +96,7 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
             className="lastMsgDate"
             data-chat={_id}
             data-has-notifs={chatNotifCount}
-            style={{ color: chatNotifCount ? "#1770e6" : "gray",fontWeight:chatNotifCount?'400':'' }}
+            style={{ color: chatNotifCount ? "#1770e6" : "gray",fontWeight:chatNotifCount?'400':'',fontSize:'15px' }}
           >
             {lastMsgDateString === "Today" ? msgTimeStringOf(lastMsgDate) : lastMsgDateString !== "Yesterday" ? dateStringOf(lastMsgDate) : "Yesterday"}
           </span>

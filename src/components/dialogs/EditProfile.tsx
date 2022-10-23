@@ -93,7 +93,6 @@ const EditProfile = ({setDialogBody}:any) => {
             expiryTime: loggedinUser.expiryTime,
           }
           dispatch(setLoggedInUser(updateUser));
-          displaySuccess("Name Updated Successfully");
           setEditName(false)
         }
         

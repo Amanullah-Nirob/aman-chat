@@ -23,6 +23,7 @@ import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction';
 import { settings } from '../../../utilities/carouselHelpers';
 import MainProfileDrawer from '../drawer/MainProfileDrawer';
 import { styled, useTheme } from '@mui/material/styles';
+import NoConversation from '../elements/NoConversation';
 
 
 
@@ -185,7 +186,7 @@ const handleDrawerClose = () => {
 
 {/* header search */}
            <div className="headerSearch">
-             <input  type="text" placeholder='Search Chat' style={{backgroundColor:theme==='light'?'#f0f2f5':'rgb(56 56 56 / 64%)',color:theme==='light'?'#000':'#eee'}}
+             <input  type="text" placeholder='Search Friends' style={{backgroundColor:theme==='light'?'#f0f2f5':'rgb(56 56 56 / 64%)',color:theme==='light'?'#000':'#eee'}}
               onChange={(e) => searchChats(e)} 
               />
            </div>
@@ -337,14 +338,7 @@ const handleDrawerClose = () => {
             </div>
            ):(
             <>
-            <span className="noConversation">
-              {chats?.length === 0
-                ? `Hi ${
-                    truncateString(loggedinUser?.name?.split(" ")[0], 12, 9) ||
-                    "There"
-                  } 😎`
-                : "No Chats Found"}
-            </span>
+           <NoConversation loggedinUser={loggedinUser} />
           </>
            )
           }
