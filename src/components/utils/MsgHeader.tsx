@@ -7,14 +7,12 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { getOneToOneChatReceiver, truncateString } from './appUtils';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
-import { Close } from '@mui/icons-material';
-import AddIcCallIcon from "@mui/icons-material/AddIcCall";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { selectVideoChats, setAudioOnly, setCallStatus, setOtherUserId, setRemoteStream } from '../../app/slices/VideoChatsSlice';
 import Peer from "simple-peer";
 import { getLocalStreamPreview, newPeerConnection } from '../../webRTC/webRTC';
-import VideoCallIcon from "@mui/icons-material/VideoCall";
-
+import VideocamIcon from '@mui/icons-material/Videocam';
+import CallIcon from '@mui/icons-material/Call';
 
 let currentPeerConnection: any = null;
 const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
@@ -118,7 +116,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
                 })
             }}
         >
-            <AddIcCallIcon />
+            <CallIcon />
         </IconButton>
        </div>
        <div className='VideoCall'>
@@ -134,7 +132,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
                 })
             }}
         >
-            <VideoCallIcon />
+            <VideocamIcon />
         </IconButton>
        </div>
      </div> 

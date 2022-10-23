@@ -4,7 +4,6 @@ import axios from "axios";
 import { Box, IconButton,Grid } from '@mui/material';
 import io from "socket.io-client";
 
-
 import { AttachFile, EmojiEmotions } from '@mui/icons-material';
 import SendIcon from '@mui/icons-material/Send';
 // internal imports
@@ -308,11 +307,6 @@ const deleteMessage= async()=>{
        }))
     );
   }, []);
-
-
-
-
-
 
 
 

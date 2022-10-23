@@ -90,10 +90,6 @@ const BootstrapDialogTitle = (props: DialogTitleProps) => {
     try {
         const user = await login({email,password}).unwrap();
         if(user?._id){
-          dispatch(
-            displayToast({ title: "Registration Successful", message: "Your login session will expire in 15 days",type: "success", duration: 5000, positionVert: "top",
-              positionHor: "center",
-            }));
           dispatch(setLoggedInUser(user))
          }
     } catch (error:any) {

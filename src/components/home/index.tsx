@@ -202,21 +202,21 @@ const typingSocketEventHandler = () => {
                  </MessagePage>
                 </Grid>
           </Grid>
-
+{/* mobile navigation */}
           <Box sx={{display:!matches || selectedChat?'none':'block'}}>
            <MobileNavigation
              chats={chats} 
            ></MobileNavigation>
           </Box>
 
-
+{/* custom dialog */}
             <CustomDialog
               dialogData={dialogData}
               showDialogActions={showDialogActions}
               showDialogClose={true}>
               {dialogBody}
             </CustomDialog>
-         
+{/* call home audio and video */}
             {localStream && <CallHome />} 
            <IncomingCall />
 
