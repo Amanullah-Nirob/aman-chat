@@ -10,7 +10,7 @@ import { dateStringOf, msgDateStringOf, msgTimeStringOf, setCaretPosition } from
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import MsgAttachment from './MsgAttachment';
 import AttachmentPreview from './AttachmentPreview';
-
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
 
@@ -91,7 +91,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
           >
 {/* message edit ACTION */}
         {isEditMode ? (
-            <div style={{ margin: "-5px 25px 3px 0px",display:'flex',justifyContent:'end' }} >
+            <div style={{ margin: "-5px 0 3px 0px",display:'flex',justifyContent:'end' }} >
 
               {(!currMsg?.fileUrl || (msgFileRemoved && !attachmentData?.attachment)) && (
                   <IconButton data-attach-msg-file={true} sx={{ transform: "rotateZ(45deg)" }}>
@@ -162,22 +162,25 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
         />
       )}
 
-{/* message options icon */}
+{/* message action icon */}
           {isLoggedInUser && msgSent && (
+               <IconButton sx={{padding:'0'}}>
             <span
               data-msg={currMsgId}
               data-file-exists={file_id}
               title="Edit/Delete Message"
-              style={{position:'absolute',top:'0',right:'0',height:'100%'}}
+              style={{position:'absolute',top:'0',left:'-26px',height:'100%'}}
               className={`msgOptionsIcon`}
             >
-              <KeyboardArrowDown
+              <MoreVertIcon
                 data-msg={currMsgId}
                 data-file-exists={file_id}
                 style={{ fontSize: 22 }}
                 sx={{position:'absolute',top:'0',right:'0'}}
               />
             </span>
+               </IconButton>
+          
           )}
 
 {/* message main TEXT show area */}
@@ -197,7 +200,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
                     <DoneAll
                       data-msg={currMsgId}
                       data-file-exists={file_id}
-                      sx={{width:'14px',marginLeft:'4px'}}
+                      sx={{width:'14px',marginLeft:'2px',height:'17px'}}
                     />
                   ) : (
                     <CircularProgress

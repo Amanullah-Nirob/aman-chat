@@ -12,6 +12,7 @@ const NotificationsMenu = ({chats,anchor,setAnchor}:any) => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
        <div className="notificationUserList">
+        <h3 style={{margin: '4px 13px 5px'}}>All Notifications</h3>
        <NotificationList chats={chats}></NotificationList>
        </div>
         </Menu>

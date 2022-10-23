@@ -1,4 +1,4 @@
-import { Avatar,Box,TextField,Button,CircularProgress } from '@mui/material';
+import { Avatar,Box,TextField,Button,CircularProgress ,ListItemButton} from '@mui/material';
 import React, { useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAppState, setGroupInfo, setSelectedChat, toggleRefresh } from '../../app/slices/AppSlice';
@@ -22,6 +22,7 @@ import ViewGroupMembers from './ViewGroupMembers';
 import ChildDialog from '../utils/ChildDialog';
 import AddMembersToGroup from './AddMembersToGroup';
 import { hideDialog } from '../../app/slices/CustomDialogSlice';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const GroupInfoBody = ({messages}:any) => {
     const {refresh, groupInfo, clientSocket, isSocketConnected }:any= useAppSelector(selectAppState);
@@ -331,9 +332,9 @@ const exitGroup=async()=>{
             <div className="groupPhotoUpdate">
             <Avatar src={groupDP} sx={{width:'160px',height:'160px'}} />
                 <div className="profileImageIcon">
-                <label htmlFor="profilePhoto">
-                <input accept="image/*" id="profilePhoto" type="file" style={{ display: 'none' }}
-                onChange={updateGroupDp}
+                <label htmlFor="updateGroupPhoto">
+                <input accept="image/*" id="updateGroupPhoto" type="file" style={{ display: 'none' }}
+                  onChange={updateGroupDp}
                 />
                 <CameraAltIcon />
                 </label>
@@ -364,74 +365,62 @@ const exitGroup=async()=>{
             }
       </div>
 {/* number of Group */}
-      <div style={{ marginBottom: "12px",}}>
+      <div style={{ marginBottom: "12px",color:'green',fontWeight:'bold'}}>
         {`${groupMembers?.length} Member${groupMembers?.length > 1 ? "s" : ""}`}
       </div>
 
+<div className='groupActionButtons'>
 {/* View Members */}
-      <div className={`dialogField`}>
-        <Button 
-        sx={{width:'100%',marginBottom:'10px'}}
-        variant="outlined"
-        onClick={openViewMembersDialog}
-        >
-          <InfoOutlined sx={{ marginLeft: "-15px" }}/>
+<div className={`dialogField`} onClick={openViewMembersDialog}>
+        <ListItemButton>
+          <GroupsIcon sx={{ marginLeft: "-4px" }}/>
           <span style={{marginLeft:'12px'}}>View Members</span>
-        </Button>
+        </ListItemButton>
       </div>
 {/* add member */}
-      <div className={`dialogField`}>
-        <Button 
-        color='success'
-        sx={{width:'100%',marginBottom:'10px'}}
-        variant="outlined"
-        onClick={openAddMembersDialog}
-        >
-          <PersonAdd sx={{ marginLeft: "-15px" }}/>
+      <div className={`dialogField`} onClick={openAddMembersDialog}>
+        <ListItemButton>
+          <PersonAdd sx={{ marginLeft: "-4px" }}/>
           <span style={{marginLeft:'12px'}}>Add Members</span>
-        </Button>
+        </ListItemButton>
       </div>
 {/* Exit group */}
-      <div className={`dialogField`}>
-          <Button 
-              color='error'
-              sx={{width:'100%',marginBottom:'10px'}}
-              variant="outlined"
-              onClick={()=>{ 
-                if (
-                  isUserGroupAdmin &&
-                  admins?.length === 1 &&
-                  groupMembers?.length !== 1
-                ){
-                  return displayWarning(
-                    `Every group must have atleast 1 admin. Since 
-                     you're the only group admin, you won't be allowed
-                     to exit until you make someone else as the admin.`,
-                    10000
-                  );
-                }
+      <div className={`dialogField`}
+         onClick={()=>{ 
+          if (
+            isUserGroupAdmin &&
+            admins?.length === 1 &&
+            groupMembers?.length !== 1
+          ){
+            return displayWarning(
+              `Every group must have atleast 1 admin. Since 
+               you're the only group admin, you won't be allowed
+               to exit until you make someone else as the admin.`,
+              10000
+            );
+          }
 
-                openExitGroupConfirmDialog();
-               }}
-              >
-                <Logout sx={{ marginLeft: "-15px" }}/>
+          openExitGroupConfirmDialog();
+         }}
+      >
+          <ListItemButton>
+                <Logout sx={{ marginLeft: "-4px" }}/>
                 <span style={{marginLeft:'12px'}}>Exit Group</span>
-           </Button>
+           </ListItemButton>
     </div>
 {/* Delete Group (only for admins) */}
         {isUserGroupAdmin && (
-            <div className={`dialogField`}>
-          <Button 
-            color='error'
-            sx={{width:'100%',marginBottom:'10px'}}
-            variant="outlined"
+            <div className={`dialogField`}
             onClick={openDeleteGroupConfirmDialog}
             >
-              <Delete sx={{ marginLeft: "-15px" }}/>
+          <ListItemButton>
+              <Delete sx={{ marginLeft: "-4px" }}/>
               <span style={{marginLeft:'12px'}}>Delete Group</span>
-            </Button>
+            </ListItemButton>
           </div>
         )}
+</div>
+
 
 
 

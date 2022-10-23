@@ -47,12 +47,13 @@ const VideoHome = ({isRoomMinimized}:any) => {
                     stream={
                         screenSharingStream ? screenSharingStream : localStream
                     }
+                    isYou={true}
                     isLocalStream={true}
                 />
              )}
        
            {remoteStream && (
-                <Video stream={remoteStream} isLocalStream={false} />
+                <Video stream={remoteStream} isLocalStream={false}   isYou={false}/>
             )}
            
         </MainContainer>

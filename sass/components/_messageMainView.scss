@@ -56,8 +56,7 @@
                     align-items: flex-end;
                     justify-content: flex-end;
                     margin: 1px 0px -4px 0px;
-                    font-size: 12px;
-                    font-style: italic;
+                    font-size: 11px;
                     .sendStatusIcon{
                         margin: 2px;
                     }
@@ -266,9 +265,9 @@
       height: calc(100vh - 68px);
       .messageHeader {
         padding: 3px 2px;
-        justify-content: flex-start;
         .mobileLeftArrow{
           display: block;
+          margin-top: 10px;
         }
       }
 

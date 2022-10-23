@@ -16,7 +16,7 @@ const VideoEl = styled("video")({
 
 
 
-const Video:React.FC<{ stream: MediaStream; isLocalStream: boolean;}> = ({ stream, isLocalStream }) => {
+const Video:React.FC<{ stream: MediaStream; isLocalStream: boolean;isYou:boolean}> = ({ stream, isLocalStream,isYou }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -41,6 +41,7 @@ const Video:React.FC<{ stream: MediaStream; isLocalStream: boolean;}> = ({ strea
                 autoPlay
                 muted={isLocalStream}
             />
+            <span style={{color:'green',fontWeight:'bold'}}>{isYou?'you':''}</span>
      </MainContainer>
     );
 };

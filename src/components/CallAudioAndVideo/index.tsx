@@ -10,32 +10,34 @@ import { selectTheme } from "../../app/slices/theme/ThemeSlice";
 
 
 const fullScreenRoomStyle = {
-    width: '98%',
-    height: '75vh',
-    top: '1vh',
-    left: '15px',
+    width: '80%',
+    height: '83vh',
+    top: '12vh',
+    left: '11%',
     zIndex: 200,
 };
 
 const minimizedRoomStyle = {
-    width: '95%',
-    height: '45vh',
+    width: '75%',
+    height: '60vh',
     top: '16vh',
-    left: '32px',
+    left: '12%',
     overflow: 'hidden',
-    padding: '10px'
+    padding: '10px',
+    zIndex: 200,
 };
 
 const mobileMinimizedRoomStyle = {
     width: '95%',
-    height: '78vh',
-    top: '3vh',
-    left: '10px'
+    height: '83vh',
+    top: '9vh',
+    left: '10px',
+    zIndex: 200,
 };
 const mobileFullScreenRoomStyle = {
     width: '94%',
-    height: '80vh',
-    top: '1vh',
+    height: '83vh',
+    top: '9vh',
     left: '13px',
     zIndex: 200,
 };

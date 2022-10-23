@@ -33,7 +33,7 @@ import { selectVideoChats, setCallRequest, setCallStatus, setOtherUserId } from 
 import { store } from '../../app/store';
 import { setLocalStream } from '../../app/videoChats/videoChatActions';
 import CallHome from '../CallAudioAndVideo';
-
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 
 let msgFileAlreadyExists = false;
 
@@ -60,7 +60,7 @@ const MessagePage = ({setDialogBody,typingChatUser}:any) => {
   const [fileAttached, setFileAttached] = useState(false);
   const msgContent = useRef<any | null>(null);
   const [enableMsgSend, setEnableMsgSend] = useState(false);
-  const {otherUserId,screenSharingStream}=useAppSelector(selectVideoChats)
+  const {otherUserId,screenSharingStream,callRequest}=useAppSelector(selectVideoChats)
   const localStream=useAppSelector(state=>state.localStreamData.localStream)
 
   const matches = useMediaQuery('(max-width:600px)');
@@ -292,7 +292,7 @@ const deleteMessage= async()=>{
 // message sure option
   const openDeleteMsgConfirmDialog = () => {
     dispatch(setShowDialogActions(true));
-    setDialogBody(<>Are you sure you want to delete this message?</>);
+    setDialogBody(<div style={{padding:'0 15px'}}>Are you sure you want to Delete This Message</div>);
     dispatch(displayDialog({ title: "Delete Message", nolabel: "NO", yeslabel: "YES", loadingYeslabel: "Deleting...", action: deleteMessage}));
   };
 // delete message area end ---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -452,10 +452,10 @@ const discardMsgDraft = () => {
   // Open discard draft confirm dialog
   const openDiscardDraftConfirmDialog = () => {
     dispatch(setShowDialogActions(true));
-    setDialogBody(<>Are you sure you want to discard this draft?</>);
+    setDialogBody(<div style={{padding:'0 15px'}}>Are you sure you want to Edit Mode Close?</div>);
     dispatch(
       displayDialog({
-        title: "Discard Draft",
+        title: "Message Edit",
         nolabel: "NO",
         yeslabel: "YES",
         loadingYeslabel: "Discarding...",
@@ -786,7 +786,7 @@ const customScroll={
   },
 
 }
-
+                   
 
     return (
         <div className='messageMainView'>
@@ -851,7 +851,7 @@ const customScroll={
   
                   <div className="fileattach"> 
                       <IconButton onClick={selectAttachment}>
-                        <AttachFile style={{ fontSize: 22 }} />
+                        <AddToPhotosIcon style={{ fontSize: 22 }} />
                       </IconButton>
 {/* file attach   */}
                      <input
@@ -917,7 +917,8 @@ const customScroll={
                       </div>
                       </div>
                  {/* call chat show */}
-                    {localStream && <CallHome />} 
+                  {/* {localStream && <CallHome />}  */}
+                 
                        </section>
 
 

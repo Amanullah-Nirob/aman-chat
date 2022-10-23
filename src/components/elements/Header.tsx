@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React,{ useEffect, useRef, useState} from 'react';
+import React,{ Component, useEffect, useRef, useState} from 'react';
 import logo from '../../../public/static/images/favi.png'
 import { useAppSelector,useAppDispatch } from '../../app/hooks';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
@@ -19,6 +19,8 @@ import { selectAppState, setDeleteNotifsOfChat, setFetchMsgs, setSelectedChat } 
 import { displayToast } from '../../app/slices/ToastSlice';
 import { Notifications } from "@mui/icons-material";
 import NotificationsMenu from '../menus/NotificationsMenu';
+import SwitchToggle from '../authentication/SwitchToggle';
+
 
 function useDebounce(value:string, delay:number) {
   const [debouncedValue, setDebouncedValue] = useState(value);
@@ -169,6 +171,8 @@ const createOrRetrieveChat= async (userId:any)=>{
 
 
 
+
+
     return (
      <Box className='header' sx={{
       backgroundColor:theme==='light'?'#fff':'transparent',
@@ -183,12 +187,12 @@ const createOrRetrieveChat= async (userId:any)=>{
           <Image src={logo} layout='fill'></Image>
         </div>
         <form className="search-area-main">
-            <div className="search-input">
-                 <input
+            <div className="search-input">    
+            <input
                     ref={inputEl}
                     type="text"
                     value={keyword}
-                    placeholder='Search' style={{backgroundColor:theme==='light'?'#f0f2f5':'rgb(56 56 56 / 64%)',color:theme==='light'?'#000':'#fff'}}
+                    placeholder='Search Any One' style={{backgroundColor:theme==='light'?'#f0f2f5':'rgb(56 56 56 / 64%)',color:theme==='light'?'#000':'#fff'}}
                     onChange={(e) => setKeyword(e.target.value)}
                 />
                 {clearTextView}
@@ -212,8 +216,13 @@ const createOrRetrieveChat= async (userId:any)=>{
             </div>
         </form>
       </div>
+{/* header right area */}
+    <div className='right-area'>
 
-      <div className='right-area'>
+    <div className='darkModeSwitch'>
+    <SwitchToggle></SwitchToggle>
+    </div>
+
       <div className="notification-area" style={{position:'relative'}}>
       <IconButton
             onClick={openNotificationMenu}
@@ -228,6 +237,8 @@ const createOrRetrieveChat= async (userId:any)=>{
         </IconButton>
 
       </div>
+
+
 
       <div className="profile-area">
       <IconButton sx={{ color: "#999999",marginRight:'15px'}} onClick={(e) => setProfileSettingsMenuAnchor(e.target)}>

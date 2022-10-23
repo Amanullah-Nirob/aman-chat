@@ -30,7 +30,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
  // ========================================================================================================
 
     const callRequest = (data: { 
-        receiverUserId: string;
+        receiverUserId: string; 
         callerName: string;
         callerPhoto: string;
         audioOnly: boolean;
@@ -66,7 +66,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
                 if (data.accepted && data.signal) {
                     console.log("ACCEPTED", data.signal);
                     dispatch(setOtherUserId(data.otherUserId));
-                    peer.signal(data.signal);
+                    peer?.signal(data.signal);
                 }
             });
         }
@@ -82,7 +82,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
 
     return (
  <div className='messageHeader' style={{boxShadow:theme==='light'?'rgb(0 0 0 / 6%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'rgb(0 0 0 / 40%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px'}}>
-    
+    <div className="headerInfo" style={{display:'flex'}}>
     <Box className='mobileLeftArrow'>
          <IconButton onClick={close}>
           <ArrowBackIcon />
@@ -101,10 +101,13 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
           {truncateString(chatName, 22, 17)}
          </span>
     </div>
+    </div>
+
 
     <div className="msgHeaderOthers" style={{display:'flex'}}>
        <div className='audioCall'>
         <IconButton
+         color="primary"
             onClick={() => {
                 callRequest({
                     audioOnly: true,
@@ -120,6 +123,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
        </div>
        <div className='VideoCall'>
         <IconButton
+            color="primary"
             onClick={() => {
                 callRequest({
                     audioOnly: false,

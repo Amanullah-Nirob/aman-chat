@@ -70,7 +70,8 @@ const SwitchToggle = () => {
                     <p>Off</p>
                   </div>
                   )}
-                  </Hidden>:<Hidden mdDown>{theme == 'dark' ? 'Dark': 'Light'}</Hidden>}
+                  </Hidden>:
+                  <Hidden mdDown>{theme == 'dark' ? 'Dark': 'Light'}</Hidden>}
                 />
         </div>
     );

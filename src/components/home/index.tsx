@@ -18,6 +18,7 @@ import MainProfileDrawer from '../drawer/MainProfileDrawer';
 import MobileNavigation from '../mobile/MobileNavigation';
 import IncomingCall from '../CallAudioAndVideo/IncomingCall';
 import CallHome from '../CallAudioAndVideo';
+import { selectVideoChats } from '../../app/slices/VideoChatsSlice';
 
 
 
@@ -31,7 +32,7 @@ const [dialogBody, setDialogBody] = useState<any | null >(<></>);
 const [chats, setChats] = useState<any | null>([]);
 const [typingChatUsers, setTypingChatUsers] = useState<any | null>([]);
 const matches = useMediaQuery('(max-width:600px)');
-
+const {callRequest}=useAppSelector(selectVideoChats)
 
 const getTypingUserName = (typingUser:any) => truncateString(typingUser.name?.toString().split(" ")[0], 12, 9) || " ";
 const getTypingChatId = (chatUser:any) => chatUser?.toString().split("---")[0];
@@ -170,6 +171,8 @@ const typingSocketEventHandler = () => {
   }, [deleteNotifsOfChat]);
 // delete notification area end >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+
+
     return (
         <>
         {loggedinUser && 
@@ -216,9 +219,7 @@ const typingSocketEventHandler = () => {
               {dialogBody}
             </CustomDialog>
          
-
-          {/* {localStream && <CallHome />}  */}
-           {/* <CallHome /> */}
+            {localStream && <CallHome />} 
            <IncomingCall />
 
 

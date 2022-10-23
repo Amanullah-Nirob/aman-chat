@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from "@mui/system";
 import Backdrop from '@mui/material/Backdrop';
 import Typography from "@mui/material/Typography";
@@ -27,6 +27,17 @@ const IncomingCall = () => {
    const theme=useAppSelector(selectTheme)
 
 
+   const audio = new Audio('/static/audio/ringtune.mp3');
+   audio.loop = true;
+   
+   useEffect(()=>{
+
+    let playRingtone= document.getElementById(`playRingtone`) as HTMLElement
+    callRequest?.callerUserId && (playRingtone.click())
+    
+   },[callRequest?.callerUserId])
+
+
     const callResponse = (accepted: boolean, audioOnly : boolean) => {
         const data={
             receiverUserId: callRequest!.callerUserId,
@@ -34,7 +45,7 @@ const IncomingCall = () => {
             accepted,
             audioOnly
         }
-    
+        audio.pause()
         clientSocket.emit("call-response", data);
     
         if (!data.accepted) {
@@ -60,7 +71,7 @@ const IncomingCall = () => {
                 dispatch(setRemoteStream(stream));
             });
     
-            peer.signal(callRequest?.signal!);
+            peer?.signal(callRequest?.signal!);
         }
     
         getLocalStreamPreview(data.audioOnly, () => {
@@ -71,6 +82,9 @@ const IncomingCall = () => {
     
     }
 
+
+
+    
 
     return (
         <Backdrop
@@ -149,6 +163,12 @@ const IncomingCall = () => {
               </div>
             
             </div>
+            <button
+            id='playRingtone'
+            onClick={() => {
+             audio.play();
+           }}>
+        </button>
         </Box>
     </Backdrop>
     );
