@@ -301,7 +301,6 @@ const deleteMessage= async()=>{
 
   // Initializing Client Socket
   useEffect(() => {
-    console.log(io(`${process.env.API_URL}`, {transports: ["websocket"] }));
     dispatch(
       setClientSocket(io(`${process.env.API_URL}`, { 
         transports: ["websocket"]
@@ -380,7 +379,6 @@ const deletedMsgSocketEventHandler = () => {
 // call Request Even Handler
 const callRequestEvenHandler=()=>{
   clientSocket.on("call-request", (data:any) => {
-    console.log(data);
     dispatch(setCallRequest(data) as any);
  })
 }

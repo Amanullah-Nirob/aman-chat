@@ -102,7 +102,7 @@ const MsgAttachment = ({msgSent,isEditMode,fileEditIcons,downloadingFileId,loadi
         <>
            {fileUrl?.startsWith(IMG_BASE_URL) || isImageOrGifFile(file_name) ?
             (
-               <span className="msgImageWrapper" style={{position:'relative',width:'260px',height:'200px', display:'inline-block'}}>
+               <span className="msgImageWrapper" style={{position:'relative',width:'260px',height:'200px', display:'inline-block',cursor:'pointer'}}>
                 <Image
                  id={`${currMsg?._id}---image`}
                  src={fileUrl}
