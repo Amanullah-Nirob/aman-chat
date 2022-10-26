@@ -351,14 +351,6 @@ const handleDrawerClose = () => {
             open={open}
             handleDrawerClose={handleDrawerClose}
           ></MainProfileDrawer>
-    
-          {/* mobile navigation */}
-          <Box sx={{display:!matches || selectedChat?'none':'block'}}>
-           <MobileNavigation
-             chats={chats} 
-           ></MobileNavigation>
-          </Box>
-  
         </div>
     );
 };

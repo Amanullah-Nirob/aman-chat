@@ -202,6 +202,12 @@ const typingSocketEventHandler = () => {
                  </MessagePage>
                 </Grid>
           </Grid>
+      {/* mobile navigation */}
+          <Box sx={{display:!matches || selectedChat?'none':'block'}}>
+           <MobileNavigation
+             chats={chats} 
+           ></MobileNavigation>
+          </Box>
 
 {/* custom dialog */}
             <CustomDialog
