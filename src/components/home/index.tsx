@@ -190,6 +190,12 @@ const typingSocketEventHandler = () => {
                     setDialogBody={setDialogBody} 
                     typingChatUsers={typingChatUsers}> 
                     </ChatList>
+          {/* mobile navigation */}
+          <Box sx={{display:!matches || selectedChat?'none':'block'}}>
+           <MobileNavigation
+             chats={chats} 
+           ></MobileNavigation>
+          </Box>
               </Grid>
             
                 <Grid item xl={9.5} lg={8.9} md={8.3} sm={12} xs={12} sx={{display:selectedChat?'block':{lg:'block',md:'block',sm:'none',xs:'none'}}}>
@@ -202,12 +208,12 @@ const typingSocketEventHandler = () => {
                  </MessagePage>
                 </Grid>
           </Grid>
-{/* mobile navigation */}
-          <Box sx={{display:!matches || selectedChat?'none':'block'}}>
+      {/* mobile navigation */}
+          {/* <Box sx={{display:!matches || selectedChat?'none':'block'}}>
            <MobileNavigation
              chats={chats} 
            ></MobileNavigation>
-          </Box>
+          </Box> */}
 
 {/* custom dialog */}
             <CustomDialog

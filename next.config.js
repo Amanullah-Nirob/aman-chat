@@ -6,7 +6,7 @@ const nextConfig = {
     domains: ['res.cloudinary.com','localhost'],
   },
   env: {
-    API_URL:'https://glacial-river-12489.herokuapp.com',
+    API_URL:'http://localhost:5000',
     DEFAULTImage:'https://res.cloudinary.com/abhi-sawant/image/upload/v1653670527/user_dqzjdz.png'
 },
 }
