@@ -50,15 +50,8 @@ const handleChange = (event: React.SyntheticEvent, newValue: string) => {
 };
 
 // drawer state area
-// nitification drawer state
-const [openNotification, setOpenNotification] = useState(false);
-const handleNotificationDrawerOpen = () => {
-  setOpenNotification(true);
-  handlePeoplesDrawerClose()
-};
-const handleNotificationDrawerClose = () => {
-  setOpenNotification(false);
-};
+
+
 
 // media 
 const [openMedia, setOpenMedia] = useState(false);
@@ -69,6 +62,18 @@ const handleMediaDrawerOpen = () => {
 const handleMediaDrawerClose = () => {
   setOpenMedia(false);
 };
+
+// nitification drawer state
+const [openNotification, setOpenNotification] = useState(false);
+const handleNotificationDrawerOpen = () => {
+  setOpenNotification(true);
+  handlePeoplesDrawerClose()
+  handleMediaDrawerClose()
+};
+const handleNotificationDrawerClose = () => {
+  setOpenNotification(false);
+};
+
 
 
 // people

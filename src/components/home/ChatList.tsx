@@ -24,6 +24,7 @@ import { settings } from '../../../utilities/carouselHelpers';
 import MainProfileDrawer from '../drawer/MainProfileDrawer';
 import { styled, useTheme } from '@mui/material/styles';
 import NoConversation from '../elements/NoConversation';
+import MobileNavigation from '../mobile/MobileNavigation';
 
 
 
@@ -344,14 +345,19 @@ const handleDrawerClose = () => {
           }
            </Box> 
 
-         
-            <MainProfileDrawer
+
+          <MainProfileDrawer
             setDialogBody={setDialogBody}
             open={open}
             handleDrawerClose={handleDrawerClose}
-           ></MainProfileDrawer>
+          ></MainProfileDrawer>
     
-           
+          {/* mobile navigation */}
+          <Box sx={{display:!matches || selectedChat?'none':'block'}}>
+           <MobileNavigation
+             chats={chats} 
+           ></MobileNavigation>
+          </Box>
   
         </div>
     );
