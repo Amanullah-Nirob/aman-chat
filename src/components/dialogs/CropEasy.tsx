@@ -10,7 +10,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import getCroppedImg from '../utils/cropImage'
 import { hideDialog, setShowDialogActions,displayDialog } from '../../app/slices/CustomDialogSlice';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { isImageFile,TWO_MB } from '../utils/appUtils';
+import { getAxiosConfig, isImageFile,TWO_MB } from '../utils/appUtils';
 import { displayToast } from '../../app/slices/ToastSlice';
 import { useProfilePhotoUpdateMutation } from '../../app/apisAll/userApi';
 import { selectCurrentUser } from '../../app/slices/auth/authSlice';
@@ -18,6 +18,7 @@ import { setLoggedInUser } from '../../app/slices/auth/authSlice';
 import EditProfile from './EditProfile';
 import MainProfileDrawer from '../drawer/MainProfileDrawer';
 import { selectAppState } from '../../app/slices/AppSlice';
+import axios from 'axios';
 
 const CropEasy = ({photoURL,setDialogBody}:any) => {
 
@@ -88,24 +89,26 @@ const handleBack=()=>{
           if (file.size >= TWO_MB) {
             return displayWarning("Please Select an Image Smaller than 2 MB", 4000);
           }
+        const config = getAxiosConfig({ loggedinUser:loggedInUser, formData: true });
          setUploading(true)
          const formData = new FormData();
          formData.append("profilePic", file);
          formData.append("currentProfilePic", loggedInUser?.profilePic);
          formData.append("cloudinary_id", loggedInUser?.cloudinary_id);
 
-          const {data}:any=await profilePhotoUpdate(formData)
-          if(data._id){
+         const { data } = await axios.put(`${process.env.API_URL}/api/user/update/profile-pic`,
+          formData,
+          config
+        );
             const updateUser={
               ...data,
               token: loggedInUser.token,
               expiryTime: loggedInUser.expiryTime,
             }
             dispatch(setLoggedInUser(updateUser));
-            displaySuccess("ProfilePic Updated Successfully");
+            // displaySuccess("ProfilePic Updated Successfully");
             setUploading(false)
             dispatch(hideDialog())
-          }
         } catch (error) {
           console.log(error);
         }

@@ -6,8 +6,7 @@ const nextConfig = {
     domains: ['res.cloudinary.com','localhost'],
   },
   env: {
-    // API_URL:'https://chat-zoned.up.railway.app',
-    API_URL:'http://localhost:5000',
+    API_URL:'https://aman-chat-backend.vercel.app',
     DEFAULTImage:'https://res.cloudinary.com/abhi-sawant/image/upload/v1653670527/user_dqzjdz.png'
 },
 }

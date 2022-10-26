@@ -16,6 +16,7 @@ import { setLoading,selectLoadingState } from '../../app/slices/LoadingSlice';
 import { useProfileNameUpdateMutation } from '../../app/apisAll/userApi';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { selectAppState } from '../../app/slices/AppSlice';
+import { isImageFile, TWO_MB } from '../utils/appUtils';
 
 
 const EditProfile = ({setDialogBody}:any) => {
@@ -64,6 +65,24 @@ const EditProfile = ({setDialogBody}:any) => {
 // photo update 
   const handleChange = (e:any) => {
     const file = e.target.files[0];
+    if (!file) return;
+
+    if (!isImageFile(file.name)) {
+      return dispatch(
+        displayToast({
+          title: "Invalid Image File",
+          message: "Please Select an Image File (png/jpg/jpeg/svg/webp)",
+          type: "warning",
+          duration: 5000,
+          positionVert: "bottom",
+          positionHor: "center",
+        })
+      );
+    }
+    if (file.size >= TWO_MB) {
+      return displayWarning("Please Select an Image Smaller than 2 MB", 4000);
+    }
+
     if (file) {
       dispatch(setShowDialogActions(false));
       setDialogBody(<CropEasy photoURL={URL.createObjectURL(file)} setDialogBody={setDialogBody} />);
