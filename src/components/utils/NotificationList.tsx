@@ -15,8 +15,8 @@ const NotificationList = ({chats}:any) => {
         // Notifications grouped by 'chat'
         const notifChat:any = notif.chat;
         const chatId = notifChat._id;
-        const chatName = notifChat.isGroupChat ? `group===${notifChat.chatName}`: getOneToOneChatReceiver(loggedInUser, notifChat?.users).name;
-        const chatProfilePic=notifChat.isGroupChat ? `${notifChat.chatDisplayPic}`: getOneToOneChatReceiver(loggedInUser, notifChat?.users).profilePic
+        const chatName = notifChat.isGroupChat ? `group===${notifChat.chatName}`: getOneToOneChatReceiver(loggedInUser, notifChat?.users)?.name;
+        const chatProfilePic=notifChat.isGroupChat ? `${notifChat.chatDisplayPic}`: getOneToOneChatReceiver(loggedInUser, notifChat?.users)?.profilePic
         const notifGroupId = `${chatId}---${chatName}---${chatProfilePic}`;
         if (notifGroups[notifGroupId]) {
           ++notifGroups[notifGroupId];

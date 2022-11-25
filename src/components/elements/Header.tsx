@@ -215,6 +215,7 @@ const createOrRetrieveChat= async (userId:any)=>{
 
             </div>
         </form>
+        
       </div>
 {/* header right area */}
     <div className='right-area'>

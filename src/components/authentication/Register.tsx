@@ -44,6 +44,8 @@ const Register: FC = () => {
       dispatch(setLoggedInUser(user))
      }
    } catch (error:any) { 
+    console.log(error);
+    
       dispatch(  
         displayToast({ title: "Registration Failed", message: error?.data.message? error?.data.message : 'Registration Failed', type: "error", duration: 4000, positionVert: "top",
           positionHor: "center",

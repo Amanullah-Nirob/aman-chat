@@ -114,8 +114,8 @@ const createGroupChat=async()=>{
           <div className='groupCrtImage'>
           <Avatar src={chatDisplayPicUrl} sx={{width:'200px',height:'200px'}}></Avatar>
             <div className="profileImageIcon">
-            <label htmlFor="profilePhoto">
-            <input accept="image/*" id="profilePhoto" type="file" style={{ display: 'none' }}
+            <label htmlFor="groupPhoto">
+            <input accept="image/*" id="groupPhoto" type="file" style={{ display: 'none' }}
               onChange={handleImgInputChange}
             />
              <CameraAltIcon />
