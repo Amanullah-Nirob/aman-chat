@@ -1,7 +1,7 @@
 <div align="center">
 
-# `Aman-chat` NodeJs-NextJs-Chat-Calling-App
-> #### This is a Chat-and Video calling app built using NodeJs,NextJs,typeScript, which is primarily used for `Real-time Online Chatting and audio and video calling`.
+# `Aman-chat` NextJs-Chat-Calling-App
+> #### This is a Chat-and Video calling app built using NodeJs,NextJs,typeScript and socket.io, which is primarily used for `Real-time Online Chatting and audio and video calling`.
 </div>
 
 ## Features
@@ -25,7 +25,7 @@
   - Delete group 
 - Dark mode options
 
-- Real time features 
+- Real time features
   - Message 
     - real-time messaging
     - real-time message updates (edit/delete)
@@ -42,15 +42,13 @@
   - Calling
     - Real-time calling one-to-one 
     - Call Running interface with caller photo,name and play ringtone 
-
 - Call features
   - Voice Call - Crystal-clear one-to-one voice calls
   - Video Call - High-quality one-to-one video calls
   - Live Streaming / Screen Sharing
   - Toggle user audio 
   - Toggle user video 
-
-- Responsive 
+- Responsive
   - Responsive on all device like desktop,laptop, tab and Mobile
   - 90% similar to UI,functionality like Meta Messenger on Mobile device 
 
@@ -78,7 +76,6 @@ https://youtu.be/P2mvFqp1k1c
 - [Json Web Token](https://jwt.io/)
 - [AWS SDK](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/getting-started-nodejs.html)
 - [Socket.io](https://socket.io/)
-
 
 ## License
 [MIT](LICENSE) © Amanullah Nirob
