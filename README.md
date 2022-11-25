@@ -5,26 +5,25 @@
 </div>
 
 ## Features
-- Authentication - Register/Login by email password
-- Profile Setting 
-  - Photo edit by resizing
-  - Profile Name Change
-  - Password Update
-- Search anyone and create a one-to-one Chat/group
-- Message features
+* Authentication - Register/Login by email password
+* Profile Setting 
+   - Photo edit by resizing
+   - Profile Name Change
+   - Password Update
+* Search anyone and create a one-to-one Chat/group
+* Message features
   - Send/edit/delete text/emoji/Images in messages
   - Add/Edit/Delete/Download files (document/image/gif/audio/video) in messages `(i have no AWS IAM user account so this feature will be temporarily unavailable But all functionality is implemented)`
- - File preview before sending and updating
-- Group Chat features (for all group members)
+ * File preview before sending and updating
+* Group Chat features (for all group members)
   - View group members
   - Edit group display pic/group name 
   - Exit group
-- Group Chat features (only for group admins)
+* Group Chat features (only for group admins)
   - Add/remove members 
   - Make/dismiss group admin (Must have an admin)
   - Delete group 
 - Dark mode options
-
 - Real time features
   - Message 
     - real-time messaging
@@ -59,23 +58,23 @@ https://youtu.be/P2mvFqp1k1c
 
 ## Technologies Used
 ### Frontend
-- [NextJs](https://nextjs.org/) 
-- [TypeScript](https://www.typescriptlang.org/) 
-- [Redux Toolkit and RTK Query](https://redux-toolkit.js.org/) 
-- [Sass](https://sass-lang.com/) 
-- [Material-UI](https://mui.com/) 
-- [Socket.io-client](https://socket.io/docs/v4/client-api/) 
-- [PeerJs](https://peerjs.com/) 
-- [webRTC](https://webrtc.org/) 
+* [NextJs](https://nextjs.org/) 
+* [TypeScript](https://www.typescriptlang.org/) 
+* [Redux Toolkit and RTK Query](https://redux-toolkit.js.org/) 
+* [Sass](https://sass-lang.com/) 
+* [Material-UI](https://mui.com/) 
+* [Socket.io-client](https://socket.io/docs/v4/client-api/) 
+* [PeerJs](https://peerjs.com/) 
+* [webRTC](https://webrtc.org/) 
 
 ### Backend
-- [Nodejs](https://nodejs.org/en/)
-- [ExpressJs](https://expressjs.com/)
-- [MongoDb](https://www.mongodb.com/)
-- [Mongoose](https://mongoosejs.com/)
-- [Json Web Token](https://jwt.io/)
-- [AWS SDK](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/getting-started-nodejs.html)
-- [Socket.io](https://socket.io/)
+* [Nodejs](https://nodejs.org/en/)
+* [ExpressJs](https://expressjs.com/)
+* [MongoDb](https://www.mongodb.com/)
+* [Mongoose](https://mongoosejs.com/)
+* [Json Web Token](https://jwt.io/)
+* [AWS SDK](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/getting-started-nodejs.html)
+* [Socket.io](https://socket.io/)
 
 ## License
 [MIT](LICENSE) © Amanullah Nirob
