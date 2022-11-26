@@ -53,6 +53,7 @@
 
 
 ## Live Project Demo
+https://aman-chat.vercel.app/
 https://youtu.be/P2mvFqp1k1c
 
 
@@ -78,3 +79,10 @@ https://youtu.be/P2mvFqp1k1c
 
 ## License
 [MIT](LICENSE) © Amanullah Nirob
+
+
+<div align="center">
+
+### If you liked this app, give it a star 🌟
+
+</div>
