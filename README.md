@@ -81,8 +81,4 @@ https://youtu.be/P2mvFqp1k1c
 [MIT](LICENSE) © Amanullah Nirob
 
 
-<div align="center">
-
 ### If you liked this app, give it a star 🌟
-
-</div>
