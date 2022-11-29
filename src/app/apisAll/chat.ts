@@ -4,7 +4,7 @@ import { RootState } from "../store";
 export const chatApi=createApi({
     reducerPath: "chatApi",
     baseQuery:fetchBaseQuery({
-        baseUrl:`${process.env.API_URL}/api/chat`,
+        baseUrl:`${process.env.NEXT_PUBLIC_API_URL}/api/chat`,
         prepareHeaders:(headers,{getState})=>{
         // By default, if we have a token in the store, let's use that for authenticated requests
         const token = (getState() as RootState).auth?.loggedInUser?.token;

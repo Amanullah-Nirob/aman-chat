@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const FILE_STYLES = { width: "100vw", height: "82vh", borderRadius: 10 };
-const PLACEHOLDER_IMG = process.env.DEFAULTImage;
+const PLACEHOLDER_IMG = process.env.NEXT_PUBLIC_DEFAULTImage;
 
 const FullSizeImage = ({ event, audioSrc, videoSrc }:any) => {
   return (

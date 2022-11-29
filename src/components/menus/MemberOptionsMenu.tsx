@@ -58,7 +58,7 @@ const MemberOptionsMenu = ({anchor,setAnchor,clickedMember,setShowDialogActions,
     dispatch(setLoading(true));
     const config = getAxiosConfig({ loggedinUser });
     try {
-      const { data } = await axios.post(`${process.env.API_URL}/api/chat`,{ userId: clickedMember?._id },config);
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`,{ userId: clickedMember?._id },config);
 
       dispatch(setLoading(false));
       updateView(data);
@@ -90,7 +90,7 @@ const makeGroupAdmin= async()=>{
     dispatch(setLoading(true));
     const config = getAxiosConfig({ loggedinUser });
     try {
-        const { data } = await axios.post( `${process.env.API_URL}/api/chat/group/make-admin`,{ userId: clickedMember?._id, chatId: groupInfo?._id },config );
+        const { data } = await axios.post( `${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/make-admin`,{ userId: clickedMember?._id, chatId: groupInfo?._id },config );
 
         if (isSocketConnected) {
             clientSocket.emit("grp updated", {
@@ -116,7 +116,7 @@ const dismissAsAdmin=async()=>{
     dispatch(setLoading(true));
     const config = getAxiosConfig({ loggedinUser });
     try {
-        const { data } = await axios.put(`${process.env.API_URL}/api/chat/group/dismiss-admin`,{ userId: clickedMember?._id, chatId: groupInfo?._id }, config);
+        const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/dismiss-admin`,{ userId: clickedMember?._id, chatId: groupInfo?._id }, config);
         if (isSocketConnected) {
             clientSocket.emit("grp updated", {
               updater: loggedinUser,
@@ -155,7 +155,7 @@ const dismissAsAdmin=async()=>{
     dispatch(setLoading(true));
     const config = getAxiosConfig({ loggedinUser });
     try {
-        const { data } = await axios.put(`${process.env.API_URL}/api/chat/group/remove`,
+        const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/remove`,
             {
               userToBeRemoved: clickedMember?._id,
               isGroupAdmin: clickedMember?.isGroupAdmin,

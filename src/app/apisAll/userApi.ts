@@ -7,7 +7,7 @@ import { RegisterRequest,AuthResponse,LoginRequest,loginResponse } from "../inte
 export const userApi=createApi({
     reducerPath: "userApi",
     baseQuery:fetchBaseQuery({
-        baseUrl:`${process.env.API_URL}/api/user`,
+        baseUrl:`${process.env.NEXT_PUBLIC_API_URL}/api/user`,
         prepareHeaders:(headers,{getState})=>{
         // By default, if we have a token in the store, let's use that for authenticated requests
         const token = (getState() as RootState).auth?.loggedInUser?.token;

@@ -48,7 +48,7 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
    const config = getAxiosConfig({ loggedinUser });
 
       try {
-       const { data } = await axios.get(`${process.env.API_URL}/api/chat`, config);
+       const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, config);
           
         const mappedChats = data.map((chat:any) => {
           const { isGroupChat, users } = chat;
@@ -113,7 +113,7 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
 
 
  // create group area
- const DEFAULT_GROUP_DP = process.env.DEFAULTImage;
+ const DEFAULT_GROUP_DP = process.env.NEXT_PUBLIC_DEFAULTImage;
 const openCreateGroupChatDialog=()=>{
   dispatch(
     setGroupInfo({

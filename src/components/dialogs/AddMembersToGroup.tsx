@@ -107,7 +107,7 @@ const AddMembersToGroup = ({ getAddedMembers, forCreateGroup }:any) => {
       if (isMemberSelected) setIsMemberSelected(false);
 
       if (keyword) {
-          fetch(`${process.env.API_URL}/api/user?search=${keyword}`,{
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?search=${keyword}`,{
               headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${loggedInUser.token}` },
           }).then(res=>res.json())
           .then(data=>{

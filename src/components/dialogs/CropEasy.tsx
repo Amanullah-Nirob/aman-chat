@@ -96,7 +96,7 @@ const handleBack=()=>{
          formData.append("currentProfilePic", loggedInUser?.profilePic);
          formData.append("cloudinary_id", loggedInUser?.cloudinary_id);
 
-         const { data } = await axios.put(`${process.env.API_URL}/api/user/update/profile-pic`,
+         const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/user/update/profile-pic`,
           formData,
           config
         );

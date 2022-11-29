@@ -87,7 +87,7 @@ const GroupInfoBody = ({messages}:any) => {
             formData.append("currentDP", groupDP);
             formData.append("cloudinary_id", groupInfo?.cloudinary_id);
             formData.append("chatId", groupInfo?._id);
-            const { data } = await axios.put(`${process.env.API_URL}/api/chat/group/update-dp`,formData,config);
+            const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/update-dp`,formData,config);
             if (isSocketConnected) {
                 clientSocket.emit("grp updated", {
                   updater: loggedinUser,
@@ -114,7 +114,7 @@ const GroupInfoBody = ({messages}:any) => {
     dispatch(setLoading(true));
     const config = getAxiosConfig({ loggedinUser });
     try {
-        const { data } = await axios.put(`${process.env.API_URL}/api/chat/group/update-name`,
+        const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/update-name`,
          { groupName: name, chatId: groupInfo?._id },config
         );
         if (isSocketConnected) {
@@ -158,7 +158,7 @@ const GroupInfoBody = ({messages}:any) => {
     dispatch(setLoading(true));
     const config = getAxiosConfig({ loggedinUser });
     try {
-      const { data } = await axios.post(`${process.env.API_URL}/api/chat/group/add`,
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/add`,
         {
           usersToBeAdded: JSON.stringify(addedMembers),
           chatId: groupInfo?._id
@@ -200,7 +200,7 @@ const deleteGroup=async()=>{
   dispatch(setLoading(true));
   const config = getAxiosConfig({ loggedinUser });
   try {
-    const deleteGroupPromise = axios.put(`${process.env.API_URL}/api/chat/group/delete`,
+    const deleteGroupPromise = axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/delete`,
       {
         currentDP: groupInfo?.chatDisplayPic,
         cloudinary_id: groupInfo?.cloudinary_id,
@@ -210,7 +210,7 @@ const deleteGroup=async()=>{
     );
     const deleteMessagesPromise = messages?.length
     ? axios.put(
-        `${process.env.API_URL}/api/message/delete`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/message/delete`,
         {
           messageIds: JSON.stringify(messages?.map((m:any) => m._id)),
           isDeleteGroupRequest: true,
@@ -269,7 +269,7 @@ const exitGroup=async()=>{
   const config = getAxiosConfig({ loggedinUser });
 
   try {
-    const { data } = await axios.put(`${process.env.API_URL}/api/chat/group/remove`,
+    const { data } = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group/remove`,
       {
         userToBeRemoved: loggedinUser?._id,
         isGroupAdmin: isUserGroupAdmin,

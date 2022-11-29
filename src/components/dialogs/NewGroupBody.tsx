@@ -88,7 +88,7 @@ const createGroupChat=async()=>{
         formData.append("displayPic", chatDisplayPic);
         formData.append("chatName", chatName);
         formData.append("users", JSON.stringify(users?.map((user:any) => user?._id)));
-        const { data } = await axios.post(`${process.env.API_URL}/api/chat/group`, formData, config);
+        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/chat/group`, formData, config);
         if (isSocketConnected) {
             clientSocket.emit("new grp created", {
               admin: loggedinUser,

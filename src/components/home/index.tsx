@@ -136,7 +136,7 @@ const typingSocketEventHandler = () => {
     const config = getAxiosConfig({ loggedinUser });
     try {
       await axios.put(
-        `${process.env.API_URL}/api/user/delete/notifications`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/delete/notifications`,
         { notificationIds: JSON.stringify(notifsToBeDeleted) },
         config
       );

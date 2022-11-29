@@ -38,7 +38,7 @@ const Peoples = ({open}:any) => {
     const config = getAxiosConfig({ loggedinUser });
     try {
      const {data}= await axios.get(
-        `${process.env.API_URL}/api/user/allUsers`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/allUsers`,
         config
       );
       setAllUsers(data);
@@ -66,7 +66,7 @@ useEffect(()=>{
 const createOrRetrieveChat= async (userId:any)=>{
   const config = getAxiosConfig({ loggedinUser });
   try {
-      const { data } = await axios.post(`${process.env.API_URL}/api/chat`, { userId }, config);
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, { userId }, config);
       dispatch(setSelectedChat(data));
       dispatch(setFetchMsgs(true));
       dispatch(setDeleteNotifsOfChat(data._id));

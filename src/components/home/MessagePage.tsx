@@ -55,7 +55,7 @@ const MessagePage = ({setDialogBody,typingChatUser}:any) => {
   const msgListBottom = useRef<any>(null);
   const [downloadingFileId, setDownloadingFileId] = useState("");
   const [loadingMediaId, setLoadingMediaId] = useState("");
-  const SOCKET_ENDPOINT:any = process.env.API_URL;
+  const SOCKET_ENDPOINT:any = process.env.NEXT_PUBLIC_API_URL;
   const msgFileInput = useRef<any | null>({});
   const [fileAttached, setFileAttached] = useState(false);
   const msgContent = useRef<any | null>(null);
@@ -129,7 +129,7 @@ const resetMsgInput = (options?:any) => {
     setSending(true);
     const config = getAxiosConfig({ loggedinUser, blob: true });
     try {
-    const { data } = await axios.get(`${process.env.API_URL}/api/message/files/${fileId}`, config);
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/message/files/${fileId}`, config);
 
       const link = document.createElement("a");
       link.href = URL.createObjectURL(new Blob([data]));
@@ -159,7 +159,7 @@ const resetMsgInput = (options?:any) => {
     const config = getAxiosConfig({ loggedinUser });
     try {
       const { data } = await axios.get(
-        `${process.env.API_URL}/api/message/${selectedChat?._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/message/${selectedChat?._id}`,
         config
       );
       setMessages(data.map((msg:any) => {msg["sent"] = true; return msg}));
@@ -235,7 +235,7 @@ const updateMessage = async (updatedMsgContent:any, msgDate:any) => {
 
   const config = getAxiosConfig({ loggedinUser, formData: true });
   try {
-    const apiUrl = isNonImageFile ? `${process.env.API_URL}/api/message/update-in-s3` : `${process.env.API_URL}/api/message/update`;
+    const apiUrl = isNonImageFile ? `${process.env.NEXT_PUBLIC_API_URL}/api/message/update-in-s3` : `${process.env.NEXT_PUBLIC_API_URL}/api/message/update`;
     const formData = new FormData();
 
     formData.append("attachment", msgData.attachment);
@@ -269,7 +269,7 @@ const deleteMessage= async()=>{
   const config = getAxiosConfig({ loggedinUser });
  
   try {
-    await axios.put(`${process.env.API_URL}/api/message/delete`, { messageIds: JSON.stringify([clickedMsgId]) }, config );
+    await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/message/delete`, { messageIds: JSON.stringify([clickedMsgId]) }, config );
     if (isSocketConnected) {
       clientSocket?.emit("msg deleted", {
         deletedMsgId: clickedMsgId,
@@ -302,7 +302,7 @@ const deleteMessage= async()=>{
   // Initializing Client Socket
   useEffect(() => {
     dispatch(
-      setClientSocket(io(`${process.env.API_URL}`, { 
+      setClientSocket(io(`${process.env.NEXT_PUBLIC_API_URL}`, { 
         transports: ["websocket"]
        }))
     );
@@ -497,7 +497,7 @@ const discardMsgDraft = () => {
     const { fileName, isAudio } = options;
     const config = getAxiosConfig({ loggedinUser, blob: true });
     try {
-      const { data } = await axios.get(`${process.env.API_URL}/api/message/files/${fileId}`, config);
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/message/files/${fileId}`, config);
 
       const mediaSrc = URL.createObjectURL(new Blob([data]));
       viewMedia(mediaSrc, { fileName, isAudio });
@@ -724,7 +724,7 @@ const sendMessage= async()=>{
     const config = getAxiosConfig({ loggedinUser, formData: true });
     try {
         // Upload img/gif to cloudinary, and all other files to aws s3
-        const apiUrl = isNonImageFile? `${process.env.API_URL}/api/message/upload-to-s3`: `${process.env.API_URL}/api/message/`;
+        const apiUrl = isNonImageFile? `${process.env.NEXT_PUBLIC_API_URL}/api/message/upload-to-s3`: `${process.env.NEXT_PUBLIC_API_URL}/api/message/`;
 
         const formData = new FormData();
         formData.append("attachment", msgData.attachment);

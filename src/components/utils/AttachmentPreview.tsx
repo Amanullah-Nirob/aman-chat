@@ -11,7 +11,7 @@ import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 const AttachmentPreview = ({isEditMode,attachmentData,fileEditIcons}:any) => {
    const {attachment, attachmentPreviewUrl}:any = attachmentData;
   //  const {type,name,size}:any=attachment
-   const PLACEHOLDER_IMG = process.env.DEFAULTImage;
+   const PLACEHOLDER_IMG = process.env.NEXT_PUBLIC_DEFAULTImage;
    const previewTitle = attachment?.type.startsWith("application/") ? "Attached File" : attachment?.name;
    const theme=useAppSelector(selectTheme)
 

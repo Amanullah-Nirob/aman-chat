@@ -88,7 +88,7 @@ const Header = ({setDialogBody,chats}:any) => {
   if (debouncedSearchTerm) {
       setLoading(true);
       if (keyword) {
-          fetch(`${process.env.API_URL}/api/user?search=${keyword}`,{
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user?search=${keyword}`,{
               headers: {'Content-Type': 'application/json', 'Authorization': `Bearer ${loggedinUser.token}` },
           }).then(res=>res.json())
           .then(data=>{
@@ -154,7 +154,7 @@ const createOrRetrieveChat= async (userId:any)=>{
     handleClearKeyword()
     const config = getAxiosConfig({ loggedinUser });
     try {
-        const { data } = await axios.post(`${process.env.API_URL}/api/chat`, { userId }, config);
+        const { data } = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, { userId }, config);
         dispatch(setSelectedChat(data));
         dispatch(setFetchMsgs(true));
         dispatch(setDeleteNotifsOfChat(data._id));
