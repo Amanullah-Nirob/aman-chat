@@ -148,11 +148,8 @@ const handleDrawerClose = () => {
 
 
 
-
-
     return (
-        <div className='chatListArea-main' style={{borderColor:theme==='light'?'rgb(233 226 226)':'#444242'}}>
-
+        <div className='chatListArea-main' style={{borderColor:theme==='light'?'rgb(233 226 226)':'#444242',backgroundColor:matches?theme==='light'?'transparent':'#000':'transparent'}}>
           <Box className="chatListHeader" >
 {/* header title and search */}
            <div className="headerTitle">
@@ -318,7 +315,7 @@ const handleDrawerClose = () => {
                 if (notif.chat._id === chat._id) ++chatNotifCount;
               });
               return(
-                <Box sx={{ width: '100%', bgcolor: 'background.paper' }} key={chat._id}>
+                <Box sx={{ width: '100%', backgroundColor:matches?theme==='light'?'transparent':'#000':'transparent' }} key={chat._id}>
                  <List component="nav" aria-label="main mailbox folders" sx={{paddingTop:'0',paddingBottom:{sm:'10px',xs:'6px'}}}>
                  <ChatListItem
                     chat={chat}

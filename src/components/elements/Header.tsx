@@ -10,7 +10,7 @@ import {selectCurrentUser} from '../../app/slices/auth/authSlice'
 import UserListItem from './UserListItem';
 import CircularProgress from '@mui/material/CircularProgress';
 import CloseIcon from '@mui/icons-material/Close';
-import {Avatar,IconButton,Badge,Box} from '@mui/material';
+import {Avatar,IconButton,Badge,Box, useMediaQuery} from '@mui/material';
 import ProfileSettings from '../menus/ProfileSettings';
 import { getAxiosConfig } from '../utils/appUtils';
 import { setLoading } from '../../app/slices/LoadingSlice'
@@ -53,7 +53,7 @@ const Header = ({setDialogBody,chats}:any) => {
  const [notificationsMenuAnchor, setNotificationsMenuAnchor] = useState(null);
  const [animateNotif, setAnimateNotif] = useState(false);
  const {selectedChat}=useAppSelector(selectAppState)
-
+const mobileMatch= useMediaQuery('(max-width:600px)');
 // notification area start
  const notifCount = loggedinUser?.notifications?.length || "";
 
@@ -175,7 +175,7 @@ const createOrRetrieveChat= async (userId:any)=>{
 
     return (
      <Box className='header' sx={{
-      backgroundColor:theme==='light'?'#fff':'transparent',
+      backgroundColor:theme==='light'?'#fff':mobileMatch?'#000':'transparent',
       boxShadow:theme==='light'?'rgb(66 66 66 / 6%) 0px 4px 6px -1px, rgb(0 0 0 / 6%) 0px 2px 4px -1px':'',
       borderColor:theme==='light'?'transparent':'#303030',
       display:{xl:'flex', lg:'flex', md:'flex', sm:'flex',xs:selectedChat?'none':'flex'}

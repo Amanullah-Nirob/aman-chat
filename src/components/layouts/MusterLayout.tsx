@@ -12,11 +12,28 @@ interface LayoutProps {
   
 const MusterLayout = ({children}:LayoutProps) => {
     const mode = useAppSelector(selectTheme);
-    const theme = React.useMemo(
+
+    const lightTheme = React.useMemo(
         () =>
           createTheme({
             palette: {
               mode,
+              background: {
+                default: "#fff"
+              },
+            },
+          }),
+        [mode],
+      );
+
+    const nightTheme = React.useMemo(
+        () =>
+          createTheme({
+            palette: {
+              mode,
+              background: {
+                default: "#000"
+              },
             },
           }),
         [mode],
@@ -26,7 +43,7 @@ const MusterLayout = ({children}:LayoutProps) => {
 
       
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={mode==='light'?lightTheme:nightTheme}>
         <CssBaseline />
             {children}
         <AppToast></AppToast> 

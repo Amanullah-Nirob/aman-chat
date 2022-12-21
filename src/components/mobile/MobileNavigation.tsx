@@ -102,14 +102,15 @@ const handlePeoplesDrawerClose = () => {
      <Box className='mobileNavigation' 
     sx={{
       display:{xl:'flex', lg:'flex', md:'flex', sm:'flex',xs:selectedChat?'none':'flex'},
-
+      backgroundColor:theme==='light'?'transparent':'#000'
     }}>
 {/* home chat */}
      <BottomNavigation 
         sx={{ 
           width: '100%',
           height:'60px',
-          borderTop:theme==='light'?'1px solid #ddd':'1px solid #383636' 
+          borderTop:theme==='light'?'1px solid #ddd':'1px solid #383636',
+          background:'transparent' 
         }} 
       value={changeNav} onChange={handleChange}>
       <BottomNavigationAction onClick={homePageBackAndAllDrawerClose} 

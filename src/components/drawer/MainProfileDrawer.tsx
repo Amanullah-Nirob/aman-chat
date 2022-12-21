@@ -73,7 +73,7 @@ const MainProfileDrawer = ({open,handleDrawerClose,setDialogBody}:any) => {
  <Box sx={{ display: 'flex' }}>
       <CssBaseline /> 
       <Drawer
-        sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth,border:0}, }}
+        sx={{ width: drawerWidth, flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth,border:0,backgroundColor:theme==='light'?'#fff':'#000'}, }}
         variant="persistent"
         anchor="right"
         open={open}

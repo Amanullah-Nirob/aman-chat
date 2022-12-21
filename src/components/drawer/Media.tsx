@@ -2,6 +2,8 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import {Box,ListItemButton} from '@mui/material';
 import {Drawer,CssBaseline,IconButton} from '@mui/material';
+import { selectTheme } from '../../app/slices/theme/ThemeSlice';
+import { useAppSelector } from '../../app/hooks';
 
 
 const drawerWidth = '100%';
@@ -15,11 +17,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 const Media = ({open}:any) => {
+  const theme=useAppSelector(selectTheme)
     return (
         <Box sx={{ display: 'flex' }}>
         <CssBaseline /> 
         <Drawer
-          sx={{ width: drawerWidth,flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth,border:0,height: '90.9%'}, }}
+          sx={{ width: drawerWidth,flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth,border:0,height: '92%',backgroundColor:theme==='light'?'#fff':'#000'}, }}
           variant="persistent"
           anchor="right"
           open={open}
