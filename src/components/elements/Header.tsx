@@ -220,7 +220,7 @@ const createOrRetrieveChat= async (userId:any)=>{
 {/* header right area */}
     <div className='right-area'>
 
-    <div className='darkModeSwitch'>
+    <div className='darkModeSwitch' style={{marginBottom:'4px'}}>
     <SwitchToggle></SwitchToggle>
     </div>
 

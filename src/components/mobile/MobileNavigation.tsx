@@ -14,10 +14,12 @@ import { selectAppState, setIsMobile } from '../../app/slices/AppSlice';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import Peoples from '../drawer/Peoples';
 import Media from '../drawer/Media';
+import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 
 const MobileNavigation = ({chats}:any) => {
     const loggedinUser=useAppSelector(selectCurrentUser)
     const [animateNotif, setAnimateNotif] = useState(false);
+    const theme=useAppSelector(selectTheme)
     const {selectedChat}=useAppSelector(selectAppState)
     const dispatch=useAppDispatch()
 // notification area start
@@ -95,17 +97,21 @@ const handlePeoplesDrawerClose = () => {
     handlePeoplesDrawerClose()
     handleMediaDrawerClose()
  }
-
+ 
     return (
-    <Box className='mobileNavigation' sx={{display:{xl:'flex', lg:'flex', md:'flex', sm:'flex',xs:selectedChat?'none':'flex'}}}>
-{/* home chat */}
-     <BottomNavigation sx={{ width: '100%' }} value={changeNav} onChange={handleChange}>
+    <Box className='mobileNavigation' 
+    sx={{
+      display:{xl:'flex', lg:'flex', md:'flex', sm:'flex',xs:selectedChat?'none':'flex'},
+      borderTop:theme==='light'?'1px solid #ddd':'1px solid #383636'
 
-      <BottomNavigationAction onClick={homePageBackAndAllDrawerClose}
+    }}>
+{/* home chat */}
+     <BottomNavigation sx={{ width: '100%',height:'67px' }} value={changeNav} onChange={handleChange}>
+      <BottomNavigationAction onClick={homePageBackAndAllDrawerClose} 
+        // sx={{paddingTop:'0'}}
         label="Chat" value="chat"
         icon={<ChatIcon />}
       />
-
 {/* notifications */}
       <BottomNavigationAction
         onClick={handleNotificationDrawerOpen}

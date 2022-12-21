@@ -1,5 +1,7 @@
 import Head from 'next/head';
 import React, { ReactNode } from "react";
+import { useAppSelector } from '../../app/hooks';
+import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 
 const initHeaders = (
     <>
@@ -21,8 +23,9 @@ interface Props {
 
 
 const PageContainer = ({header = initHeaders,footer = initFooters,children,title}:Props) => {
+    const theme=useAppSelector(selectTheme)
     let titleView;
- 
+    
     if (title !== '' && title !== undefined) {
         titleView = title + ' | ' + 'AmanChat';
     }else{
@@ -33,6 +36,10 @@ const PageContainer = ({header = initHeaders,footer = initFooters,children,title
         <>
         <Head>
             <title>{titleView}</title>
+            <meta 
+                name="theme-color" key="theme-color"
+                content={ theme ==='light'?'#fff':'#000'}
+                />
         </Head> 
         {header}
         {children}

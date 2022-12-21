@@ -9,10 +9,11 @@ import { ListItemIcon, MenuItem,Avatar } from "@mui/material";
 import {Key,Logout } from '@mui/icons-material';
 import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import ChangePassword from '../dialogs/ChangePassword';
-import { useAppDispatch } from '../../app/hooks';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { displayDialog, setShowDialogActions } from '../../app/slices/CustomDialogSlice';
 import { setLoggedInUser } from '../../app/slices/auth/authSlice';
 import  Router  from 'next/router';
+import { selectTheme, switchTheme } from '../../app/slices/theme/ThemeSlice';
 
 
 const drawerWidth = '100%';
@@ -30,9 +31,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 
 const MainProfileDrawer = ({open,handleDrawerClose,setDialogBody}:any) => {
-
+   const theme=useAppSelector(selectTheme)
    const dispatch=useAppDispatch()
-
 
     // update password 
     const openEditPasswordDialog=()=>{
@@ -65,6 +65,9 @@ const MainProfileDrawer = ({open,handleDrawerClose,setDialogBody}:any) => {
       );
     }
 
+    const handleChange = (_event: any) => {
+      dispatch(switchTheme(theme == 'dark' ? 'light' : 'dark'))
+   };
 
   return (
  <Box sx={{ display: 'flex' }}>
@@ -91,9 +94,12 @@ const MainProfileDrawer = ({open,handleDrawerClose,setDialogBody}:any) => {
 {/* main part*/}
      <Box sx={{padding:'0 17px'}}>
 {/* dark mode switch */}
-        <ListItemButton sx={{padding:'0'}} >
-         <div className="darkModeSwitch">
-         <SwitchToggle></SwitchToggle>
+        <ListItemButton sx={{padding:'0'}} onClick={handleChange}>
+         <div className="darkModeSwitch" style={{display:'flex',alignItems:'center'}}>
+        <div className='mobileDarkSwitch' style={{marginRight:'6px'}}>
+          <SwitchToggle></SwitchToggle> 
+        </div>
+         <p style={{margin:'0'}}>{theme==='light'?'Light Mode':'Night Mode'}</p>
          </div>
          </ListItemButton>
 

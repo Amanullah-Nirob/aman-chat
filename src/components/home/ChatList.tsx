@@ -173,8 +173,7 @@ const handleDrawerClose = () => {
                  alt={loggedinUser?.name}
                 ></Avatar>
                 </IconButton>
-          
-                <h2>Chat</h2>
+                <h2 style={{marginLeft:'4px'}}>Chats</h2>
                </div>
              )}
             </div>
@@ -195,7 +194,7 @@ const handleDrawerClose = () => {
            <div className="activeUsers">
             <div className='createOthers'>
                <div>
-               <Avatar sx={{width:'50px',height:'50px',backgroundColor:theme==='light'?'':'rgb(56 56 56 / 64%)'}}>
+               <Avatar sx={{width:'50px',height:'50px',backgroundColor:theme==='light'?'#d9d9d9':'rgb(56 56 56 / 64%)'}}>
                   <OnlinePredictionIcon sx={{color:theme==='light'?'#000':'#fff'}} />
                </Avatar>
                </div>
