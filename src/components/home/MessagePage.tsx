@@ -732,7 +732,7 @@ const sendMessage= async()=>{
         formData.append("content", msgData.content);
         formData.append("chatId", selectedChat?._id);
         const { data } = await axios.post(apiUrl, formData, config);
-        const newMessage={...data,"sent":true}
+        const newMessage={...data,"sent":true} 
         setMessages([newMessage, ...messages]);
 
         if (isSocketConnected) clientSocket?.emit("new msg sent", data);

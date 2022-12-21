@@ -171,7 +171,7 @@ const Message = forwardRef(({msgSent,currMsg,prevMsg,msgEditMode,clickedMsgId,do
               title="Edit/Delete Message"
               style={{position:'absolute',top:'0',left:'-26px',height:'100%'}}
               className={`msgOptionsIcon`}
-            >
+            > 
               <MoreVertIcon
                 data-msg={currMsgId}
                 data-file-exists={file_id}

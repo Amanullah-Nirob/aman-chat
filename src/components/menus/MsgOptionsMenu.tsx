@@ -25,7 +25,7 @@ const MsgOptionsMenu = ({anchor,setAnchor,clickedMsg,editMsgHandler,openDeleteMs
           </ListItemIcon>
           <span>Delete Message</span>
         </MenuItem>
-      </Menu>
+      </Menu> 
     );
 };
 
