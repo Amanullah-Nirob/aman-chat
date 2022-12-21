@@ -203,7 +203,7 @@ const typingSocketEventHandler = () => {
                 </Grid>
           </Grid>
       {/* mobile navigation */}
-          <Box sx={{display:!matches || selectedChat?'none':'block'}}>
+          <Box sx={{display:!matches || selectedChat?'none':'block',position:'fixed',width:'100%',bottom:'0'}} className='mobileMainNav'>
            <MobileNavigation
              chats={chats} 
            ></MobileNavigation>

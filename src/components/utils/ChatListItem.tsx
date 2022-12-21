@@ -107,7 +107,7 @@ const ChatListItem = ({chat,chatNotifCount,typingChatUser}:any) => {
       <div className="notificationCountAnd-lastMessageShow">
        {/* notification count show */}
        {lastMessage && chatNotifCount && (
-        <Badge 
+        <Badge sx={{zIndex:'0'}}
           data-chat={_id} 
           data-has-notifs={chatNotifCount} 
           badgeContent={chatNotifCount || ""} 

@@ -1,0 +1,86 @@
+{
+	"name": "Aman Chat",
+	"short_name": "Aman Chat",
+	"description": "A messenger app with group chats and audio and video calling.",
+	"start_url": "/?source=pwa",
+	"background_color": "#fff",
+	"orientation": "portrait",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "#fff",
+	"icons": [
+		{
+            "src": "app/pwa-icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "app/pwa-icons/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "app/pwa-icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "app/pwa-icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+			"purpose": "maskable"
+        }
+	],
+	"shortcuts": [
+		{
+		  "name": "Home",
+		  "short_name": "Home",
+		  "description": "Open home section of the applications",
+		  "url": "/",
+		  "icons": [
+			{ "src": "app/shortcuts/maskable1.png", "sizes": "192x192" }
+		  ]
+		},
+		{
+		  "name": "Login",
+		  "short_name": "Login",
+		  "description": "Open Login section of the applications",
+		  "url": "/login",
+		  "icons": [
+			{ "src": "app/shortcuts/maskable2.png", "sizes": "192x192" }
+		  ]
+		}
+	  ],
+	  "screenshots": [
+		{
+		  "src": "app/promotion/chatListDark.png",
+		  "sizes": "1080x2280",
+		  "type": "image/png"
+		},
+		{
+		  "src": "app/promotion/callRequest.png",
+		  "sizes": "1080x2280",
+		  "type": "image/png"
+		},
+		{
+		  "src": "app/promotion/videoChat.png",
+		  "sizes": "1080x2280",
+		  "type": "image/png"
+		},
+		{
+		  "src": "app/promotion/messageLight.png",
+		  "sizes": "1080x2280",
+		  "type": "image/png"
+		},
+		{
+		  "src": "app/promotion/homeLight.png",
+		  "sizes": "1080x2280",
+		  "type": "image/png"
+		},
+		{
+		  "src": "app/promotion/homeDark.png",
+		  "sizes": "1080x2280",
+		  "type": "image/png"
+		}
+	  ]
+}

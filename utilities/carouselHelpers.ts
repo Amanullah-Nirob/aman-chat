@@ -1,9 +1,9 @@
 export const settings = {
-    className: "center",
-    infinite: false,
-    // centerPadding: "60px",
+    className: "start",
+    infinite: true,
     slidesToShow: 4,
-    swipeToSlide: true,
+    slidesToScroll: 3,
+    initialSlide: 5,
     arrows: false,
     responsive: [
       {

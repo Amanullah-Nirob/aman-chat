@@ -90,7 +90,6 @@ const handlePeoplesDrawerClose = () => {
 };
 
 
-
 // all drawer close home back
  const homePageBackAndAllDrawerClose=()=>{
     handleNotificationDrawerClose()
@@ -99,16 +98,21 @@ const handlePeoplesDrawerClose = () => {
  }
  
     return (
-    <Box className='mobileNavigation' 
+    <>
+     <Box className='mobileNavigation' 
     sx={{
       display:{xl:'flex', lg:'flex', md:'flex', sm:'flex',xs:selectedChat?'none':'flex'},
-      borderTop:theme==='light'?'1px solid #ddd':'1px solid #383636'
 
     }}>
 {/* home chat */}
-     <BottomNavigation sx={{ width: '100%',height:'67px' }} value={changeNav} onChange={handleChange}>
+     <BottomNavigation 
+        sx={{ 
+          width: '100%',
+          height:'60px',
+          borderTop:theme==='light'?'1px solid #ddd':'1px solid #383636' 
+        }} 
+      value={changeNav} onChange={handleChange}>
       <BottomNavigationAction onClick={homePageBackAndAllDrawerClose} 
-        // sx={{paddingTop:'0'}}
         label="Chat" value="chat"
         icon={<ChatIcon />}
       />
@@ -128,7 +132,6 @@ const handlePeoplesDrawerClose = () => {
             </div>
         )}
       />
-
 {/* peoples */}
       <BottomNavigationAction label="People" value="people"
        onClick={handlePeoplesDrawerOpen}
@@ -142,29 +145,24 @@ const handlePeoplesDrawerClose = () => {
       label="Folder"
        value="folder"  icon={<FolderIcon />} />
     </BottomNavigation>
+    </Box>
 
-{/* page drawer */}
+      {/* notifications page call*/}
+      {<NotificationMobile
+          chats={chats}
+          open={openNotification}
+      ></NotificationMobile>}
 
+        <Peoples
+            open={openPeoples}
+        ></Peoples>
 
-{/* notifications page call*/}
-<NotificationMobile
-    chats={chats}
-    open={openNotification}
-></NotificationMobile>
+        <Media
+            open={openMedia}
+        ></Media>
+  </>
 
-  <Peoples
-      open={openPeoples}
-  ></Peoples>
-
-  <Media
-      open={openMedia}
-  ></Media>
-
-
-
-
-
-        </Box>
+   
     );
 };
 

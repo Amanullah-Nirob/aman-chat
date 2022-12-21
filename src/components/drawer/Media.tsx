@@ -19,7 +19,7 @@ const Media = ({open}:any) => {
         <Box sx={{ display: 'flex' }}>
         <CssBaseline /> 
         <Drawer
-          sx={{ width: drawerWidth,flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth,border:0,height: '90%'}, }}
+          sx={{ width: drawerWidth,flexShrink: 0, '& .MuiDrawer-paper': { width: drawerWidth,border:0,height: '90.9%'}, }}
           variant="persistent"
           anchor="right"
           open={open}

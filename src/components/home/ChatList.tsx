@@ -42,8 +42,6 @@ const ChatList = ({chats,setChats,setDialogBody,typingChatUsers}:any) => {
 
 
 
-
-
  const fetchChats= async (onlineUsers:any)=>{
    const config = getAxiosConfig({ loggedinUser });
 
@@ -200,9 +198,9 @@ const handleDrawerClose = () => {
                </div>
                <p>Online Users</p>
             </div>
-            <div 
-            className="userActiveLists">
-            <Slider {...settings}>
+            <div className="userActiveLists">
+            {/* <Slider {...settings}> */}
+            <div className='onLineUserMain'>
             {loading? (
               [...Array(9)].map((e, i) => (
                 <div key={`loadingListOf${'activeUsers' + i}`} style={{width:'50px'}}>
@@ -267,7 +265,7 @@ const handleDrawerClose = () => {
 
             )
           }
-            </Slider>
+            </div>
             </div>
         </div>
           </Box>
@@ -321,7 +319,7 @@ const handleDrawerClose = () => {
               });
               return(
                 <Box sx={{ width: '100%', bgcolor: 'background.paper' }} key={chat._id}>
-                 <List component="nav" aria-label="main mailbox folders">
+                 <List component="nav" aria-label="main mailbox folders" sx={{paddingTop:'0',paddingBottom:{sm:'10px',xs:'6px'}}}>
                  <ChatListItem
                     chat={chat}
                     chatNotifCount={chatNotifCount || ""}

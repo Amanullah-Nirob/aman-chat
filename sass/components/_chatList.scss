@@ -18,6 +18,15 @@
         }
         .userActiveLists {
             width: 90%;
+            .onLineUserMain {
+                display: flex;
+                width: 100%;
+                overflow-x: scroll;
+                margin-left: 12px;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
         }
         h3{
             margin: 0;
@@ -26,6 +35,7 @@
             display: flex;
             flex-direction: column;
             text-align: center;
+            margin-right: 16px;
             .userActiveName {
                 text-align: center;
                 margin-top: 6px;
@@ -57,7 +67,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 7px 4px;
+            padding: 8px 4px;
             margin-bottom: 13px;
             .titleMain{
                 h2 {
@@ -88,7 +98,7 @@
 
     .chatListAreaMain {
         height: 86%;
-        padding: 0px 6px;
+        padding: 12px 6px;
     }
 
     .chatListUserInfo{
@@ -140,7 +150,11 @@
 
 @media screen and (max-width:'768px') {
     .chatListArea-main {
-        border-right: 0
+        border-right: 0;
+    }
+    .chatListArea-main .chatListAreaMain {
+        height: 68%;
+        padding: 6px 6px 0;
     }
 
 }
