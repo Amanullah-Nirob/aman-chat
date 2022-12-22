@@ -1,0 +1,28 @@
+.installBanner_main{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 1101;
+    padding: 11px 0 0;
+    .notification_content_box{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 28px 32px;
+    }
+}
+
+@media screen and (max-width:'600px') {
+    .installBanner_main{
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        z-index: 1101;
+        padding: 11px 0 0;
+        .notification_content_box{
+            flex-direction:column;
+            border: none !important;
+            padding: 15px 0px;
+        }
+    }
+}

@@ -5,6 +5,9 @@ import { CssBaseline } from '@mui/material';
 import AppToast from '../utils/AppToast';
 import {selectToastState} from '../../app/slices/ToastSlice'
 import { useAppSelector } from '../../app/hooks';
+import { usePWAInstall } from '../../hooks/usePWAInstall';
+import { cookies, enablePWAInstallBanner } from '../utils/pwaConfig';
+import InstallBanner from '../pwa-prompt/InstallBanner';
 interface LayoutProps {
     children: React.ReactNode;
 }
@@ -41,12 +44,21 @@ const MusterLayout = ({children}:LayoutProps) => {
 
      const {toastData}=useAppSelector(selectToastState)
 
+     const [showInstallPrompt, installPWA, hideInstallPrompt] = usePWAInstall({
+      enable: enablePWAInstallBanner,
+      cookieName: cookies.pwaInstallDismissed.name
+   })
       
     return (
         <ThemeProvider theme={mode==='light'?lightTheme:nightTheme}>
         <CssBaseline />
             {children}
         <AppToast></AppToast> 
+        <InstallBanner
+                onCancel={() => hideInstallPrompt(false)}
+                onOk={installPWA}
+                show={showInstallPrompt}
+         />
         </ThemeProvider>
     );
 };

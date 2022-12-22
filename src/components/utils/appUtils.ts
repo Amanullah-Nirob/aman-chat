@@ -147,3 +147,9 @@ export const getFileSizeString = memoize((fileSize:any) => {
 });
 
 
+export function toBoolean(env: string | undefined, initial: boolean) {
+  if (typeof env !== 'undefined') {
+    return env === 'true'
+  }
+  return initial
+}
