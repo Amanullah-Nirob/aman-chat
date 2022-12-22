@@ -48,6 +48,7 @@ const MusterLayout = ({children}:LayoutProps) => {
       enable: enablePWAInstallBanner,
       cookieName: cookies.pwaInstallDismissed.name
    })
+      console.log(showInstallPrompt);
       
     return (
         <ThemeProvider theme={mode==='light'?lightTheme:nightTheme}>
