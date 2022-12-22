@@ -58,6 +58,7 @@ export const newPeerConnection = (initiator: boolean) => {
         trickle: false,
         config: {
             iceServers: [
+            { urls: "stun:numb.viagenie.ca:3478" },
               {
                 url: 'turn:numb.viagenie.ca',
                 credential: 'muazkh',
