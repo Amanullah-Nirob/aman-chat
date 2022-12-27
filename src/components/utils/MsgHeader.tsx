@@ -13,6 +13,7 @@ import Peer from "simple-peer";
 import { getLocalStreamPreview, newPeerConnection } from '../../webRTC/webRTC';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import CallIcon from '@mui/icons-material/Call';
+import { setCallerInfo } from '../../app/slices/importantForCall';
 
 let currentPeerConnection: any = null;
 const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
@@ -49,6 +50,7 @@ const MsgHeader = ({close,openViewProfileDialog,openGroupInfoDialog}:any) => {
                     ...data,
                     signal,
                 });
+                dispatch(setCallerInfo(data))
             });
     
             peer.on("stream", (stream:any) => {

@@ -2,6 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { persistReducer,FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER,} from "redux-persist";
+import storageSession from 'redux-persist/lib/storage/session'
 
 // internal imports
 import storage from "./sync-storage";
@@ -16,6 +17,7 @@ import ChildDialogReducer from './slices/ChildDialogSlice'
 import VideoChatsReducer from './slices/VideoChatsSlice'
 import { chatApi } from "./apisAll/chat";
 import localStreamReducer from './videoChats/videoChatReducer'
+import importantForCallReducer from './slices/importantForCall'
 
 const persistConfig = {
     key: "root",
@@ -23,6 +25,7 @@ const persistConfig = {
     storage,
     whitelist: ["auth","theme"],
 }; 
+const importantForCallPersistConfig = { key: 'importantForCall', version: 1, storage:storageSession };
 
 const rootReducer = combineReducers({
   [userApi.reducerPath]: userApi.reducer,
@@ -36,6 +39,7 @@ const rootReducer = combineReducers({
   ChildDialogData:ChildDialogReducer,
   VideoChats:VideoChatsReducer,
   localStreamData:localStreamReducer,
+  importantForCall:persistReducer(importantForCallPersistConfig,importantForCallReducer),
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

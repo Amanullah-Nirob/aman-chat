@@ -6,16 +6,24 @@ const LoadingSlice = createSlice({
   initialState: {
     loading: false,
     disableIfLoading: ``,
+    detectVolume:{},
+    remoteDetectVolume:{},
   },
   reducers: {
     setLoading: (state, action) => {
       state.loading = action.payload;
       state.disableIfLoading = `${state.loading ? "disabled notAllowed" : ""}`;
     },
+    setDetectVolume: (state, action) => {
+      state.detectVolume = action.payload;
+    },
+    setRemoteDetectVolume: (state, action) => {
+      state.remoteDetectVolume = action.payload;
+    },
   },
 });
 
-export const { setLoading } = LoadingSlice.actions;
+export const { setLoading,setDetectVolume,setRemoteDetectVolume } = LoadingSlice.actions;
 
 export const selectLoadingState = (state:any) => state.LoadingData;
 

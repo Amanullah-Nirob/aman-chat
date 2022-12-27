@@ -15,6 +15,7 @@ const MainContainer = styled("div")({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    height:{sm:'10%',xs:'0'}
 });
 
 

@@ -1,6 +1,7 @@
 import Peer from "simple-peer";
 import { setLocalStream } from "../app/videoChats/videoChatActions"; 
 import { store } from "../app/store";
+import { startPitchDetection } from "./pitchDetection/detectSpeaking";
 
 
 export const getLocalStreamPreview = (audioOnly: boolean, callback?: () => void) => {
@@ -10,7 +11,7 @@ export const getLocalStreamPreview = (audioOnly: boolean, callback?: () => void)
     navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
 
         store.dispatch(setLocalStream(stream) as any);
-
+        startPitchDetection(stream)
         if (callback) {
             callback();
         }

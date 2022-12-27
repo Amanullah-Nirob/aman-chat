@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { styled } from "@mui/system";
+import { selectCurrentUser } from "../../app/slices/auth/authSlice";
+import { useAppSelector } from "../../app/hooks";
 
 const MainContainer = styled("div")({
     height: "100%",
     width: "100%",
     backgroundColor: "black",
-    borderRadius: "8px",
-    margin: '3px 7px'
+    position:'relative'
 });
 
 const VideoEl = styled("video")({
@@ -16,9 +17,10 @@ const VideoEl = styled("video")({
 
 
 
-const Video:React.FC<{ stream: MediaStream; isLocalStream: boolean;isYou:boolean}> = ({ stream, isLocalStream,isYou }) => {
+const Video:React.FC<{ stream: MediaStream; isLocalStream: boolean;isYou:boolean,callerInfo?:any}> = ({ stream, isLocalStream,isYou,callerInfo }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
-
+    const loggedInUser=useAppSelector(selectCurrentUser)
+   
     useEffect(() => {
         const video = videoRef.current;
         video!.srcObject = stream;
@@ -41,7 +43,7 @@ const Video:React.FC<{ stream: MediaStream; isLocalStream: boolean;isYou:boolean
                 autoPlay
                 muted={isLocalStream}
             />
-            <span style={{color:'green',fontWeight:'bold'}}>{isYou?'you':''}</span>
+            <p className={isYou?'callerName me':'callerName'}>{isYou?loggedInUser?.name + ' (me)':callerInfo?.name}</p>
      </MainContainer>
     );
 };

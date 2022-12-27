@@ -18,8 +18,8 @@ const Camera = () => {
 
 
     return (
-        <div style={{backgroundColor:theme==='light'?'#3333':'rgb(255 255 255 / 8%)',borderRadius:'29px',marginRight:'20px'}}>
-          <IconButton onClick={handleToggleCamera}>
+        <div style={{backgroundColor:'rgb(255 255 255 / 8%)',borderRadius:'29px',marginRight:'20px'}}>
+          <IconButton onClick={handleToggleCamera}  sx={{color:'#fff'}}>
         {cameraEnabled ? <VideocamIcon /> : <VideocamOffIcon />}
         </IconButton>
         </div>

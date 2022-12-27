@@ -63,8 +63,8 @@ const ScreenShare = () => {
 
 
     return (
-        <div style={{backgroundColor:theme==='light'?'#3333':'rgb(255 255 255 / 8%)',borderRadius:'29px',marginRight:'20px'}}>
-    <IconButton 
+        <div style={{backgroundColor:'rgb(255 255 255 / 8%)',borderRadius:'29px',marginRight:'20px'}}>
+    <IconButton  sx={{color:'#fff'}}
         onClick={handleScreenShareToggle}
     >
         {screenShareEnabled ? (

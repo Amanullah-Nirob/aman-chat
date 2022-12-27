@@ -20,7 +20,7 @@ import Message from '../utils/Message';
 import MsgOptionsMenu from '../menus/MsgOptionsMenu';
 import { displayToast } from '../../app/slices/ToastSlice';
 import { FIVE_MB, getAxiosConfig, isImageOrGifFile, parseInnerHTML, setCaretPosition } from '../utils/appUtils';
-import { setLoading } from '../../app/slices/LoadingSlice';
+import { setLoading, setRemoteDetectVolume } from '../../app/slices/LoadingSlice';
 import { selectTheme } from '../../app/slices/theme/ThemeSlice';
 import Picker from '@emoji-mart/react'
 import AttachmentPreview from '../utils/AttachmentPreview';
@@ -34,6 +34,7 @@ import { setLocalStream } from '../../app/videoChats/videoChatActions';
 import CallHome from '../CallAudioAndVideo';
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import Welcome from '../elements/Welcome';
+import { setCallerInfo } from '../../app/slices/importantForCall';
 
 let msgFileAlreadyExists = false;
 
@@ -379,7 +380,18 @@ const deletedMsgSocketEventHandler = () => {
 // call Request Even Handler
 const callRequestEvenHandler=()=>{
   clientSocket.on("call-request", (data:any) => {
-    dispatch(setCallRequest(data) as any);
+    dispatch(setCallRequest(data) as any); 
+ })
+}
+// call Request Even Handler
+const detectVolumeHandler=()=>{
+  clientSocket.on("detectVolume", (data:any) => {
+    const callerInfo={
+      ...data,
+      receiverUserId:data?.senderId
+    }
+    dispatch(setCallerInfo(callerInfo))
+    dispatch(setRemoteDetectVolume(data) as any); 
  })
 }
 
@@ -411,7 +423,7 @@ useEffect(() => {
     dispatch(setSocketConnected(true));
   });
   }
-
+  detectVolumeHandler()
   callRequestEvenHandler()
   notifyChatLeft()
   newMsgSocketEventHandler()

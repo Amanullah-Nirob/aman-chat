@@ -1,0 +1,76 @@
+.call_area_main{
+    padding: 20px;
+   .videoHome{
+    .homeVideoAllContent{
+            .localVideoMain{
+                position: relative;
+                margin-right: 15px;
+                div#myPitchBar {
+                    position: absolute;
+                    top: 30%;
+                    right: 0;
+                    border-radius: 6px;
+                    width: 6px;
+                    transition-property: height background-color;
+                    transition-duration: 0.25s;
+                }
+            }
+            .RemoteVideoMain{
+                position: relative;
+                div#myPitchBarRemote {
+                    position: absolute;
+                    top: 30%;
+                    right: 0;
+                    border-radius: 6px;
+                    width: 6px;
+                    transition-property: height background-color;
+                    transition-duration: 0.25s;
+                }
+            }
+    }
+   }
+}
+p.callerName {
+    margin: 0;
+    position: absolute;
+    bottom: 14px;
+    left: 15px;
+    background-color: #000;
+    padding: 8px 16px;
+    color: #fff;
+    border: 1px solid #201d1d;
+    border-radius: 9px;
+}
+#speakingMe {
+    box-shadow: 0 0 23px 1px rgb(81 177 123 / 60%);
+    transition: 0.25s ease-in-out;
+}
+#speakingOther {
+    box-shadow: 0 0 23px 1px rgb(81 177 123 / 60%);
+    transition: 0.25s ease-in-out;
+
+}
+
+@media screen and (max-width:'600px') {
+    .call_area_main{
+        padding: 0px;
+        .videoHome{
+         .homeVideoAllContent{
+                 .localVideoMain{
+                     margin-right: 0px;
+                 }
+         }
+        }
+     }
+     p.callerName {
+        margin: 0;
+        position: absolute;
+        bottom: 9px;
+        left: 0px;
+        background-color: #000;
+        padding: 3px 7px;
+        color: #fff;
+        border: 1px solid #201d1d;
+        border-radius: 2px;
+    }
+}

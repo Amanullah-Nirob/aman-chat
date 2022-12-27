@@ -10,28 +10,28 @@ import { selectTheme } from "../../app/slices/theme/ThemeSlice";
 
 
 const fullScreenRoomStyle = {
-    width: '80%',
+    width: '75%',
     height: '83vh',
-    top: '12vh',
-    left: '11%',
+    top: '9vh',
+    left: '14%',
+    padding: '20px',
     zIndex: 200,
 };
 
 const minimizedRoomStyle = {
-    width: '75%',
-    height: '60vh',
-    top: '16vh',
-    left: '12%',
+    width: '100%',
+    height: '100vh',
+    top: '0',
+    left: '0',
     overflow: 'hidden',
-    padding: '10px',
     zIndex: 200,
 };
 
 const mobileMinimizedRoomStyle = {
-    width: '95%',
-    height: '83vh',
-    top: '9vh',
-    left: '10px',
+    width: '100%',
+    height: '100vh',
+    top: '0vh',
+    left: '0',
     zIndex: 200,
 };
 const mobileFullScreenRoomStyle = {
@@ -51,6 +51,7 @@ const CallHome = () => {
          <Box
             style={
             isRoomMinimized ? { ...minimizedRoomStyle, ...(matches && {...mobileMinimizedRoomStyle}) } : { ...fullScreenRoomStyle, ...(matches && {...mobileFullScreenRoomStyle}) }}
+           className='call_area_main'
             sx={{
                 ...(matches &&
                     isRoomMinimized && {
@@ -61,7 +62,7 @@ const CallHome = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    background: theme==='dark'?'linear-gradient(217deg, rgb(255 0 0 / 4%), rgba(255,0,0,0) 70.71%),linear-gradient(127deg, rgba(0,255,0,.25), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.25), rgba(0,0,255,0) 70.71%)':'linear-gradient(217deg, rgb(255 0 0 / 4%), rgba(255,0,0,0) 70.71%),linear-gradient(127deg, rgba(0,255,0,.25), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.25), rgba(0,0,255,0) 70.71%)',
+                    background: '#0e0e0e',
                     transition: "all 0.5s ease-in-out",
                 
             }}

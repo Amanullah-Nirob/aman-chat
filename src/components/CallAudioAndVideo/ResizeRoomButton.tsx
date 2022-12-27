@@ -18,7 +18,7 @@ const ResizeRoomButton: React.FC<{
 }> = ({ isRoomMinimized, handleRoomResize }) => {
     return (
         <MainContainer>
-            <IconButton onClick={handleRoomResize}>
+            <IconButton onClick={handleRoomResize}  sx={{color:'#fff'}}>
                 {isRoomMinimized ? <FullscreenIcon /> : <FullscreenExitIcon />}
             </IconButton>
         </MainContainer>
