@@ -1,5 +1,4 @@
 import React from "react";
-import { styled } from "@mui/system";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useAppSelector } from '../../../app/hooks';
 import { selectVideoChats } from '../../../app/slices/VideoChatsSlice';
@@ -7,16 +6,9 @@ import Microphone from "./Microphone";
 import CloseRoom from "./CloseRoom";
 import ScreenShare from "./ScreenShare";
 import Camera from "./Camera";
+import { Box } from "@mui/material";
 
 
-
-const MainContainer = styled("div")({
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height:{sm:'10%',xs:'0'}
-});
 
 
 
@@ -30,7 +22,14 @@ const ButtonRoom: React.FC<{isRoomMinimized: boolean;}> = ({ isRoomMinimized }) 
     }
 
     return (
-        <MainContainer>
+        <Box 
+        sx={{ 
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height:{sm:'10%',xs:'0'}}}
+        >
            {!audioOnly && (
                 <>
                     <ScreenShare  />
@@ -39,7 +38,7 @@ const ButtonRoom: React.FC<{isRoomMinimized: boolean;}> = ({ isRoomMinimized }) 
             )} 
             <Microphone localStream={localStream} />
             <CloseRoom localStream={localStream}/>
-        </MainContainer>
+        </Box>
     );
 };
 
